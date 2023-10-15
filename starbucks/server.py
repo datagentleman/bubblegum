@@ -1,13 +1,15 @@
 import socket
-
+ 
 class Server:
   HOST = "127.0.0.1"
   PORT = 1337
-      
+    
   def run(self):
     print("Starting starbucks server ...")
     
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+      s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+      
       s.bind((self.HOST, self.PORT))
       s.listen()
       
@@ -23,5 +25,3 @@ class Server:
       while True:
         data = conn.recv(1024)
         conn.sendall(data)
-								
-								
