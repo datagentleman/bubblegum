@@ -18,3 +18,4 @@ def write(conn: socket.socket, data: bytearray|bytes) -> int:
   
   conn.send(size + data)
   return len(bytes)
+  

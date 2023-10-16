@@ -1,5 +1,5 @@
 import socket
-import starbucks.protocol as rw
+import starbucks.packet as packet
 
 class Server:
   HOST = "127.0.0.1"
@@ -23,5 +23,5 @@ class Server:
 
   def do_work(self, conn):
     with conn:
-      data = rw.read(conn)
-      rw.write(conn, data)        
+      data = packet.read(conn)
+      packet.write(conn, data)        
