@@ -1,37 +1,23 @@
 from __future__ import annotations
 import socket
 
-# Low level reading/writing packets from/to tcp sockets
-
-def read(conn: socket.socket):
-  # read size - 2 bytes
-  bytes = conn.recv(2)
-  size = int.from_bytes(bytes, byteorder='big')
-  
-  # read and return data
-  data = conn.recv(size)
-  return data
-
-
-def write(conn: socket.socket, data: bytearray|bytes) -> int:
-  bytes = write_packet(data)
-  conn.send(bytes)
-  return len(bytes)
-
-
 class Message:
   def __init__(self, name, *args):
     self.cmd: str = name
     self.args: list[str] = args
+  
+  @classmethod
+  def send(cls, conn: socket.socket, msg: str|bytearray|bytes) -> int:
+    msg = msg.encode() if isinstance(msg, str) else msg
+    bytes = write_packet(msg)
+    conn.send(bytes)
+    return len(bytes)
 
 
-  def to_bytes(self) -> bytearray:
-    cmd = write_packet(self.cmd.encode())
-
-    args = [write_packet(key.encode()) for key in self.args]
-    args_count = write_packet(len(args).to_bytes(2))
-
-    return bytearray(cmd + args_count + b''.join(args))
+  @classmethod
+  def recv(cls, conn: socket.socket):
+    size = int.from_bytes(conn.recv(2), byteorder='big')
+    return  conn.recv(size)
 
 
   @staticmethod
@@ -42,7 +28,17 @@ class Message:
     args = [read_packet(data).decode() for _ in range(args_count)]
 
     return Message(cmd, *args)
+
    
+  def to_bytes(self) -> bytearray:
+    cmd = write_packet(self.cmd.encode())
+
+    args = [write_packet(key.encode()) for key in self.args]
+    args_count = write_packet(len(args).to_bytes(2))
+
+    return bytearray(cmd + args_count + b''.join(args))
+  
+  
     
 def write_packet(data: bytearray|bytes) -> bytes|bytearray:
   size = len(data).to_bytes(2)

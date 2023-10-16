@@ -1,5 +1,5 @@
 import socket
-import starbucks.packet as packet
+from starbucks.packet import Message as msg
 
 class Server:
   HOST = "127.0.0.1"
@@ -24,6 +24,6 @@ class Server:
   def do_work(self, conn):
     with conn:
       while True:
-        data = packet.read(conn)
+        data = msg.recv(conn)
         print(f"Data received: {data}")
-        packet.write(conn, data)        
+        msg.send(conn, data)        

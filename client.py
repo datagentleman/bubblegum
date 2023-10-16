@@ -1,5 +1,5 @@
 import socket
-import starbucks.packet as packet
+from starbucks.packet import Message as msg
 
 HOST = '127.0.0.1'
 PORT = 1337
@@ -11,6 +11,6 @@ if __name__ == '__main__':
       while True:
         cmd = input("cmd: ")
         print(f"Data send: {cmd.encode()}")
-        packet.write(s, cmd.encode())
-        print(packet.read(s))
+        msg.send(s, cmd)
+        print(msg.recv(s))
         
