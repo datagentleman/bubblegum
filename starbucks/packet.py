@@ -14,10 +14,8 @@ def read(conn: socket.socket):
 
 
 def write(conn: socket.socket, data: bytearray|bytes) -> int:
-  size = len(data).to_bytes(2)
-  bytes = size + data
-  
-  conn.send(size + data)
+  bytes = write_packet(data)
+  conn.send(bytes)
   return len(bytes)
 
 
@@ -29,7 +27,7 @@ class Message:
 
   def to_bytes(self) -> bytearray:
     cmd = write_packet(self.cmd.encode())
-    
+
     args = [write_packet(key.encode()) for key in self.args]
     args_count = write_packet(len(args).to_bytes(2))
 
@@ -39,7 +37,7 @@ class Message:
   @staticmethod
   def from_bytes(data: bytearray|bytes) -> Message:
     cmd = read_packet(data).decode()
-    
+
     args_count = int.from_bytes(read_packet(data), "big")
     args = [read_packet(data).decode() for _ in range(args_count)]
 
@@ -58,6 +56,3 @@ def read_packet(data: bytearray) -> bytes|bytearray:
   packet = data[:size]; del data[:size]
 
   return packet
-      
-      
-      

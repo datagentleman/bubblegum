@@ -23,5 +23,7 @@ class Server:
 
   def do_work(self, conn):
     with conn:
-      data = packet.read(conn)
-      packet.write(conn, data)        
+      while True:
+        data = packet.read(conn)
+        print(f"Data received: {data}")
+        packet.write(conn, data)        
