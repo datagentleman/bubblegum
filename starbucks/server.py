@@ -1,5 +1,6 @@
 import socket
- 
+import starbucks.protocol as rw
+
 class Server:
   HOST = "127.0.0.1"
   PORT = 1337
@@ -22,6 +23,5 @@ class Server:
 
   def do_work(self, conn):
     with conn:
-      while True:
-        data = conn.recv(1024)
-        conn.sendall(data)
+      data = rw.read(conn)
+      rw.write(conn, data)        
