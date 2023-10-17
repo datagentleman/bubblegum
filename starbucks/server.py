@@ -2,13 +2,14 @@ import socket
 from starbucks.packet import Message as msg
 from starbucks.command import Command as command
 from starbucks.api import API
+from starbucks.buffer import Buffer 
 
 class Server:
   HOST = "127.0.0.1"
   PORT = 1337
   
   def run(self):
-    print("Starting star”bucks server ...")
+    print("Starting starbucks server ...")
 
     command.COMMANDS = API
  
@@ -28,7 +29,8 @@ class Server:
   def do_work(self, conn):
     with conn:  
       while True:
-        data = msg.recv(conn)
-        print(f"Data received: {data}")
+        buf = Buffer()
+        buf.write(msg.recv(conn))
+        print(f"Data received: {buf.data}")
         
-        command.run(command.from_bytes(data), conn)
+        command.run(command.from_bytes(buf), conn)
