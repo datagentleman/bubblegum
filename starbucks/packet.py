@@ -18,26 +18,6 @@ class Message:
   def recv(cls, conn: socket.socket) -> bytearray:
     n = int.from_bytes(conn.recv(2), byteorder='big')
     return bytearray(conn.recv(n))
-
-
-  @staticmethod
-  def from_bytes(data: bytearray|bytes) -> Message:
-    cmd = read_packet(data).decode()
-    
-    # read number of arguments
-    count = int.from_bytes(read_packet(data), "big")
-    args  = [read_packet(data).decode() for _ in range(count)]
-    
-    return Message(cmd, *args)
-
-   
-   
-  def to_bytes(self) -> bytearray:
-    cmd   = write_packet(self.cmd.encode())
-    args  = [write_packet(key.encode()) for key in self.args]
-    count = write_packet(len(args).to_bytes(2))
-    
-    return bytearray(cmd + count + b''.join(args))  
   
 
 def write_packet(data: bytearray|bytes) -> bytes|bytearray:

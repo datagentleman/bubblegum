@@ -1,8 +1,8 @@
-from starbucks.packet import Message
+from starbucks.command import Command
 
-def test_packet_message_to_bytes():
-  bytes = Message("Hello", "World").to_bytes()
-  msg = Message.from_bytes(bytes)
+def test_packet_command_to_bytes():
+  bytes = Command("Hello", "World").to_bytes()
+  cmd   = Command.from_bytes(bytes)
 
-  assert(msg.cmd == "Hello")
-  assert(msg.args == ("World",))
+  assert(cmd.name == "Hello")
+  assert(cmd.args == ("World",))
