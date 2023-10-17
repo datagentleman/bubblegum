@@ -1,5 +1,6 @@
 import socket
 from starbucks.packet import Message as msg
+from starbucks.commands import Commands
 
 class Server:
   HOST = "127.0.0.1"
@@ -26,4 +27,4 @@ class Server:
       while True:
         data = msg.recv(conn)
         print(f"Data received: {data}")
-        msg.send(conn, data)        
+        Commands.handle_command(conn, msg.from_bytes(data))

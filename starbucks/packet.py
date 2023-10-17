@@ -11,13 +11,13 @@ class Message:
     msg   = msg.encode() if isinstance(msg, str) else msg
     bytes = write_packet(msg)
     
-    return conn.send(bytes)
+    return conn.send(write_packet(bytes))
 
 
   @classmethod
-  def recv(cls, conn: socket.socket):
+  def recv(cls, conn: socket.socket) -> bytearray:
     n = int.from_bytes(conn.recv(2), byteorder='big')
-    return conn.recv(n)
+    return bytearray(conn.recv(n))
 
 
   @staticmethod
@@ -30,6 +30,7 @@ class Message:
     
     return Message(cmd, *args)
 
+   
    
   def to_bytes(self) -> bytearray:
     cmd   = write_packet(self.cmd.encode())
@@ -45,9 +46,8 @@ def write_packet(data: bytearray|bytes) -> bytes|bytearray:
 
 
 def read_packet(data: bytearray) -> bytes|bytearray:  
-  bytes = data[:2]; del data[:2]
-  
-  size = int.from_bytes(bytes, byteorder='big')
+  bytes  = data[:2]; del data[:2]
+  size   = int.from_bytes(bytes, byteorder='big')
   packet = data[:size]; del data[:size]
 
   return packet
