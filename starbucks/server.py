@@ -3,6 +3,7 @@ from starbucks.packet import Message as msg
 from starbucks.command import Command as command
 from starbucks.api import API
 from starbucks.buffer import Buffer 
+from starbucks.stream import Stream 
 
 class Server:
   HOST = "127.0.0.1"
@@ -29,8 +30,7 @@ class Server:
   def do_work(self, conn):
     with conn:  
       while True:
-        buf = Buffer()
-        buf.write(msg.recv(conn))
-        print(f"Data received: {buf.data}")
+        stream = Stream(conn)
+        buffer = Buffer(stream.read())
         
-        command.run(command.from_bytes(buf), conn)
+        command.run(command.from_bytes(buffer), stream)

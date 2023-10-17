@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from starbucks.buffer import Buffer
 from starbucks.packet import Message as msg
+from starbucks.stream import Stream
 
 class Command:
   COMMANDS = None
@@ -12,11 +13,11 @@ class Command:
     
     
   @classmethod
-  def run(cls, cmd, conn):
+  def run(cls, cmd, stream: Stream):
     if not cmd.name in cls.COMMANDS:
-      return msg.send(conn, b"COMMAND DOESN'T EXIST!")
+      return stream.send(b"COMMAND DOESN'T EXIST!")
   
-    cls.COMMANDS[cmd.name](cmd.args, conn)
+    cls.COMMANDS[cmd.name](cmd.args, stream)
 
 
   def to_bytes(self) -> Buffer:
@@ -25,16 +26,16 @@ class Command:
     buf.write(len(self.args).to_bytes(2))
     
     [buf.write(key.encode()) for key in self.args]
-    
     return buf
 
 
   @staticmethod
   def from_bytes(buf: Buffer) -> Command:
     cmd = buf.read().decode()
-    
+       
     # read number of arguments
-    count = int.from_bytes(buf.read(), "big")
+    raw_size = buf.read()
+    count = int.from_bytes(raw_size, "big")
     args  = [buf.read().decode() for _ in range(count)]
     
     return Command(cmd, *args)
