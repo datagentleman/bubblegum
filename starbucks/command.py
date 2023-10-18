@@ -5,7 +5,7 @@ from starbucks.packet import Message as msg
 from starbucks.stream import Stream
 
 class Command:
-  COMMANDS = None
+  COMMANDS = {}
   
   def __init__(self, name, *args):
     self.name: str = name
@@ -14,10 +14,12 @@ class Command:
     
   @classmethod
   def run(cls, cmd, stream: Stream):
-    if not cmd.name in cls.COMMANDS:
+    handler = cls.COMMANDS.get(cmd.name)
+    
+    if handler is None: 
       return stream.send(b"COMMAND DOESN'T EXIST!")
-  
-    cls.COMMANDS[cmd.name](cmd.args, stream)
+
+    handler(cmd.args, stream)
 
 
   def to_bytes(self) -> Buffer:

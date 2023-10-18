@@ -12,5 +12,6 @@ class Stream:
     
 
   def send(self, data: bytes):
-    self.source.send(Buffer(data).data)
+    buf = Buffer().write(data)
+    self.source.send(buf.raw())
   

@@ -14,5 +14,6 @@ if __name__ == '__main__':
         print(f"Data send: {cmd.encode()}")
 
         stream.send(cmd.encode())
-        print(stream.read())
+        res = stream.read()
+        print(f'RESPONSE: {res}')
         
