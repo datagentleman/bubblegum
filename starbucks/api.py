@@ -1,5 +1,6 @@
 from starbucks.commands import * 
 
 API = {
-  "HELLO": hello
+  "HELLO":  hello,
+  "STREAM": stream,
 }
