@@ -30,10 +30,13 @@ class Server:
   def do_work(self, conn):
     with conn:  
       while True:
-        stream = Stream(conn)
-        buffer = Buffer(stream.read())
-        
-        print(f'Got data: {buffer.data()}')
-        
-        buf = Buffer(buffer.read())
-        command.run(command.from_bytes(buf), stream)
+        try:
+          stream = Stream(conn)
+          buffer = Buffer(stream.read())
+
+          print(f'Got data: {buffer.data()}')
+          buf = Buffer(buffer.read())
+          command.run(command.from_bytes(buf), stream)
+        except Exception as e:
+          print(f"We have error: {e}")
+          break
