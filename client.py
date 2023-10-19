@@ -9,6 +9,6 @@ if __name__ == '__main__':
   while True:
     cmd = input("cmd: ")
     print(f"Data send: {cmd.encode()}")
-
+    
     cli.send(cmd.encode())
     print(f'RESPONSE: {cli.read()}')

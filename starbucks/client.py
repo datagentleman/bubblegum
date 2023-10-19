@@ -1,5 +1,7 @@
 import socket
-from starbucks.stream import Stream
+
+from starbucks.stream  import Stream
+from starbucks.command import Command
 
 class Client:
   def __init__(self, host, port):
@@ -13,8 +15,9 @@ class Client:
     return s
 
 
-  def send(self, data):
-    self.stream.send(data)
+  def send(self, cmd, *args):
+    cmd = Command(cmd, *args)
+    self.stream.send(cmd.to_bytes().data())
 
 
   def read(self) -> bytes:

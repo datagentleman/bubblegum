@@ -33,4 +33,7 @@ class Server:
         stream = Stream(conn)
         buffer = Buffer(stream.read())
         
-        command.run(command.from_bytes(buffer), stream)
+        print(f'Got data: {buffer.data()}')
+        
+        buf = Buffer(buffer.read())
+        command.run(command.from_bytes(buf), stream)

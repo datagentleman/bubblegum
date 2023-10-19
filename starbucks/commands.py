@@ -8,12 +8,9 @@ def hello(args, stream: Stream):
 def stream(args, stream: Stream=None):
   dataset_name = args[0]
   data = Dataset.read(dataset_name)
-  
-  
+
   # Temporary - only for development
   if stream == None:
     return data
   else:
     stream.send(data)
-    
-  
