@@ -2,22 +2,22 @@ from __future__ import annotations
 
 class Buffer:
   def __init__(self, packet=b''):
-    self.data = bytearray(packet)
+    self._data = bytearray(packet)
 
 
   def write(self, data: bytes):
-    self.data += self.pack(data)
+    self._data += self.pack(data)
     return self
 
 
   # read next packet
   def read(self) -> bytes:  
     # read data size
-    raw  = self.data[:2]; del self.data[:2]
+    raw  = self._data[:2]; del self._data[:2]
     size = int.from_bytes(raw, byteorder='big')
     
     # read data
-    packet = self.data[:size]; del self.data[:size] 
+    packet = self._data[:size]; del self._data[:size] 
     return bytes(packet)
   
   
@@ -27,5 +27,8 @@ class Buffer:
     
 
   def raw(self) -> bytes:
-    return self.pack(self.data)
+    return self.pack(self._data)
+
   
+  def data(self) -> bytes:
+    return bytes(self._data)

@@ -18,7 +18,7 @@ class Command:
     
     if handler is None: 
       return stream.send(b"COMMAND DOESN'T EXIST!")
-
+    
     handler(cmd.args, stream)
 
 
