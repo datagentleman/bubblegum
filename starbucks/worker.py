@@ -3,9 +3,16 @@ from starbucks.template import WorkerTemplate
 
 class Worker:
   PATH = "./workers"
-  
+
+  def __init__(self, name):
+    self.name = name
+    self.template = WorkerTemplate(self.name, self.read_code()) 
+
+
   def run(self):
-    code = open(f"{Worker.PATH}/give_me_all_the_data.py", "r").read()
-    template = WorkerTemplate("give_me_all_the_data", code)
-    
-    result = subprocess.run(["python", "-c", template.template()])
+    subprocess.run(["python", "-c", self.template.template()])
+
+
+  def read_code(self) -> str:
+    return open(f"{Worker.PATH}/{self.name}.py", "r").read()
+  
