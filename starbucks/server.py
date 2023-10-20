@@ -1,5 +1,4 @@
 import socket
-from starbucks.packet import Message as msg
 from starbucks.command import Command as command
 from starbucks.api import API
 from starbucks.buffer import Buffer 
