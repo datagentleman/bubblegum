@@ -9,4 +9,6 @@ if __name__ == '__main__':
   while True:
     cmd_name = input("cmd: ")
     conn.send(cmd_name)
-    print(f'RESPONSE: {conn.read().data()}')
+    
+    res = conn.read()
+    print(f'RESPONSE: {res.data()}')
