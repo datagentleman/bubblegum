@@ -34,7 +34,7 @@ class Command:
   @staticmethod
   def from_bytes(buf: Buffer) -> Command:
     cmd = buf.read().decode()
-       
+
     # read number of arguments
     raw_size = buf.read()
     count = int.from_bytes(raw_size, "big")

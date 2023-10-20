@@ -9,7 +9,7 @@ class Stream:
   def read(self) -> bytes:
     n = int.from_bytes(self.source.recv(2), byteorder='big')
     return self.source.recv(n)
-    
+
 
   def send(self, data: bytes):
     buf = Buffer().write(data)

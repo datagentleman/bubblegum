@@ -1,15 +1,11 @@
-from starbucks.client import Client
+import subprocess
+from starbucks.template import WorkerTemplate
 
-HOST = '127.0.0.1'
-PORT = 1337
-
-def get_me_all_data(input):
-  print(f"Got data from node: {input}")
-
-
-if __name__ == '__main__':
-  stream = Client(HOST, PORT)
-  stream.send("STREAM", "iris/iris.csv")
+class Worker:
+  PATH = "./workers"
   
-  get_me_all_data(stream.read())
-  
+  def run(self):
+    code = open(f"{Worker.PATH}/give_me_all_the_data.py", "r").read()
+    template = WorkerTemplate("give_me_all_the_data", code)
+    
+    result = subprocess.run(["python", "-c", template.template()])
