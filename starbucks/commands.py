@@ -1,6 +1,7 @@
 from starbucks.stream  import Stream
 from starbucks.dataset import Dataset  
 from starbucks.worker  import Worker  
+from starbucks.buffer  import Buffer  
 
 def hello(args, stream: Stream):
   stream.send(b"Another latte?")
@@ -11,12 +12,12 @@ def stream(args, stream: Stream=None):
   data = Dataset.read(dataset_name)
 
   # Temporary - only for development
-  if stream == None:
-    return data
-  else:
-    stream.send(data)
+  return data if stream == None else stream.send(data)
+
+
+def worker_ls(args=None, stream: Stream=None):
+  buf = Buffer()
+
+  [buf.write(name.encode()) for name in Worker.ls()]
+  stream.send(buf)
   
-  
-def worker_list(args=None, stream: Stream=None):
-  data = b''.join((name.encode() for name in Worker.ls()))
-  stream.send(data)

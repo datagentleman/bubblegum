@@ -10,5 +10,5 @@ if __name__ == '__main__':
     cmd_name = input("cmd: ")
     conn.send(cmd_name)
     
-    res = conn.read()
-    print(f'RESPONSE: {res.data()}')
+    buf = conn.read()
+    print(f'RESPONSE: {buf.data()}')

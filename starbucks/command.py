@@ -16,7 +16,7 @@ class Command:
     handler = cls.COMMANDS.get(cmd.name)
     
     if handler is None: 
-      return stream.send(b"COMMAND DOESN'T EXIST!")
+      return stream.send(Buffer(b"COMMAND DOESN'T EXIST!"))
     
     handler(cmd.args, stream)
 

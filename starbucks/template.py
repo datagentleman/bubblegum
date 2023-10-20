@@ -8,11 +8,11 @@ PORT = 1337
 {} 
 
 if __name__ == '__main__':
-  stream = Client(HOST, PORT)
-  stream.send("STREAM", "iris/iris.csv")
+  client = Client(HOST, PORT)
+  client.send("STREAM", "iris/iris.csv")
 
   # execute worker function
-  {}(stream.read())
+  {}(client.read())
 """
 
 class WorkerTemplate:

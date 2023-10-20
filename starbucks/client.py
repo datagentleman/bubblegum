@@ -18,7 +18,7 @@ class Client:
 
   def send(self, cmd, *args):
     cmd = Command(cmd, *args)
-    self.stream.send(cmd.to_bytes().data())
+    self.stream.send(cmd.to_bytes())
 
 
   def read(self) -> Buffer:

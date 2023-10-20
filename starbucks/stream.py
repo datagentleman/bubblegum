@@ -8,14 +8,20 @@ class Stream:
 
 
   def read(self) -> Buffer:
-    if len(self.buf.data()) == 0:
-      n = int.from_bytes(self.source.recv(2), byteorder='big')
-      self.buf.append(self.source.recv(n))
-    
+    if len(self.buf.data()) == 0: 
+      self.load_buffer()
+      
     return Buffer(self.buf.read())
+    
 
+  def load_buffer(self):
+    n = int.from_bytes(self.source.recv(2), byteorder='big')
+    self.buf.append(self.source.recv(n))    
 
-  def send(self, data: bytes):
-    buf = Buffer().write(data)
-    self.source.send(buf.raw())
+                                                                                                                  
+  def send(self, buf: Buffer, batch: bool=False):
+    data = buf.data() if batch else buf.raw()
+    res = Buffer(data)
+    
+    self.source.send(res.raw())
   
