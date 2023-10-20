@@ -32,10 +32,9 @@ class Server:
       while True:
         try:
           stream = Stream(conn)
-          buffer = Buffer(stream.read())
-
-          print(f'Got data: {buffer.data()}')
-          buf = Buffer(buffer.read())
+          buf = stream.read()
+          
+          print(f'Got data: {buf.data()}')
           command.run(command.from_bytes(buf), stream)
         except Exception as e:
           print(f"We have error: {e}")

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from starbucks.buffer import Buffer
-from starbucks.packet import Message as msg
 from starbucks.stream import Stream
 
 class Command:
@@ -33,12 +32,12 @@ class Command:
 
   @staticmethod
   def from_bytes(buf: Buffer) -> Command:
-    cmd = buf.read().decode()
+    name = buf.read().decode()
 
     # read number of arguments
     raw_size = buf.read()
     count = int.from_bytes(raw_size, "big")
     args  = [buf.read().decode() for _ in range(count)]
     
-    return Command(cmd, *args)
+    return Command(name, *args)
   

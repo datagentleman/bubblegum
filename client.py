@@ -4,11 +4,9 @@ HOST = '127.0.0.1'
 PORT = 1337
 
 if __name__ == '__main__':
-  cli = Client(HOST, PORT)
+  conn = Client(HOST, PORT)
   
   while True:
-    cmd = input("cmd: ")
-    print(f"Data send: {cmd.encode()}")
-    
-    cli.send(cmd.encode())
-    print(f'RESPONSE: {cli.read()}')
+    cmd_name = input("cmd: ")
+    conn.send(cmd_name)
+    print(f'RESPONSE: {conn.read().data()}')

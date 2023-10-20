@@ -10,6 +10,10 @@ class Buffer:
     return self
 
 
+  def append(self, data: bytes):
+    self._data += data
+
+
   # read next packet
   def read(self) -> bytes:  
     # read data size

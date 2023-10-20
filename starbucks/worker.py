@@ -18,6 +18,7 @@ class Worker:
   def read_code(self) -> str:
     return open(f"{Worker.PATH}/{self.name}.py", "r").read()
 
+
   @classmethod
   def ls(cls) -> list[str]:
     return [name for name in os.listdir(cls.PATH)]
