@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from typing import List
 import os
 
 # Main class for managing local datasets
@@ -12,7 +11,7 @@ class Dataset:
 
 
   @staticmethod
-  def ls() -> List[Dataset]:
+  def ls() -> list[Dataset]:
     return [Dataset(name) for name in os.listdir(Dataset.PATH)]
 
 

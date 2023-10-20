@@ -1,5 +1,5 @@
 from starbucks.stream   import Stream
-from starbucks.datasets import Dataset  
+from starbucks.dataset import Dataset  
 
 def hello(args, stream: Stream):
   stream.send(b"Another latte?")
