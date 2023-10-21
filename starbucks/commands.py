@@ -20,4 +20,10 @@ def worker_ls(args=None, stream: Stream=None):
 
   [buf.write(name.encode()) for name in Worker.ls()]
   stream.send(buf)
+
+
+def worker_run(args=None, stream: Stream=None):
+  buf = Buffer()
+
+  stream.send(buf)
   

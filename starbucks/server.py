@@ -1,8 +1,9 @@
 import socket
+import traceback
+
 from starbucks.command import Command as command
-from starbucks.api import API
-from starbucks.buffer import Buffer 
-from starbucks.stream import Stream 
+from starbucks.api     import API
+from starbucks.stream  import Stream 
 
 class Server:
   HOST = "127.0.0.1"
@@ -32,9 +33,9 @@ class Server:
         try:
           stream = Stream(conn)
           buf = stream.read()
-          
+
           print(f'Got data: {buf.data()}')
           command.run(command.from_bytes(buf), stream)
-        except Exception as e:
-          print(f"We have error: {e}")
+        except Exception:
+          print(f'We have error: {traceback.format_exc()}')
           break
