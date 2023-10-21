@@ -21,7 +21,7 @@ class Stream:
                                                                                                                   
   def send(self, buf: Buffer, batch: bool=False):
     data = buf.data() if batch else buf.raw()
-    res = Buffer(data)
+    res  = Buffer(data)
     
     self.source.send(res.raw())
   

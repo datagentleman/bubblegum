@@ -12,7 +12,8 @@ def stream(args, stream: Stream=None):
   data = Dataset.read(dataset_name)
 
   # Temporary - only for development
-  return data if stream == None else stream.send(data)
+  buf = Buffer().write(data)
+  return data if stream == None else stream.send(buf)
 
 
 def worker_ls(args=None, stream: Stream=None):
@@ -23,7 +24,5 @@ def worker_ls(args=None, stream: Stream=None):
 
 
 def worker_run(args=None, stream: Stream=None):
-  buf = Buffer()
-
-  stream.send(buf)
-  
+  res = Worker('give_me_all_the_data').run()
+  stream.send(Buffer().write("Worker is running".encode()))

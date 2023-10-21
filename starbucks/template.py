@@ -5,7 +5,7 @@ HOST = '127.0.0.1'
 PORT = 1337
 
 # worker code goes here
-{} 
+{}
 
 if __name__ == '__main__':
   client = Client(HOST, PORT)
@@ -23,5 +23,4 @@ class WorkerTemplate:
 
   def template(self):    
     t = TEMPLATE.format(self.code, self.name)
-    print(t)
     return t

@@ -9,8 +9,12 @@ def test_datasets_ls():
 
 def test_stream_data():
   commands.stream(['iris/iris.csv'])
-  
+
 
 def test_worker_ls():
   print([name.rstrip('.py') for name in Worker.ls()])
-  
+
+
+def test_worker_run():
+  # print(Worker('give_me_all_the_data').run())
+  pass

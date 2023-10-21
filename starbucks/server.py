@@ -1,9 +1,12 @@
 import socket
 import traceback
 
+from threading import Thread
+
 from starbucks.command import Command as command
 from starbucks.api     import API
 from starbucks.stream  import Stream 
+
 
 class Server:
   HOST = "127.0.0.1"
@@ -20,11 +23,11 @@ class Server:
       s.bind((self.HOST, self.PORT))
       s.listen()
       
-      # This will be in threads via cython. For now it's single threaded.
       while True:
+        print(f'WAITING FOR CONN ..................')
         conn, addr = s.accept()
         print(f"Got connection from {addr}")
-        self.do_work(conn)
+        Thread(target=self.do_work, args=[conn]).start()
 
 
   def do_work(self, conn):
