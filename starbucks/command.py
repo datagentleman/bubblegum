@@ -13,12 +13,12 @@ class Command:
     
   @classmethod
   def run(cls, cmd, stream: Stream):
-    handler = cls.COMMANDS.get(cmd.name)
-    
-    if handler is None: 
+    cmd_handler = cls.COMMANDS.get(cmd.name)
+
+    if cmd_handler is None: 
       return stream.send(Buffer(b"COMMAND DOESN'T EXIST!"))
     
-    handler(cmd.args, stream)
+    cmd_handler(cmd.args, stream)
 
 
   def to_bytes(self) -> Buffer:

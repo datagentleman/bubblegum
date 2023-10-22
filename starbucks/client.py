@@ -9,7 +9,7 @@ class Client:
     self.conn: socket.socket = self.connect(host, port)
     self.stream: Stream = Stream(self.conn)
 
-    
+
   def connect(self, host: str, port: str):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((host, port))

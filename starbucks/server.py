@@ -36,7 +36,7 @@ class Server:
         try:
           stream = Stream(conn)
           buf = stream.read()
-
+          
           print(f'Got data: {buf.data()}')
           command.run(command.from_bytes(buf), stream)
         except Exception:

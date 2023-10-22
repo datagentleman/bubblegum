@@ -17,18 +17,20 @@ class Buffer:
   # read next packet
   def read(self) -> bytes:  
     # read size
-    raw = self._data[:2]
-    self._data = self._data[2:]
-    
-    size = int.from_bytes(raw, byteorder='big')
+    size = int.from_bytes(self._read(2), byteorder='big')
     
     # read data
-    packet = self._data[:size]
-    self._data = self._data[size:] 
+    return self._read(size)
     
-    return packet
   
+  def _read(self, len):
+    bytes = self._data[:len]
+    
+    # we must delete consumed bytes after reading 
+    self._data = self._data[len:]
+    return bytes  
   
+
   def pack(self, data) -> bytes:
     size = len(data).to_bytes(2)
     return size + data
@@ -40,3 +42,4 @@ class Buffer:
   
   def data(self) -> bytes:
     return self._data
+  
