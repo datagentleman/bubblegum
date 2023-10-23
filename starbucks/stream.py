@@ -19,7 +19,7 @@ class Stream:
     self.buf.append(self.source.recv(n))    
 
                                                                                                                   
-  def send(self, buf: Buffer, batch: bool=False):
+  def send(self, buf: Buffer, batch: bool=False) -> int:
     data = buf.data() if batch else buf.raw()
     res  = Buffer(data)
     
