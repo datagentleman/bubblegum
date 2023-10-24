@@ -13,8 +13,12 @@ class Tensor:
 
 
   @classmethod
-  def create(cls, path: str):
-    os.makedirs(f'{cls.ROOT}/{path}', exist_ok=True)
+  def create(cls, path: str, root: str=ROOT):
+    dir = pathlib.Path(f'{root}/{path}')
+    os.makedirs(dir, exist_ok=True)
+       
+    tensor = os.path.basename(dir)
+    open(f'{dir}/{tensor}.data', 'a+')
   
   
   @classmethod
@@ -23,6 +27,15 @@ class Tensor:
 
 
   @classmethod
-  def ls(cls, path: str=ROOT) -> list[tuple[str, ...]]:
-    tensors = pathlib.Path(path)
-    return [item.parts[1:] for item in tensors.rglob("*") if item.is_dir()]
+  def ls(cls, root: str=ROOT) -> list[tuple[str, ...]]:
+    tensors = []
+    
+    # we only want directories with proper basename.data file inside
+    for path in pathlib.Path(root).rglob("*"):
+       if path.is_dir():
+          data_file = f'{path}/{path.name}.data'
+          
+          if os.path.exists(data_file):
+            tensors.append(path.parts[1:])
+
+    return tensors
