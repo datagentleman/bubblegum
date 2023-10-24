@@ -17,9 +17,8 @@ class Tensor:
   def create(cls, path: str, root: str=ROOT):
     dir = Path(f'{root}/{path}')
     os.makedirs(dir, exist_ok=True)
-       
-    tensor = os.path.basename(dir)
-    Path(f'{dir}/{tensor}.data').touch()
+    
+    Path(f'{dir}/{dir.name}.data').touch()
 
   
   # TODO: remove only directories with .data files.
