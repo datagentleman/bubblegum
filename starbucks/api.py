@@ -4,6 +4,7 @@ API = {
   "HELLO":  hello,
   "STREAM": stream,
   
-  "WORKER_LS":  worker_ls,
-  "WORKER_RUN": worker_run,
+  # WORKERS 
+  "WLS":  worker_ls, 
+  "WRUN": worker_run,
 }
