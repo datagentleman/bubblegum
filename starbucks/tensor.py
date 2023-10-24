@@ -1,9 +1,8 @@
 from __future__ import annotations
+from pathlib import Path
 
 import os
 import shutil
-
-from pathlib import Path
 
 class Tensor:
   ROOT = "./tensors/"
@@ -17,7 +16,7 @@ class Tensor:
   def create(cls, path: str, root: str=ROOT):
     dir = Path(f'{root}/{path}')
     os.makedirs(dir, exist_ok=True)
-    
+
     Path(f'{dir}/{dir.name}.data').touch()
 
   
