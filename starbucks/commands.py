@@ -2,6 +2,7 @@ from starbucks.stream  import Stream
 from starbucks.dataset import Dataset  
 from starbucks.worker  import Worker  
 from starbucks.buffer  import Buffer  
+from starbucks.tensor  import Tensor  
 
 def response(code: str, msg: str="")-> Buffer:
   return Buffer().write(code.encode()).write(msg.encode())
@@ -30,3 +31,14 @@ def worker_ls(args=None, stream: Stream=None):
 def worker_run(args=None, stream: Stream=None):
   Worker('give_me_all_the_data').run()
   stream.send(response('OK'))
+
+
+def tensor_create(args=None, stream: Stream=None):
+  tensor_path = args[0]
+
+  try:
+    Tensor.create(tensor_path)
+    stream.send(response('OK'))
+  except Exception as e:
+    stream.send(response('ERROR', str(e)))
+  

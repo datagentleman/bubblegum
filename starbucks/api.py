@@ -3,8 +3,11 @@ from starbucks.commands import *
 API = {
   "HELLO":  hello,
   "STREAM": stream,
-  
-  # WORKERS 
+
+  # WORKERS
   "WLS":  worker_ls, 
-  "WRUN": worker_run,
+  "WRUN": worker_run,  
+
+  # TENSORS
+  "TCREATE": tensor_create,
 }
