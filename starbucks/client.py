@@ -45,3 +45,9 @@ class Client:
   def tremove(self, path: str) -> Buffer:
     self.send('TREMOVE', path)
     return self.read()
+
+
+  # List tensors
+  def tls(self, path: str='') -> Buffer:
+    self.send('TLS', path)
+    return self.read()
