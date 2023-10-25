@@ -15,14 +15,11 @@ class Client:
 
 
   def connect(self):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((self.host, self.port))
-    
-    self.conn   = s
+    self.conn   = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.stream = Stream(self.conn)
     
+    self.conn.connect((self.host, self.port))
     self.__handshake()
-    
     return self
 
 
