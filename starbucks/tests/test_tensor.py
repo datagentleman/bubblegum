@@ -12,12 +12,11 @@ def test_tensor_create_remove():
   
 
 def test_tensor_ls():
+  Tensor.remove("test")
   Tensor.create("test/iris/validation/w1")
   
-  tensors = Tensor.ls()
+  tensors = Tensor.ls('tensors/test')
   
   assert(len(tensors) == 1)
   assert(tensors[0] == ('test', 'iris', 'validation', 'w1'))
-  
-  Tensor.remove("test")
   

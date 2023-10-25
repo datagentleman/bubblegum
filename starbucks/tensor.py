@@ -1,8 +1,10 @@
 from __future__ import annotations
-from pathlib import Path
 
-import os
+import os 
 import shutil
+
+from pathlib import Path
+from starbucks.buffer import Buffer
 
 class Tensor:
   ROOT = "./tensors/"
@@ -10,13 +12,13 @@ class Tensor:
   def __init__(self, name: str, dataset: str):
     self.name    = name
     self.dataset = dataset
-
+    
 
   @classmethod
   def create(cls, path: str, root: str=ROOT):
     dir = Path(f'{root}/{path}')
-    os.makedirs(dir, exist_ok=True)
 
+    os.makedirs(dir, exist_ok=True)
     Path(f'{dir}/{dir.name}.data').touch()
 
   
@@ -31,12 +33,9 @@ class Tensor:
   def ls(cls, root: str=ROOT) -> list[tuple[str, ...]]:
     tensors = []
     
-    # we only want directories with proper basename.data file inside
+    # we only want directories with proper .data file inside
     for path in Path(root).rglob("*"):
-       if path.is_dir():
-          data_file = f'{path}/{path.name}.data'
-          
-          if os.path.exists(data_file):
-            tensors.append(path.parts[1:])
-
+      if path.joinpath(f"{path.name}.data").is_file():
+        tensors.append(path.parts[1:])
+    
     return tensors

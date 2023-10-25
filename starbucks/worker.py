@@ -5,7 +5,7 @@ from starbucks.template import WorkerTemplate
 
 class Worker:
   PATH = "./workers"
-  
+
   def __init__(self, name):
     self.name = name
     self.template = WorkerTemplate(self.name, self.read_code())
