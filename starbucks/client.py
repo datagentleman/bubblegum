@@ -24,3 +24,7 @@ class Client:
   def read(self) -> Buffer:
     return self.stream.read()
   
+  # Create tensor
+  def tcreate(self, path: str) -> Buffer:
+    self.send('TCREATE', path)
+    return self.read()
