@@ -5,9 +5,10 @@ from starbucks.command import Command
 from starbucks.buffer  import Buffer
 
 class Client:
-  def __init__(self, host, port):
+  def __init__(self, host: str, port: str, type: str="CLIENT"):
     self.host: str = host
     self.port: str = port
+    self.type: str = type
     
     self.conn: socket.socket = None
     self.stream: Stream = None
@@ -20,8 +21,20 @@ class Client:
     self.conn   = s
     self.stream = Stream(self.conn)
     
+    self.__handshake()
+    
     return self
 
+
+  def __handshake(self):
+    # handshake should be reasonably fast
+    self.conn.settimeout(0.5)
+    
+    self.stream.send(Buffer().write(self.type.encode()))
+    self.read()
+    
+    self.conn.settimeout(None)
+    
 
   def send(self, cmd, *args):
     cmd = Command(cmd, *args)

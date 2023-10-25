@@ -5,8 +5,9 @@ import logging as log
 from threading import Thread
 
 from starbucks.command import Command as command
-from starbucks.api     import API
+from starbucks.buffer  import Buffer 
 from starbucks.stream  import Stream 
+from starbucks.api     import API
 
 class Server:
   def __init__(self, host, port):
@@ -24,15 +25,23 @@ class Server:
     
       while True:
         conn, addr = s.accept()
-        log.info(f"Got connection from {addr}")
-        Thread(target=self.do_work, args=[conn]).start()
-
-
-  def do_work(self, conn):
-    with conn:
-      while True:
         stream = Stream(conn)
-        buf = stream.read()
 
-        log.debug(f'Got data: {buf.data()}')
-        command.run(command.from_bytes(buf), stream)
+        self.read_handshake(stream)
+        
+        log.info(f"Got connection from {addr}")
+        Thread(target=self.do_work, args=[stream]).start()
+
+
+  def do_work(self, stream):
+    while True:
+      buf = stream.read()
+
+      log.debug(f'Got data: {buf.data()}')
+      command.run(command.from_bytes(buf), stream)
+  
+  
+  def read_handshake(self, stream: Stream):
+    _  = stream.read()
+    stream.send(Buffer().write(str('OK').encode()))
+    
