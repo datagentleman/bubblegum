@@ -10,4 +10,5 @@ API = {
 
   # TENSORS
   "TCREATE": tensor_create,
+  "TLS":     tensor_list,
 }

@@ -41,4 +41,13 @@ def tensor_create(args=None, stream: Stream=None):
     stream.send(response('OK'))
   except Exception as e:
     stream.send(response('ERROR', str(e)))
+
   
+def tensor_list(args=None, stream: Stream=None):
+  buf = Buffer()
+
+  try:
+    [buf.write('/'.join(tensor).encode()) for tensor in Tensor.ls()]
+    stream.send(buf)
+  except Exception as e:
+    stream.send(response('ERROR', str(e)))
