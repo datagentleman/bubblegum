@@ -34,10 +34,10 @@ def worker_run(args=None, stream: Stream=None):
 
 
 def tensor_create(args=None, stream: Stream=None):
-  tensor_path = args[0]
+  tensor = args[0]
 
   try:
-    Tensor.create(tensor_path)
+    Tensor.create(tensor)
     stream.send(response('OK'))
   except Exception as e:
     stream.send(response('ERROR', str(e)))
@@ -49,5 +49,15 @@ def tensor_list(args=None, stream: Stream=None):
   try:
     [buf.write('/'.join(tensor).encode()) for tensor in Tensor.ls()]
     stream.send(buf)
+  except Exception as e:
+    stream.send(response('ERROR', str(e)))
+
+
+def tensor_remove(args=None, stream: Stream=None):
+  tensor = args[0]
+
+  try:
+    Tensor.remove(tensor)
+    stream.send(response('OK'))
   except Exception as e:
     stream.send(response('ERROR', str(e)))
