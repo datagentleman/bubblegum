@@ -8,7 +8,7 @@ PORT = 1337
 {}
 
 if __name__ == '__main__':
-  client = Client(HOST, PORT)
+  client = Client(HOST, PORT).connect()
   client.send("STREAM", "iris/iris.csv")
 
   # execute worker function
@@ -24,3 +24,4 @@ class WorkerTemplate:
   def template(self):    
     t = TEMPLATE.format(self.code, self.name)
     return t
+  

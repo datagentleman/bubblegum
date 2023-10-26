@@ -26,12 +26,13 @@ class Client:
   def __handshake(self):
     # handshake should be reasonably fast
     self.conn.settimeout(0.5)
-    
+  
     self.stream.send(Buffer().write(self.type.encode()))
-    self.read()
+    self.stream.read()
     
+    # from this point on we cannot have any timeouts on socket - ex: streaming, long running tasks, ...
     self.conn.settimeout(None)
-    
+
 
   def send(self, cmd, *args):
     cmd = Command(cmd, *args)
@@ -40,10 +41,21 @@ class Client:
 
   def read(self) -> Buffer:
     return self.stream.read()
+
+
+  ### 
+  ### WORKERS 
+  ###
+
+  # Run worker
+  def wrun(self) -> Buffer:
+    self.send('WRUN')
+    return self.read()
   
-  #### 
-  #### TENSORS 
-  ####
+  
+  ### 
+  ### TENSORS 
+  ###
   
   # Create tensor
   def tcreate(self, path: str) -> Buffer:

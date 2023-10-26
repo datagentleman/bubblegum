@@ -12,7 +12,7 @@ class Worker:
 
 
   def run(self):
-    subprocess.run(["python", "-c", self.template.template()])
+    subprocess.Popen(["python", "-c", self.template.template()])
 
 
   def read_code(self) -> str:
