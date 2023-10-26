@@ -3,7 +3,7 @@ import logging as log
 
 from starbucks.server import Server
 
-log.basicConfig(level=log.DEBUG)
+log.basicConfig(format="\x1b[6;37;44m%(levelname)s\x1b[0m:%(message)s", level=log.DEBUG)
 
 HOST = '127.0.0.1'
 PORT = 1337
