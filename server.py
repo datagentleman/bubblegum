@@ -8,7 +8,7 @@ log.basicConfig(format="\x1b[6;37;44m%(levelname)s\x1b[0m:%(message)s", level=lo
 config.load('config.ini')
 
 HOST = config["server"]["host"]
-PORT = int(config("server", "port"))
+PORT = config.as_int("server", "port")
 
 if __name__ == '__main__':
   try:
