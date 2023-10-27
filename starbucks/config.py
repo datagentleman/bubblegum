@@ -1,18 +1,12 @@
-from configparser import ConfigParser
+from config import config
 
 class _Config(type):
-  def load(self, path: str):
-    self.config = ConfigParser()
-    self.config.read(path)
-
+  def load(self, env: str='dev'):
+    self.conf = config[env]
 
   def __getitem__(self, key):
-    return self.config[key]
+    return self.conf[key]
     
-
-  def as_int(self, section, key):
-    return self.config.getint(section, key)    
-
 
 class Config(metaclass=_Config): 
   pass
