@@ -26,11 +26,10 @@ class Client:
   def __handshake(self):
     # handshake should be reasonably fast
     self.conn.settimeout(0.5)
-  
     self.stream.send(Buffer().write(self.type.encode()))
     self.stream.read()
     
-    # from this point on we cannot have any timeouts on socket - ex: streaming, long running tasks, ...
+    # from this point on, we cannot have any timeouts on socket - ex: streaming, long running tasks, ...
     self.conn.settimeout(None)
 
 
@@ -73,3 +72,21 @@ class Client:
   def tls(self, path: str='') -> Buffer:
     self.send('TLS', path)
     return self.read()
+
+
+  # POC: only temporary solution, 
+  # will be replaced by proper implementation - closure
+  def next(self):
+    self.send('NEXT')
+    res = self.read()
+    return res.data()
+  
+  def close_stream(self):
+    self.conn.close()
+    
+    
+  # Stream tensor data
+  def tstream(self, path: str):
+    self.send('STREAM', path)
+    return self
+    
