@@ -1,9 +1,9 @@
-from starbucks.stream  import Stream
-from starbucks.dataset import Dataset  
-from starbucks.worker  import Worker  
-from starbucks.buffer  import Buffer  
-from starbucks.tensor  import Tensor  
-from starbucks.client  import Iterator  
+from starbucks.stream      import Stream
+from starbucks.worker      import Worker  
+from starbucks.buffer      import Buffer  
+from starbucks.tensor      import Tensor  
+from starbucks.data_stream import DataStream
+
 
 def response(code: str, msg: str="")-> Buffer:
   return Buffer().write(code.encode()).write(msg.encode())
@@ -63,6 +63,13 @@ def tensor_remove(args=None, stream: Stream=None):
 
 
 def tensor_stream(args, stream: Stream) -> None:
-  data = Dataset.read(args[0])
-  Iterator.start_loop(stream, data)
+  tensor = Tensor.find(args[0])
+  if tensor == None: return
   
+  iter = tensor.iter()
+  ds   = DataStream(stream)
+
+  while True:
+    if not ds.write(iter.next()):
+      break
+    

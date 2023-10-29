@@ -2,43 +2,10 @@ from __future__ import annotations
 
 import socket
 
-from starbucks.stream  import Stream
-from starbucks.command import Command
-from starbucks.buffer  import Buffer
-
-class Iterator:
-  def __init__(self, client: Client):
-    self.client = client
-
-  # start_loop should be run on server side.
-  # TODO: it's still in POC mode.
-  @classmethod
-  def start_loop(cls, stream: Stream, data: bytes):
-    while True:
-      req = stream.read()
-
-      if req.data() == b'NEXT':
-        stream.send(Buffer().write(data))
-
-      if req.data() == b'END':
-          break
-      
-
-  @classmethod
-  def run(cls, client: Client, path: str) -> Iterator:
-    client.send('TSTREAM', path)
-    return Iterator(client)
-
-
-  def next(self):
-    self.client.send_raw(b'NEXT')
-    res = self.client.read()
-    return res.data()
-
-
-  def end(self):
-    self.client.send_raw(b'END')
-
+from starbucks.stream      import Stream
+from starbucks.command     import Command
+from starbucks.buffer      import Buffer
+from starbucks.data_stream import DataStream
 
 class Client:
   def __init__(self, host: str, port: str, type: str="CLIENT"):
@@ -72,9 +39,6 @@ class Client:
   def send(self, cmd, *args):
     cmd = Command(cmd, *args)
     self.stream.send(cmd.to_bytes())
-
-  def send_raw(self, data: bytes):
-    self.stream.send(Buffer().write(data), batch=True)
 
 
   def read(self) -> Buffer:
@@ -114,6 +78,5 @@ class Client:
 
 
   # Stream tensor data
-  def tstream(self, path: str) -> Iterator:
-    return Iterator.run(self, path)
-    
+  def tstream(self, path: str) -> DataStream:
+    return DataStream.run(self, path)

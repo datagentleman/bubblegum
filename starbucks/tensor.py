@@ -4,7 +4,17 @@ import os
 import shutil
 
 from pathlib import Path
-from starbucks.buffer import Buffer
+from starbucks.dataset import Dataset  
+
+
+class TensorIterator:
+  def __init__(self, tensor: Tensor):
+    self.tensor = tensor
+    
+  def next(self):
+    # POC: only temporary
+    return Dataset.read('iris/iris.csv')
+
 
 class Tensor:
   ROOT = "./tensors/"
@@ -14,11 +24,15 @@ class Tensor:
     self.name = name
 
 
+  def iter(self) -> TensorIterator:
+    return TensorIterator(self)
+
+
   @classmethod
   def find(cls, path: str) -> Tensor|None:
     if Path(cls.ROOT).joinpath(path, cls.TENSOR_INFO).is_file():
       return Tensor(path)
-
+    
 
   @classmethod
   def create(cls, path: str, root: str=ROOT):
