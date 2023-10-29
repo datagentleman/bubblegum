@@ -10,6 +10,19 @@ class Iterator:
   def __init__(self, client: Client):
     self.client = client
 
+  # start_loop should be run on server side.
+  # TODO: it's still in POC mode.
+  @classmethod
+  def start_loop(cls, stream: Stream, data: bytes):
+    while True:
+      req = stream.read()
+
+      if req.data() == b'NEXT':
+        stream.send(Buffer().write(data))
+
+      if req.data() == b'END':
+          break
+      
 
   @classmethod
   def run(cls, client: Client, path: str) -> Iterator:
