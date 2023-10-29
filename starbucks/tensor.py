@@ -10,9 +10,14 @@ class Tensor:
   ROOT = "./tensors/"
   TENSOR_INFO = "tensor.info"
     
-  def __init__(self, name: str, dataset: str):
-    self.name    = name
-    self.dataset = dataset
+  def __init__(self, name: str):
+    self.name = name
+
+
+  @classmethod
+  def find(cls, path: str) -> Tensor|None:
+    if Path(cls.ROOT).joinpath(path, cls.TENSOR_INFO).is_file():
+      return Tensor(path)
 
 
   @classmethod

@@ -19,4 +19,14 @@ def test_tensor_ls():
   
   assert(len(tensors) == 1)
   assert(tensors[0] == ('test', 'iris', 'validation', 'w1'))
+
+
+def test_find():
+  Tensor.remove("test")
+  Tensor.create("test/iris")
   
+  tensor = Tensor.find("test/iris")
+  assert(isinstance(tensor, Tensor))
+  
+  tensor = Tensor.find("test/fake")
+  assert(tensor == None)
