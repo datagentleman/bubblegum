@@ -8,7 +8,8 @@ from starbucks.buffer import Buffer
 
 class Tensor:
   ROOT = "./tensors/"
-  
+  TENSOR_INFO = "tensor.info"
+    
   def __init__(self, name: str, dataset: str):
     self.name    = name
     self.dataset = dataset
@@ -19,10 +20,10 @@ class Tensor:
     dir = Path(f'{root}/{path}')
 
     os.makedirs(dir, exist_ok=True)
-    Path(f'{dir}/{dir.name}.data').touch()
+    Path(f'{dir}/{cls.TENSOR_INFO}').touch()
 
 
-  # TODO: remove only directories with .data files.
+  # TODO: remove only directories with tensor.info files.
   # Don't remove directory if there are sub-directories with other tensors. 
   @classmethod
   def remove(cls, path: str):
@@ -35,7 +36,7 @@ class Tensor:
 
     # we only want directories with proper .data file inside
     for path in Path(root).rglob("*"):
-      if path.joinpath(path.name + ".data").is_file():
+      if path.joinpath(cls.TENSOR_INFO).is_file():
         tensors.append(path.parts[1:])
     
     return tensors
