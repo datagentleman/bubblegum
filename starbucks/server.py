@@ -1,4 +1,3 @@
-import sys
 import socket
 import logging as log
 
@@ -14,6 +13,7 @@ class Server:
     self.host = host
     self.port = port
   
+  
   def run(self):
     command.COMMANDS = API
  
@@ -23,25 +23,26 @@ class Server:
       s.bind((self.host, self.port))
       s.listen()
     
-      while True:
+      while True:        
         conn, addr = s.accept()
         stream = Stream(conn)
 
         self.read_handshake(stream)
-        
-        log.info(f"Got connection from {addr}")
         Thread(target=self.do_work, args=[stream]).start()
 
 
   def do_work(self, stream):
     while True:
-      buf = stream.read()
+      try:
+        buf = stream.read()
 
-      log.debug(f'Got data: {buf.data()}')
-      command.run(command.from_bytes(buf), stream)
-  
+        log.debug(f'Got data: {buf.data()}')
+        command.run(command.from_bytes(buf), stream)
+      except:
+        log.error('Client is dead ...')
+        break
+      
   
   def read_handshake(self, stream: Stream):
     _  = stream.read()
-    stream.send(Buffer().write(str('OK').encode()))
-    
+    stream.send(Buffer().write("OK".encode()))

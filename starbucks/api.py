@@ -2,14 +2,14 @@ from starbucks.commands import *
 
 API = {
   "HELLO":  hello,
-  "STREAM": stream,
 
   # WORKERS
-  "WLS":  worker_ls, 
-  "WRUN": worker_run,  
+  "WLS":      worker_ls, 
+  "WRUN":     worker_run,  
 
   # TENSORS
   "TCREATE": tensor_create,
   "TREMOVE": tensor_remove,
+  "TSTREAM": tensor_stream,
   "TLS":     tensor_list,
 }

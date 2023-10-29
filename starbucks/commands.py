@@ -11,21 +11,6 @@ def response(code: str, msg: str="")-> Buffer:
 def hello(args, stream: Stream):
   stream.send(b"Another latte?")
 
-
-def stream(args, stream: Stream=None):
-  dataset_name = args[0]
-  data = Dataset.read(dataset_name)
-
-  # POC: for now we are only returning the same data
-  while True:
-    req = stream.read()
-        
-    if len(req.data()) > 0:
-      buf = Buffer().write(data)
-      stream.send(buf)
-    else:
-      break
-
 ### 
 ### WORKERS
 ###
@@ -74,3 +59,18 @@ def tensor_remove(args=None, stream: Stream=None):
     stream.send(response('OK'))
   except Exception as e:
     stream.send(response('ERROR', str(e)))
+
+
+def tensor_stream(args, stream: Stream):
+  dataset_name = args[0]
+  data = Dataset.read(dataset_name)
+
+  while True:
+    req = stream.read()
+
+    if req.data() == b'NEXT':
+      stream.send(Buffer().write(data))
+
+    if req.data() == b'END':
+        break
+      

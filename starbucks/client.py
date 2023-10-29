@@ -1,15 +1,38 @@
+from __future__ import annotations
+
 import socket
 
 from starbucks.stream  import Stream
 from starbucks.command import Command
 from starbucks.buffer  import Buffer
 
+class Iterator:
+  def __init__(self, client: Client):
+    self.client = client
+
+
+  @classmethod
+  def run(cls, client: Client, path: str) -> Iterator:
+    client.send('TSTREAM', path)
+    return Iterator(client)
+
+
+  def next(self):
+    self.client.send_raw(b'NEXT')
+    res = self.client.read()
+    return res.data()
+
+
+  def end(self):
+    self.client.send_raw(b'END')
+
+
 class Client:
   def __init__(self, host: str, port: str, type: str="CLIENT"):
     self.host: str = host
     self.port: str = port
     self.type: str = type
-    
+
     self.conn: socket.socket = None
     self.stream: Stream = None
 
@@ -37,6 +60,9 @@ class Client:
     cmd = Command(cmd, *args)
     self.stream.send(cmd.to_bytes())
 
+  def send_raw(self, data: bytes):
+    self.stream.send(Buffer().write(data), batch=True)
+
 
   def read(self) -> Buffer:
     return self.stream.read()
@@ -61,7 +87,7 @@ class Client:
     self.send('TCREATE', path)
     return self.read()
 
-    
+
   # Remove tensor
   def tremove(self, path: str) -> Buffer:
     self.send('TREMOVE', path)
@@ -74,19 +100,7 @@ class Client:
     return self.read()
 
 
-  # POC: only temporary solution, 
-  # will be replaced by proper implementation - closure
-  def next(self):
-    self.send('NEXT')
-    res = self.read()
-    return res.data()
-  
-  def close_stream(self):
-    self.conn.close()
-    
-    
   # Stream tensor data
-  def tstream(self, path: str):
-    self.send('STREAM', path)
-    return self
+  def tstream(self, path: str) -> Iterator:
+    return Iterator.run(self, path)
     
