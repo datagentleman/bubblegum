@@ -24,7 +24,8 @@ def worker_ls(args=None, stream: Stream=None):
 
 
 def worker_run(args=None, stream: Stream=None):
-  Worker('give_me_all_the_data').run()
+  name = args[0]
+  Worker(name).run()
   stream.send(response('OK'))
 
 

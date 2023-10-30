@@ -8,26 +8,21 @@ from starbucks.buffer      import Buffer
 from starbucks.data_stream import DataStream
 
 class Client:
-  def __init__(self, type: str="CLIENT"):
+  def __init__(self, host: str, port: str, type: str="CLIENT"):
     self.type: str = type
-    
-    self.conn: socket.socket = None
-    self.stream: Stream = None
 
-
-  @classmethod
-  def connect(cls, host: str, port: str) -> Client:
     conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     conn.connect((host, port))
     
-    stream = Stream(conn)
-    client = Client()
-    
-    client.conn   = conn
-    client.stream = stream
+    self.conn = conn
+    self.stream = Stream(conn)
 
-    client.__handshake()
-    return client
+    self.__handshake()
+    
+
+  @classmethod
+  def connect(cls, host: str, port: str) -> Client:
+    return Client(host, port)
 
 
   def __handshake(self):
@@ -54,8 +49,13 @@ class Client:
   ###
 
   # Run worker
-  def wrun(self) -> Buffer:
-    self.send('WRUN')
+  def wrun(self, name: str) -> Buffer:
+    self.send('WRUN', name)
+    return self.read()
+
+  # Run list
+  def wls(self) -> Buffer:
+    self.send('WLS')
     return self.read()
   
   
