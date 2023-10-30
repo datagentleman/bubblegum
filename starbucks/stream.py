@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import socket
 from starbucks.buffer import Buffer
 
@@ -10,18 +12,18 @@ class Stream:
   def read(self) -> Buffer:
     if len(self.buf.data()) == 0: 
       self.load_buffer()
-      
+
     return Buffer(self.buf.read())
-    
+
 
   def load_buffer(self):
     n = int.from_bytes(self.source.recv(2), byteorder='big')
-    self.buf.append(self.source.recv(n))    
+    self.buf.append(self.source.recv(n))
 
-                                                                                                                  
+
   def send(self, buf: Buffer, batch: bool=False) -> int:
     data = buf.data() if batch else buf.raw()
     res  = Buffer(data)
-    
-    self.source.send(res.raw())
+
+    return self.source.send(res.raw())
   

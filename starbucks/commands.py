@@ -4,26 +4,28 @@ from starbucks.buffer      import Buffer
 from starbucks.tensor      import Tensor  
 from starbucks.data_stream import DataStream
 
-
 def response(code: str, msg: str="")-> Buffer:
   return Buffer().write(code.encode()).write(msg.encode())
 
 
 def hello(args, stream: Stream):
-  stream.send(b"Another latte?")
+  stream.send(Buffer().write(b'Another latte?'))
+
 
 ### 
 ### WORKERS
 ###
 
-def worker_ls(args=None, stream: Stream=None):
+# list all workers
+def worker_ls(args, stream: Stream):
   buf = Buffer()
 
   [buf.write(name.encode()) for name in Worker.ls()]
   stream.send(buf)
 
 
-def worker_run(args=None, stream: Stream=None):
+# run worker
+def worker_run(args, stream: Stream):
   name = args[0]
   Worker(name).run()
   stream.send(response('OK'))
@@ -33,7 +35,8 @@ def worker_run(args=None, stream: Stream=None):
 ### TENSORS 
 ###
 
-def tensor_create(args=None, stream: Stream=None):
+# create tensor
+def tensor_create(args, stream: Stream):
   tensor = args[0]
 
   try:
@@ -43,7 +46,8 @@ def tensor_create(args=None, stream: Stream=None):
     stream.send(response('ERROR', str(e)))
 
   
-def tensor_list(args=None, stream: Stream=None):
+# list all tensors
+def tensor_list(args, stream: Stream):
   buf = Buffer()
 
   try:
@@ -53,7 +57,8 @@ def tensor_list(args=None, stream: Stream=None):
     stream.send(response('ERROR', str(e)))
 
 
-def tensor_remove(args=None, stream: Stream=None):
+# remove tensor
+def tensor_remove(args, stream: Stream):
   tensor = args[0]
 
   try:
@@ -63,9 +68,10 @@ def tensor_remove(args=None, stream: Stream=None):
     stream.send(response('ERROR', str(e)))
 
 
-def tensor_stream(args, stream: Stream) -> None:
+# stream tensor
+def tensor_stream(args, stream: Stream):
   tensor = Tensor.find(args[0])
-  if tensor == None: return
+  if not tensor: return
   
   iter = tensor.iter()
   ds   = DataStream(stream)

@@ -9,7 +9,6 @@ class Worker:
 
 
   def run(self):
-    # TODO: Add argument - user defined function
     subprocess.Popen(["python", "worker.py", self.read_code()])
 
 

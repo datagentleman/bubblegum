@@ -1,14 +1,16 @@
 from __future__ import annotations
 
+from typing import Dict, Any, Callable
+
 from starbucks.buffer import Buffer
 from starbucks.stream import Stream
 
 class Command:
-  COMMANDS = {}
+  COMMANDS: Dict[str, Callable] = {}
   
-  def __init__(self, name, *args):
+  def __init__(self, name: str, *args):
     self.name: str = name
-    self.args: list[str] = args
+    self.args: tuple[Any, ...] = args
     
     
   @classmethod
