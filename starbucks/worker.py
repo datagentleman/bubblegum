@@ -1,18 +1,16 @@
 import os
 import subprocess
 
-from starbucks.template import WorkerTemplate
-
 class Worker:
   PATH = "./workers"
 
-  def __init__(self, name):
+  def __init__(self, name: str):
     self.name = name
-    self.template = WorkerTemplate(self.name, self.read_code())
 
 
   def run(self):
-    subprocess.Popen(["python", "-c", self.template.template()])
+    # TODO: Add argument - user defined function
+    subprocess.Popen(["python", "worker.py", self.read_code()])
 
 
   def read_code(self) -> str:

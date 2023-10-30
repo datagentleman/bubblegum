@@ -1,2 +1,7 @@
-def give_me_all_the_data(input):
-  print(f"Got data from node: {input.data()}")
+from starbucks.data_stream import DataStream  
+
+def perform(input: DataStream):
+  print(f"Got data from node 1 :{input.next()}")
+  print(f"Got data from node 2: {input.next()}")
+  
+  input.end()
