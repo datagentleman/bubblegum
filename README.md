@@ -20,3 +20,35 @@ Don't know if it will be useful in any way, but it's worth trying 😀<br/>
 ## Current state
 
 Heavily in progress ! It's not usable yet 🔥 I should have something running till end of November 2023 🤞
+
+
+
+## Install required packages
+
+```
+  python -m pip install -r requirements.txt
+```
+
+
+## Run tests
+
+```
+  python3 -m pytest -s starbucks/tests
+```
+
+
+
+# Run Mypy
+
+```
+  python3 -m mypy starbucks
+```
+
+
+# Roadmap
+
+- [ ] 30/11/2023: working version of database engine in c++/cython
+- [ ] 29/12/2023: pre-alpha
+- [ ] 31/01/2024: alpha
+- [ ] 29/02/2024: beta
+- [ ] 29/03/2024: we are going live 
