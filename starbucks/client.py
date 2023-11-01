@@ -8,22 +8,21 @@ from starbucks.buffer      import Buffer
 from starbucks.data_stream import DataStream
 
 class Client:
-  def __init__(self, host: str, port: str, conn=None, type: str="CLIENT"):
+  def __init__(self, host: str, port: str, type: str="CLIENT"):
+    self.host: str = host
+    self.port: int = port
     self.type: str = type
 
-    if not conn:
-      conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-      conn.connect((host, port))
+
+  def connect(self) -> Client:
+    conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    conn.connect((self.host, self.port))
     
     self.conn = conn
     self.stream = Stream(conn)
 
     self.__handshake()
-    
-
-  @classmethod
-  def connect(cls, host: str, port: str, conn=None, str="CLIENT") -> Client:
-    return Client(host, port, conn, str)
+    return self
 
 
   def __handshake(self):
