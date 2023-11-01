@@ -6,7 +6,6 @@ from threading import Thread
 from starbucks.command import Command as command
 from starbucks.buffer  import Buffer 
 from starbucks.stream  import Stream 
-from starbucks.api     import API
 
 class Node:
   def __init__(self, host, port):
@@ -16,8 +15,8 @@ class Node:
     self.connected_nodes = {}
 
 
-  def run(self):
-    command.COMMANDS = API
+  def run(self, api):
+    command.COMMANDS = api
  
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
       s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
