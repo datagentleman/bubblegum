@@ -25,17 +25,10 @@ class Node:
         client_conn, addr = s.accept()
         conn = Conn(client_conn)
 
-        self.read_handshake(conn)
+        conn.read_handshake()
         Thread(target=client_handler, args=[conn]).start()
 
 
   def _connect_node(self, addr):
     host_port = ':'.join(map(str, addr))
     self.connected_nodes[host_port] = Node(addr[0], addr[1])
-
-
-  def read_handshake(self, conn: Conn) -> bytes:
-    conn_type = conn.read()
-    conn.send(Buffer().write("OK".encode()))
-
-    return conn_type.read()

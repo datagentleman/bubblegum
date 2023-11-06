@@ -25,6 +25,25 @@ class Conn:
 
     return self.conn.send(res.raw())
 
+  # read handshake.
+  def read_handshake(self) -> bytes:
+    conn_type = self.read()
+    self.send(Buffer().write("OK".encode()))
+
+    return conn_type.read()
+
+  # send handshake
+  # this will also ensure us that connection was accepted and we can transfer bytes.
+  def send_handshake(self) -> bytes:
+    # handshake should be reasonably fast
+    self.conn.settimeout(0.5)
+    
+    self.send(Buffer().write("OK".encode()))
+    self.read()
+    
+    # from this point on, we cannot have any timeouts on socket - ex: streaming, long running tasks, ...
+    self.conn.settimeout(None)
+
 
   def _load_buffer(self):
     n = int.from_bytes(self.conn.recv(2), byteorder='little')

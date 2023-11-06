@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import socket
 
-from starbucks.stream      import Stream
+from starbucks.conn        import Conn
 from starbucks.command     import Command
 from starbucks.buffer      import Buffer
 from starbucks.data_stream import DataStream
@@ -18,30 +18,20 @@ class Client:
     conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     conn.connect((self.host, self.port))
     
-    self.conn = conn
-    self.stream = Stream(conn)
+    self.conn = Conn(conn)
+    self.conn.send_handshake()
 
-    self.__handshake()
+
     return self
-
-
-  def __handshake(self):
-    # handshake should be reasonably fast
-    self.conn.settimeout(0.5)
-    self.stream.send(Buffer().write(self.type.encode()))
-    self.stream.read()
-    
-    # from this point on, we cannot have any timeouts on socket - ex: streaming, long running tasks, ...
-    self.conn.settimeout(None)
 
 
   def send(self, cmd, *args):
     cmd = Command(cmd, *args)
-    self.stream.send(cmd.to_bytes())
+    self.conn.send(cmd.to_bytes())
 
 
   def read(self) -> Buffer:
-    return self.stream.read()
+    return self.conn.read()
 
 
   ### 
