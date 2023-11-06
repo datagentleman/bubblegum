@@ -7,11 +7,11 @@ def test_buffer_write_read():
 
 def test_buffer_pack():
   buf = Buffer()
-  assert(buf.pack(b'Hello') == b'\x00\x05Hello')
+  assert(buf.pack(b'Hello') == b'\x05\x00Hello')
 
   
 def test_buffer_raw():
   buf = Buffer()
-  assert(buf.write(b'Hello').raw() == b'\x00\x07\x00\x05Hello')
+  assert(buf.write(b'Hello').raw() == b'\x07\x00\x05\x00Hello')
 
 

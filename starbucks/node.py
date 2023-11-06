@@ -2,7 +2,9 @@ import socket
 
 from threading         import Thread
 from starbucks.buffer  import Buffer 
-from starbucks.stream  import Stream 
+from starbucks.conn    import Conn
+
+from starbucks.src.cython.tensor import CTensor as tensor
 
 class Node:
   def __init__(self, host, port):
@@ -20,23 +22,20 @@ class Node:
       s.listen()
 
       while True: 
-        conn, addr = s.accept()
-        stream = Stream(conn)
+        client_conn, addr = s.accept()
+        conn = Conn(client_conn)
 
-        conn_type = self.read_handshake(stream)
-        if conn_type == b'NODE': 
-          self._connect_node(addr)
-
-        Thread(target=client_handler, args=[stream]).start()
+        self.read_handshake(conn)
+        Thread(target=client_handler, args=[conn]).start()
 
 
   def _connect_node(self, addr):
     host_port = ':'.join(map(str, addr))
     self.connected_nodes[host_port] = Node(addr[0], addr[1])
 
-  
-  def read_handshake(self, stream: Stream) -> bytes:
-    conn_type = stream.read()
-    stream.send(Buffer().write("OK".encode()))
+
+  def read_handshake(self, conn: Conn) -> bytes:
+    conn_type = conn.read()
+    conn.send(Buffer().write("OK".encode()))
 
     return conn_type.read()
