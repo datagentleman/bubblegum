@@ -1,4 +1,5 @@
 import socket
+import logging as log
 
 from threading         import Thread
 from starbucks.buffer  import Buffer 
@@ -20,24 +21,26 @@ class Node:
       s.bind((self.host, self.port))
       s.listen()
 
-      while True: 
+      # This will be select() loop
+      while True:
         client_conn, addr = s.accept()
         conn = Conn(client_conn)
         
         conn.read_handshake()
-        
         cmd = conn.get_cmd()
-        if cmd is None:
-          conn.send(Buffer(b"COMMAND DOESN'T EXIST!"))
-          continue
-          
+    
         # Based on given cmd, we must route request to cython or good old python.
         # Most of heavy tensor operations will be handled by cython.
-        # if(CYTHON_API.get(cmd.name)):
-        #   # call it with fd
-        #   pass
+        if(CYTHON_API.get(cmd.name)):
+          log.info(f"calling cython cmd: {cmd.name}")
+          continue
 
-        Thread(target=client_handler, args=[conn, cmd]).start()
+        if handler := PYTHON_API.get(cmd.name):
+          cmd.handler = handler
+          Thread(target=client_handler, args=[conn, cmd]).start()
+          continue
+
+        conn.send(Buffer(b"COMMAND DOESN'T EXIST!"))
 
 
   def _connect_node(self, addr):

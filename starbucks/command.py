@@ -27,20 +27,14 @@ class Command:
     [buf.write(key.encode()) for key in self.args]
     return buf
 
+
   @classmethod
   def from_bytes(cls, buf: Buffer) -> Command:
     name = buf.read().decode()
 
-    # read arguments
-    num = int.from_bytes(buf.read(), "big")
-    args  = [buf.read().decode() for _ in range(num)]
+    # read and decode arguments
+    num  = int.from_bytes(buf.read(), "big")
+    args = [buf.read().decode() for _ in range(num)]
 
-    handler = cls.COMMANDS.get(name)
-    if handler is None: 
-      return None
-
-    cmd = Command(name, *args)
-    cmd.handler = handler
-
-    return cmd
+    return Command(name, *args)
   
