@@ -1,3 +1,4 @@
+import os
 import traceback
 import logging as log
 
@@ -5,7 +6,6 @@ from starbucks.node    import Node
 from starbucks.api     import API
 from starbucks.config  import Config  as config
 from starbucks.command import Command as command
-
 
 log.basicConfig(format="\x1b[6;37;44m%(levelname)s\x1b[0m:%(message)s", level=log.DEBUG)
 
@@ -28,7 +28,7 @@ def handle_client(client_conn):
 
 if __name__ == '__main__':
   try:
-    log.info(f'Starting starbucks node on host: {HOST} port: {PORT}')
+    log.info(f'Starting starbucks node on host: {HOST} port: {PORT} pid: {os.getpid()}')
     Node(HOST, PORT).run(handle_client)
   except Exception as e:
     log.error(f'{traceback.format_exc()}')

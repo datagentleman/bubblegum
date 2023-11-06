@@ -10,8 +10,8 @@ class Command:
   
   def __init__(self, name: str, *args):
     self.name: str = name
-    self.args: tuple[Any, ...] = args
-    
+    self.args: tuple[Any, ...] = args    
+
     
   @classmethod
   def run(cls, cmd, stream: Stream):
@@ -19,7 +19,7 @@ class Command:
 
     if cmd_handler is None: 
       return stream.send(Buffer(b"COMMAND DOESN'T EXIST!"))
-    
+
     cmd_handler(cmd.args, stream)
 
 
@@ -37,9 +37,8 @@ class Command:
     name = buf.read().decode()
 
     # read number of arguments
-    raw_size = buf.read()
-    count = int.from_bytes(raw_size, "big")
-    args  = [buf.read().decode() for _ in range(count)]
-    
+    num = int.from_bytes(buf.read(), "big")
+    args  = [buf.read().decode() for _ in range(num)]
+
     return Command(name, *args)
   

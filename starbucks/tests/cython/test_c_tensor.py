@@ -1,4 +1,4 @@
-from starbucks.src.cython.tensor import CTensor as tensor
+from starbucks.cython.tensor import CTensor as tensor
 
 def test_c_tensor_open():
   ten = tensor()

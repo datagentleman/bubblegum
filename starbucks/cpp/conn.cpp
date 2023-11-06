@@ -6,7 +6,7 @@ public:
   int sock;
 
   // It's possible to create sockets from already existing fd (file descriptors).
-  // In most cases existing_fd will be client socket that is already connected to node.
+  // In most cases existing_fd will be client socket that is already connected to our node.
   Conn(int existing_fd) {
     create_socket(existing_fd);
   }

@@ -9,7 +9,7 @@ class Conn:
     self.buf  = Buffer()
   
   
-  # read next message 
+  # read next message. 
   def read(self):
     if len(self.buf.data()) == 0: 
       self._load_buffer()
@@ -32,7 +32,7 @@ class Conn:
 
     return conn_type.read()
 
-  # send handshake
+  # send handshake.
   # this will also ensure us that connection was accepted and we can transfer bytes.
   def send_handshake(self) -> bytes:
     # handshake should be reasonably fast

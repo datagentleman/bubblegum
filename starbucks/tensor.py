@@ -18,7 +18,7 @@ class TensorIterator:
 class Tensor:
   ROOT = "./tensors/"
   TENSOR_INFO = "tensor.info"
-    
+  
   def __init__(self, name: str):
     self.name = name
 
@@ -53,7 +53,7 @@ class Tensor:
   def ls(cls, root: str=ROOT) -> list[tuple[str, ...]]:
     tensors = []
 
-    # we only want directories with proper .data file inside
+    # we only want directories with proper .info file inside
     for path in Path(root).rglob("*"):
       if path.joinpath(cls.TENSOR_INFO).is_file():
         tensors.append(path.parts[1:])
