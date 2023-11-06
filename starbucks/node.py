@@ -3,8 +3,7 @@ import socket
 from threading         import Thread
 from starbucks.buffer  import Buffer 
 from starbucks.conn    import Conn
-
-from starbucks.src.cython.tensor import CTensor as tensor
+from starbucks.api     import CYTHON_API, PYTHON_API
 
 class Node:
   def __init__(self, host, port):
@@ -24,9 +23,21 @@ class Node:
       while True: 
         client_conn, addr = s.accept()
         conn = Conn(client_conn)
-
+        
         conn.read_handshake()
-        Thread(target=client_handler, args=[conn]).start()
+        
+        cmd = conn.get_cmd()
+        if cmd is None:
+          conn.send(Buffer(b"COMMAND DOESN'T EXIST!"))
+          continue
+          
+        # Based on given cmd, we must route request to cython or good old python.
+        # Most of heavy tensor operations will be handled by cython.
+        # if(CYTHON_API.get(cmd.name)):
+        #   # call it with fd
+        #   pass
+
+        Thread(target=client_handler, args=[conn, cmd]).start()
 
 
   def _connect_node(self, addr):

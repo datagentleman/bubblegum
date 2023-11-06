@@ -1,4 +1,5 @@
 from starbucks.stream      import Stream
+from starbucks.conn         import Conn
 from starbucks.worker      import Worker  
 from starbucks.buffer      import Buffer  
 from starbucks.tensor      import Tensor  
@@ -8,8 +9,8 @@ def response(code: str, msg: str="")-> Buffer:
   return Buffer().write(code.encode()).write(msg.encode())
 
 
-def hello(args, stream: Stream):
-  stream.send(Buffer().write(b'Another latte?'))
+def hello(args, conn: Conn):
+  conn.send(Buffer().write(b'Another latte?'))
 
 
 ### 
@@ -17,11 +18,11 @@ def hello(args, stream: Stream):
 ###
 
 # list all workers
-def worker_ls(args, stream: Stream):
+def worker_ls(args, conn: Conn):
   buf = Buffer()
 
   [buf.write(name.encode()) for name in Worker.ls()]
-  stream.send(buf)
+  conn.send(buf)
 
 
 # run worker

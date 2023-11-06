@@ -12,15 +12,11 @@ class Command:
     self.name: str = name
     self.args: tuple[Any, ...] = args    
 
-    
-  @classmethod
-  def run(cls, cmd, stream: Stream):
-    cmd_handler = cls.COMMANDS.get(cmd.name)
+    self.handler: Callable = None
 
-    if cmd_handler is None: 
-      return stream.send(Buffer(b"COMMAND DOESN'T EXIST!"))
 
-    cmd_handler(cmd.args, stream)
+  def run(self, stream: Stream):
+    self.handler(self.args, stream)
 
 
   def to_bytes(self) -> Buffer:
@@ -31,14 +27,20 @@ class Command:
     [buf.write(key.encode()) for key in self.args]
     return buf
 
-
-  @staticmethod
-  def from_bytes(buf: Buffer) -> Command:
+  @classmethod
+  def from_bytes(cls, buf: Buffer) -> Command:
     name = buf.read().decode()
 
-    # read number of arguments
+    # read arguments
     num = int.from_bytes(buf.read(), "big")
     args  = [buf.read().decode() for _ in range(num)]
 
-    return Command(name, *args)
+    handler = cls.COMMANDS.get(name)
+    if handler is None: 
+      return None
+
+    cmd = Command(name, *args)
+    cmd.handler = handler
+
+    return cmd
   

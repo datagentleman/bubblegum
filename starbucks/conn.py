@@ -1,6 +1,7 @@
 import socket 
 
-from starbucks.buffer import Buffer
+from starbucks.buffer  import Buffer
+from starbucks.command import Command as command
 
 # this class will manage clients connection to node
 class Conn:
@@ -43,6 +44,10 @@ class Conn:
     
     # from this point on, we cannot have any timeouts on socket - ex: streaming, long running tasks, ...
     self.conn.settimeout(None)
+
+  # get next command from client
+  def get_cmd(self) -> command:
+    return command.from_bytes(self.read())
 
 
   def _load_buffer(self):
