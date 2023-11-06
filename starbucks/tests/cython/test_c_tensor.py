@@ -1,8 +1,14 @@
 from starbucks.cython.tensor import CTensor as tensor
+import numpy as np
 
 def test_c_tensor_open():
   ten = tensor()
-  fd = ten.open(2, [b"datasets/iris/iris.csv"])
+  ten.open(b'datasets/iris/iris.csv')
 
-  print(fd)
-  print(ten.print())
+  data = np.arange(10).tobytes()
+  print(data)
+  print(f'LEN: {len(data)}')
+
+  bytes_written = ten.write(data)
+  print(f'bytes written: {bytes_written}')
+  
