@@ -7,9 +7,9 @@ class buffer {
     std::vector<unsigned char> buf;
 
     buffer() {}
-    buffer(unsigned char* b) {
-      buf.resize(20);
-      std::memcpy(buf.data(), b, 20);
+    buffer(unsigned char* b, int len) {
+      buf.resize(len);
+      std::memcpy(buf.data(), b, len);
     };
 
     // read next packet
@@ -26,6 +26,7 @@ class buffer {
     };
 
   private:
+    // TODO: check boundaries 
     void _read(void *dst, int offset, int len) {
       std:memcpy(dst, buf.data()+offset, len);
 
