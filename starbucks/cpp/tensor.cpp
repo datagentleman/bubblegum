@@ -27,7 +27,7 @@ class Tensor {
       return pwrite(fd, data, len, 0);
     }
 
-     void read(unsigned char* data, int len) {
-      pread(fd, data, len, 0);
+     int read(unsigned char* data, int len) {
+      return pread(fd, data, len, 0);
     }
 };
