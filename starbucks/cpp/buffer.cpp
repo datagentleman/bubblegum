@@ -30,9 +30,9 @@ class buffer {
       std:memcpy(dst, buf.data()+offset, len);
 
       // we must remove bytes that we just read
-      auto first = buf.begin() + offset ;
-      auto last  = buf.begin() + offset + len;
+      auto start = buf.begin() + offset;
+      auto end   = start + len;
       
-      buf.erase(first, last);
+      buf.erase(start, end);
     }
 };
