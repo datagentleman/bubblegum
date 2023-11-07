@@ -24,4 +24,15 @@ class buffer {
     unsigned char* data() {
       return buf.data();
     };
+
+  private:
+    void _read(void *dst, int offset, int len) {
+      std:memcpy(dst, buf.data()+offset, len);
+
+      // we must remove bytes that we just read
+      auto first = buf.begin() + offset ;
+      auto last  = buf.begin() + offset + len;
+      
+      buf.erase(first, last);
+    }
 };
