@@ -15,8 +15,6 @@ using namespace std;
 class Tensor {
   public:
     int fd;
-    int items_per_bucket;
-    vector<int> shape;
 
     Tensor(){}
 
@@ -25,7 +23,11 @@ class Tensor {
       return fd;
     }
 
-    int write(char* data, int len) {
+    int write(unsigned char* data, int len) {
       return pwrite(fd, data, len, 0);
+    }
+
+     void read(unsigned char* data, int len) {
+      pread(fd, data, len, 0);
     }
 };

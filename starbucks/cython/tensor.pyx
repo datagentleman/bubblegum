@@ -1,14 +1,11 @@
 # distutils: language = c++
 
-from libc.stdio cimport printf
-from libcpp     cimport bool
-
 cdef extern from "../cpp/tensor.cpp":
   cdef cppclass Tensor:
     Tensor() 
     int open(char* path) except +
-    int write(char *data, int
-     len) except +
+    int write(unsigned char *data, int len) except +
+    void read(unsigned char *data, int len) except +
 
   
 cdef extern from "../cpp/tensor.cpp":
@@ -23,5 +20,14 @@ cdef class CTensor:
   def open(self, bytes tensor):
     return self.tensor.open(tensor)
 
+
   cpdef int write(self, bytes data):
     return self.tensor.write(data, len(data))
+    
+
+  cpdef read(self, int len):
+    data = bytearray(len)
+    self.tensor.read(data, len)
+    return data
+
+
