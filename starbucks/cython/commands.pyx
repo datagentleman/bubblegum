@@ -6,10 +6,13 @@ cdef extern from "../cpp/conn.cpp":
   cdef cppclass conn:
     conn()
     conn(int)
-    void write(string)
+    void write(void*, int)
+
 
 cpdef void ping(int fd):
   cdef conn connection = conn(fd)
-  connection.write(string("PONG"))
+  cdef string pong = "PONG"
+
+  connection.write(&pong, pong.length())
 
   

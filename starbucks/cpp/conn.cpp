@@ -19,9 +19,9 @@ class conn {
       create_socket(existing_fd);
     }
 
-    void write(string msg) {
+    void write(void* msg, int len) {
       buffer buf = buffer();
-      buf.write(&msg, msg.length());
+      buf.write(msg, len);
 
       send(sock, buf.data(), buf.len(), 0);
     }
