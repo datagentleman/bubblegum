@@ -1,8 +1,6 @@
-from starbucks.api     import PYTHON_API
 from starbucks.command import Command as command
 
 def test_command_from_to_bytes():
-  command.COMMANDS = PYTHON_API
   cmd1 = command('HELLO', 'CRUEL', 'WORLD')
 
   buf = cmd1.to_bytes()

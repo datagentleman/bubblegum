@@ -1,48 +1,63 @@
 import socket
+import selectors
 import logging as log
 
-from threading         import Thread
-from starbucks.buffer  import Buffer 
-from starbucks.conn    import Conn
-from starbucks.api     import CYTHON_API, PYTHON_API
+from starbucks.conn     import Conn
 
 class Node:
   def __init__(self, host, port):
     self.host = host
     self.port = port
 
-    self.connected_nodes = {}
-
-
-  def run(self, client_handler: callable):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-      s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
-      s.bind((self.host, self.port))
-      s.listen()
-
-      # This will be select() loop
-      while True:
-        client_conn, addr = s.accept()
-        conn = Conn(client_conn)
-        
-        conn.read_handshake()
-        cmd = conn.get_cmd()
+    self.connected_clients = {}
+    self.select = selectors.DefaultSelector()
     
-        # Based on given cmd, we must route request to cython or good old python.
-        # Most of heavy tensor operations will be handled by cython.
-        if(CYTHON_API.get(cmd.name)):
-          log.info(f"calling cython cmd: {cmd.name}")
-          continue
+    self.create_server_socket()
+    
 
-        if handler := PYTHON_API.get(cmd.name):
-          cmd.handler = handler
-          Thread(target=client_handler, args=[conn, cmd]).start()
-          continue
+  # accept all connections
+  def accept(self, sock):
+    conn, addr = sock.accept()    
+    conn = Conn(conn)
 
-        conn.send(Buffer(b"COMMAND DOESN'T EXIST!"))
+    log.info(f'accepted connection: {conn} from {addr}')
+
+    conn.read_handshake()
+    conn.conn.setblocking(False)
+
+    # we can now add this connection to select pool
+    self.select.register(conn, selectors.EVENT_READ)
 
 
-  def _connect_node(self, addr):
-    host_port = ':'.join(map(str, addr))
-    self.connected_nodes[host_port] = Node(addr[0], addr[1])
+  def run(self, run_command):
+    self.sock.listen()
+
+    # add server socket to select. It will accept incoming connections
+    self.select.register(self.sock, selectors.EVENT_READ, self.accept)
+
+    while True:
+      for event, _ in self.select.select():
+          conn = event.fileobj
+          
+          try:
+            if event.data is not None:
+              callback = event.data
+              callback(conn)
+            else:
+              run_command(conn)
+
+          except ConnectionResetError as e:
+            log.error(f"Connection reset by peer: {e}")
+            self.select.unregister(conn)
+            conn.conn.close()         
+
+          except Exception as e:
+            log.error(f"ERROR: {e}")
+
+
+  def create_server_socket(self): 
+    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
+    self.sock.setblocking(False)
+    self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    self.sock.bind((self.host, self.port))

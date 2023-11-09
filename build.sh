@@ -1,5 +1,7 @@
 #! /bin/sh
 
+cd starbucks/cython/
+
 # removing /build directory would reload all libraries, including c++ ones
 rm -r ./build
 
