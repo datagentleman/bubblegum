@@ -11,9 +11,9 @@ class Node:
 
     self.connected_clients = {}
     self.select = selectors.DefaultSelector()
-    
+  
 
-  # accept all connections
+  # accept incoming connections
   def accept(self, sock):
     conn, addr = sock.accept()    
     conn = Conn(conn)
@@ -31,34 +31,34 @@ class Node:
     self.create_socket_and_listen()
 
     # add server socket to select. It will accept incoming connections
-    self.select.register(self.sock, selectors.EVENT_READ, self.accept)
+    self.select.register(self.node_socket, selectors.EVENT_READ)
 
+    # main select loop. All requests to node are handled here.
     while True:
       for event, _ in self.select.select():
-          conn = event.fileobj
-          
-          try:
-            if event.data is not None:
-              callback = event.data
-              callback(conn)
-            else:
-              run_command(conn)
+        conn = event.fileobj
+        
+        try:
+          if conn is self.node_socket:
+            self.accept(conn)
+          else:
+            run_command(conn)
 
-          except ConnectionResetError as e:
-            log.error(f"Connection reset by peer: {e}")
-            self.select.unregister(conn)
-            conn.conn.close()         
+        except ConnectionResetError as e:
+          log.error(f"Connection reset by peer: {e}")
+          self.select.unregister(conn)
+          conn.conn.close()         
 
-          except Exception as e:
-            log.error(f"ERROR: {e}")
+        except Exception as e:
+          log.error(f"ERROR: {e}")
 
 
   def create_socket_and_listen(self): 
-    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    self.node_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
-    self.sock.setblocking(False)
-    self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    
-    self.sock.bind((self.host, self.port))
-    self.sock.listen()
+    self.node_socket.setblocking(False)
+    self.node_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+    self.node_socket.bind((self.host, self.port))
+    self.node_socket.listen()
     
