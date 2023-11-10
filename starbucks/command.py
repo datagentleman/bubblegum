@@ -6,25 +6,19 @@ from starbucks.buffer import Buffer
 from starbucks.stream import Stream
 
 class Command:
-  COMMANDS: Dict[str, Callable] = {}
-  
-  def __init__(self, name: str, *args):
-    self.name: str = name
-    self.args: tuple[Any, ...] = args    
+  def __init__(self, name: str, *args: tuple[Any, ...]):
+    self.name = name
+    self.args = args    
 
     self.handler: Callable = None
 
 
-  def run(self, stream: Stream):
-    self.handler(self.args, stream)
-
-
   def to_bytes(self) -> Buffer:
     buf = Buffer()
-    buf.write(self.name.encode())
-    buf.write(len(self.args).to_bytes(2))
     
-    [buf.write(key.encode()) for key in self.args]
+    buf.write(self.name)
+    buf.write(self.args)
+
     return buf
 
 
@@ -33,7 +27,7 @@ class Command:
     name = buf.read().decode()
 
     # read and decode arguments
-    num  = int.from_bytes(buf.read(), "big")
+    num  = int.from_bytes(buf.read(), "little")
     args = [buf.read().decode() for _ in range(num)]
 
     return Command(name, *args)
