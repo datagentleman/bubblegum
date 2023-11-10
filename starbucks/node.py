@@ -12,8 +12,6 @@ class Node:
     self.connected_clients = {}
     self.select = selectors.DefaultSelector()
     
-    self.create_server_socket()
-    
 
   # accept all connections
   def accept(self, sock):
@@ -30,7 +28,7 @@ class Node:
 
 
   def run(self, run_command):
-    self.sock.listen()
+    self.create_socket_and_listen()
 
     # add server socket to select. It will accept incoming connections
     self.select.register(self.sock, selectors.EVENT_READ, self.accept)
@@ -55,9 +53,12 @@ class Node:
             log.error(f"ERROR: {e}")
 
 
-  def create_server_socket(self): 
+  def create_socket_and_listen(self): 
     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
     self.sock.setblocking(False)
     self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    
     self.sock.bind((self.host, self.port))
+    self.sock.listen()
+    
