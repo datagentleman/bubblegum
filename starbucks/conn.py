@@ -13,7 +13,7 @@ class Conn:
   # read next message. 
   def read(self):
     if len(self.buf.data()) == 0: 
-      self._load_buffer()
+      self._load_buffer() 
       
     return Buffer(self.buf.read())
     
@@ -55,3 +55,7 @@ class Conn:
     self.buf.append(self.conn.recv(n))
     
 
+  # needed when working with selec()
+  def fileno(self):
+    return self.conn.fileno()
+  

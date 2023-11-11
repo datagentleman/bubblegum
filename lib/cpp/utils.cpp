@@ -1,4 +1,8 @@
+#ifndef UTILS
+#define UTILS 
+
 #include <cstdint>
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -9,10 +13,12 @@ uint16_t to_uint16(char* bytes, bool big_endian=true) {
   if (big_endian) {
     return (bytes[0] << 8) | bytes[1];
   }
+
+  return 0;
 }
 
-// display bytes (char*)
-void display(char* data, int size, bool as_bytes=false) {
+// display unsigned char*
+void display(unsigned char* data, int size, bool as_bytes=false) {
   if(as_bytes) {
     for(int i=0; i < size; i++) {
       std::cout << std::hex << "\\x" << static_cast<int>(data[i]);
@@ -25,3 +31,4 @@ void display(char* data, int size, bool as_bytes=false) {
   }
 }
 
+#endif

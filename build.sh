@@ -1,8 +1,9 @@
 #! /bin/sh
 
-cd starbucks/cython/
+cd lib/
 
-# removing /build directory would reload all libraries, including c++ ones
 rm -r ./build
+rm -r ./*.so
 
-python3 setup.py build_ext --inplace
+python3 setup.py build_ext
+cp build/lib.macosx-13-arm64-cpython-311/starbucks/lib/* ./

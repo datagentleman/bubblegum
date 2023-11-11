@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import socket
 from starbucks.buffer import Buffer
 
 class DataStream:
@@ -6,7 +8,8 @@ class DataStream:
     self.conn = conn
 
 
-  # write() should be called by server
+  # writing bytes into stream.
+  # write() should be called by server side.
   def write(self, data: bytes):
     buf = self.conn.read()
     cmd = buf.read()
@@ -20,13 +23,21 @@ class DataStream:
 
 
   def next(self):
-    self.conn.stream.send(Buffer().write(b'NEXT'))
+    self.conn.send(Buffer().write(b'NEXT'))
     res = self.conn.read()
     return res.data()
 
 
   def end(self):
-    self.conn.stream.send(Buffer().write(b'END'))
+    self.conn.send(Buffer().write(b'END'))
+
+
+  # Peek next message in data stream
+  def peek(self) -> bytes:
+    # TODO: refactor this
+    raw_msg = self.conn.conn.recv(1, socket.MSG_PEEK)
+    
+    return
 
     
   @classmethod

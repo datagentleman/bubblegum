@@ -1,4 +1,4 @@
-from starbucks.cython.buffer import Buffer
+from lib.buffer import Buffer
 import numpy as np
 
 def test_c_buffer():

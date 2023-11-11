@@ -2,7 +2,7 @@ import socket
 import selectors
 import logging as log
 
-from starbucks.conn     import Conn
+from starbucks.conn import Conn
 
 class Node:
   def __init__(self, host, port):
@@ -37,13 +37,13 @@ class Node:
     while True:
       for event, _ in self.select.select():
         conn = event.fileobj
-        
+
         try:
           if conn is self.node_socket:
             self.accept(conn)
           else:
             run_command(conn)
-
+            
         except ConnectionResetError as e:
           log.error(f"Connection reset by peer: {e}")
           self.select.unregister(conn)

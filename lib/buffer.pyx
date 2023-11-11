@@ -1,6 +1,9 @@
 # distutils: language = c++
 
-cdef extern from "../cpp/buffer.cpp":
+from lib.commands cimport *
+from lib.tensor cimport *
+
+cdef extern from "cpp/buffer.cpp":
   cdef cppclass buffer:
     buffer()
     buffer(unsigned char*, int)
@@ -20,6 +23,6 @@ cdef class Buffer:
     pass
 
   def data(self):
-    cdef len = self.buf.len()
+    cdef int len = self.buf.len()
     cdef unsigned char[:] view = <unsigned char[:len]> self.buf.data()
     return bytearray(view)

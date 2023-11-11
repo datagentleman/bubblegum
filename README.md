@@ -1,5 +1,5 @@
 <p align='center'>
-  <img src="./logo_2.png?raw=true" height="250px" alt="starbucks db" />
+  <img src="./logo.png?raw=true" height="250px" alt="starbucks db" />
 </p>
 
 <h1 align="center">☕ STARBUCKS DB:  distributed tensor ☕</h1>
@@ -33,7 +33,7 @@ Heavily in progress ! It's not usable yet 🔥 I should have something running t
 ## Run tests
 
 ```
-  python3 -m pytest -s starbucks/tests
+  python3 -m pytest -s tests or PYTHONPATH=`pwd` python3 -m pytest -s tests
 ```
 
 

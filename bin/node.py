@@ -2,12 +2,13 @@ import os
 import traceback
 import logging as log
 
-from starbucks.node    import Node
-from starbucks.conn    import Conn
-from starbucks.config  import Config 
+from starbucks.conn     import Conn
+from starbucks.node     import Node
+from starbucks.config   import Config 
+from starbucks.buffer   import Buffer 
+from starbucks.commands import * 
 
-from starbucks.commands import *
-from starbucks.cython import commands
+from lib.commands import ping
 
 log.basicConfig(format="\x1b[6;37;44m%(levelname)s\x1b[0m:%(message)s", level=log.DEBUG)
 
@@ -18,8 +19,9 @@ def run_command(conn: Conn):
   cmd = conn.get_cmd()
 
   match cmd.name:
-    # cython commands
-    case "PING": commands.ping(conn.fileno())
+    # cython commands - running concurrently
+    case "PING":    ping(conn.fileno())
+    # case "TINSERT": tinsert(conn.fileno())
 
     # server
     case "HELLO": hello

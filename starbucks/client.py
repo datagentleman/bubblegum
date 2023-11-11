@@ -21,11 +21,15 @@ class Client:
     self.conn = Conn(conn)
     self.conn.send_handshake()
 
-
     return self
 
 
-  def send(self, cmd, *args):
+  def ping(self):
+    self.send('PING')
+    return self.read()
+
+
+  def send(self, cmd: str, *args):
     cmd = Command(cmd, *args)
     self.conn.send(cmd.to_bytes())
 

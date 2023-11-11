@@ -29,13 +29,9 @@ class buffer {
       // read data length 
       int16_t size;
       _read(&size, 0, 2);
-      
+
       // read data
       _read(dst, 0, size);
-
-      std::cout << +size << "\n";
-      display(dst, size, true);
-      
       return size;
     }
 

@@ -3,15 +3,19 @@ from __future__ import annotations
 from struct import pack
 
 class Buffer:
-  def __init__(self, packet=b''):
+  def __init__(self, packet =b''):
     self._data = packet
 
 
-  # TODO: handle more types. Extract this to separate class.
-  def write(self, data: any, num_of_bytes: int = 2):
+  # TODO: handle more types
+  def write(self, data: any, num_of_bytes: int = 2, byteorder: str = 'little'):
     match type(data).__name__:
       case 'int':
-        self._data += self.pack(data.to_bytes(num_of_bytes, byteorder='little'))
+        b = data.to_bytes(num_of_bytes, byteorder=byteorder)
+        self._data += self.pack(b)
+
+      case 'float':
+        self._data += self.pack(pack('d', data))
         
       case 'str': 
         self._data += self.pack(data.encode())
@@ -24,9 +28,9 @@ class Buffer:
         for elem in data: self.write(elem)
 
       case 'bytes': 
-        self._data += self.pack(data)  
+        self._data += self.pack(data)
 
-      case _: 
+      case _:        
         self._data += self.pack(data)  
 
     return self
@@ -53,7 +57,7 @@ class Buffer:
     return bytes
 
 
-  def pack(self, data) -> bytes:
+  def pack(self, data: bytes) -> bytes:
     size = len(data).to_bytes(2, byteorder='little')
     return size + data
   

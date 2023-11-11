@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from typing import Dict, Any, Callable
+from typing import Any, Callable
 
 from starbucks.buffer import Buffer
-from starbucks.stream import Stream
 
 class Command:
   def __init__(self, name: str, *args: tuple[Any, ...]):
@@ -15,7 +14,7 @@ class Command:
 
   def to_bytes(self) -> Buffer:
     buf = Buffer()
-    
+
     buf.write(self.name)
     buf.write(self.args)
 

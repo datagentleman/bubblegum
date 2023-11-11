@@ -1,6 +1,14 @@
 import os
 import subprocess
 
+class WorkerStream:
+  def __init__(self, conn):
+    self.conn = conn    
+
+  def next(self):
+    pass
+
+
 class Worker:
   PATH = "./workers"
 

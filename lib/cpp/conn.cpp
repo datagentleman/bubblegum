@@ -1,3 +1,6 @@
+#ifndef CONN
+#define CONN 
+
 #include <iostream>
 #include <string>
 #include <sys/socket.h>
@@ -5,6 +8,10 @@
 #include "buffer.cpp"
 
 using namespace std;
+
+void test(buffer buf, int sock) {
+  send(sock, buf.data(), buf.len(), 0);
+}
 
 // class for handling sockets and user connections
 class conn {
@@ -19,19 +26,19 @@ class conn {
       create_socket(existing_fd);
     }
 
+    // msg can be anything compatible with std::memcpy
     void write(void* msg, int len) {
       buffer buf = buffer();
       buf.write(msg, len);
-
-      send(sock, buf.data(), buf.len(), 0);
     }
 
   private:
     void create_socket(int existing_fd) {
       sock = socket(AF_INET, SOCK_STREAM, 0);
 
-      // now we can use recv/send on our sock
+      // after that we can recv/send on our sock
       dup2(existing_fd, sock);
     }
 };
 
+#endif

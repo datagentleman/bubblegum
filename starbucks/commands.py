@@ -1,5 +1,5 @@
 from starbucks.stream      import Stream
-from starbucks.conn         import Conn
+from starbucks.conn        import Conn
 from starbucks.worker      import Worker  
 from starbucks.buffer      import Buffer  
 from starbucks.tensor      import Tensor  

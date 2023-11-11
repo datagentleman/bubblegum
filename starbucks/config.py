@@ -1,4 +1,14 @@
-from config import config
+config = {
+  "dev": {
+    "server.host": "127.0.0.1",
+    "server.port": 1337,
+  },
+
+  "test": {
+    "server.host": "localhost",
+    "server.port": 1337,
+  }
+}
 
 class _Config(type):
   conf = config['dev']
