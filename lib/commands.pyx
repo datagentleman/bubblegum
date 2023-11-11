@@ -12,3 +12,8 @@ cdef extern from "cpp/conn.cpp":
 
 cpdef ping(int fd):
   Tensor().open(b'')
+  
+
+cpdef tinsert(int fd):
+  t = Tensor()
+  t.open(b'')

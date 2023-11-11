@@ -1,14 +1,15 @@
-from lib.tensor import Tensor
+import lib.tensor as tensor
 import numpy as np
 
-def test_c_tensor_open():
-  Tensor().write(b'')
-  pass
-    
-    
+
+def test_tensor_open():
+  t = tensor.Tensor().open(b'tensors/test.tensor')
+  t.write(b'd')
+  print(t.shape())
+
   # ten = tensor()
   # ten.open(b'datasets/iris/iris.csv')
-
+  
   # data = np.arange(10, dtype=np.int8).tobytes()
 
   # bytes_written = ten.write(data)

@@ -8,7 +8,7 @@ from starbucks.config   import Config
 from starbucks.buffer   import Buffer 
 from starbucks.commands import * 
 
-from lib.commands import ping
+from lib.commands import ping, tinsert
 
 log.basicConfig(format="\x1b[6;37;44m%(levelname)s\x1b[0m:%(message)s", level=log.DEBUG)
 
@@ -21,7 +21,7 @@ def run_command(conn: Conn):
   match cmd.name:
     # cython commands - running concurrently
     case "PING":    ping(conn.fileno())
-    # case "TINSERT": tinsert(conn.fileno())
+    case "TINSERT": tinsert(conn.fileno())
 
     # server
     case "HELLO": hello

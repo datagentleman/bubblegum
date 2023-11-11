@@ -1,20 +1,17 @@
 # distutils: language = c++
 
-# from lib.commands cimport ping
-
-cdef extern from "cpp/tensor.cpp":
-  cdef cppclass Stream:
-    Stream()
-    void from_fd(int fd) except +
-
-
 cdef class Tensor:
-  cpdef open(self, bytes tensor):
-    return self.tensor.open(tensor)
+  cpdef Tensor open(self, bytes tensor):
+    self.tensor.open(tensor)
+    return self
 
 
   cpdef int write(self, bytes data):
     return self.tensor.write(data, len(data))
+
+
+  cpdef vector[int] shape(self):
+    return self.tensor.shape
 
 
   cpdef read(self, int len):
