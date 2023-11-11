@@ -1,5 +1,5 @@
 build/
-./*.cpp
-./*.c
-./*.html
-./*.o
+*.cpp
+*.c
+*.html
+*.o
