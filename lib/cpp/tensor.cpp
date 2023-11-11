@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <vector>
+#include <numeric>
 
 #include "utils.cpp"
 #include "conn.cpp"
@@ -23,6 +24,8 @@ class CTensor {
     // main file descriptor for our tensor
     int fd;
 
+    dtype type = int16;
+
     // we need initial shape for tensor. We need it to calculate 
     // it's size and to assign id - required for update/remove operations.
     // We will also track how many rows we have for each bucket.
@@ -34,7 +37,6 @@ class CTensor {
     //
     // For now it's hardcoded.
     std::vector<int> shape = {1};
-
 
     // this will allow us to use pwrite() in concurrent manner.
     // Each thread will get different offset for it's data and
@@ -57,7 +59,11 @@ class CTensor {
       return pwrite(fd, data, len, write_offset);
     }
 
-    int read(unsigned char* data, int len) {
-      return pread(fd, data, len, 0);
+    int read(unsigned char* data, int num_of_tensors) {
+      // calculate number of bytes to read
+      auto num_of_elems = std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<int>());
+      auto num_of_bytes = num_of_tensors * num_of_elems * type;
+
+      return pread(fd, data, num_of_bytes, 0);
     }
 };

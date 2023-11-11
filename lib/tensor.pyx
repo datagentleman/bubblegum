@@ -14,7 +14,7 @@ cdef class Tensor:
     return self.tensor.shape
 
 
-  cpdef read(self, int len):
+  cpdef read(self, bytes dst, int len):
     data = bytearray(len)
     self.tensor.read(data, len)
     return data
