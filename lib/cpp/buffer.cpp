@@ -2,7 +2,6 @@
 #define BUFFER 
 
 #include <vector>
-
 #include "utils.cpp"
 
 using namespace std;
@@ -10,6 +9,7 @@ using namespace std;
 class buffer {
   public:
     std::vector<unsigned char> buf;
+    int header_size = 2;
     
     // Since we are using std::memcpy we must track current offset while writing
     // data to our vector.
@@ -17,18 +17,18 @@ class buffer {
     // If that will become problematic, I will replace it with something else, 
     // probably push_back() 
     int write_offset = 0;
-
+    
     buffer() {}
     buffer(unsigned char* b, int len) {
       buf.resize(len);
       memcpy(buf.data(), b, len);
-    };
+    }
 
     // read next packet
     int read(unsigned char *dst, int len) {  
       // read data length 
       int16_t size;
-      _read(&size, 0, 2);
+      _read(&size, 0, header_size);
 
       // read data
       _read(dst, 0, size);
@@ -40,9 +40,9 @@ class buffer {
       int16_t data_len  = len;
 
       buf.resize(len + sizeof(total_len) + sizeof(data_len));
-      
-      _write(&total_len, 2);
-      _write(&data_len, 2);
+
+      _write(&total_len, header_size);
+      _write(&data_len, header_size);
       _write(data, len);
     }
 
@@ -55,14 +55,14 @@ class buffer {
     }
 
   private:
-    void _write(void *data, int size) {
-      auto data_ptr = buf.data() + write_offset; 
-      
-      std::memcpy(data_ptr, data, size);
+    void _write(void *data_src, int size) {
+      auto dst = buf.data() + write_offset; 
+
+      memcpy(dst, data_src, size);
       write_offset += size;
     }
 
-    // TODO: check boundaries 
+    // TODO: check boundaries. Add read_offset !!!
     void _read(void *dst, int offset, int len) {
       memcpy(dst, buf.data() + offset, len);
 

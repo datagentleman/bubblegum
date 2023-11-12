@@ -24,7 +24,6 @@ cdef class Buffer:
 
   def data(self):
     cdef int len = self.buf.len()
+    cdef unsigned char[:] data = <unsigned char[:len]> self.buf.data()
     
-    # TODO: play with memory views and undertand them better
-    cdef unsigned char[:] view = <unsigned char[:len]> self.buf.data()
-    return bytearray(view)
+    return bytearray(data)

@@ -1,3 +1,6 @@
+#ifndef TENSOR
+#define TENSOR
+
 #include <atomic>
 #include <iostream>
 #include <string>
@@ -67,3 +70,5 @@ class CTensor {
       return pread(fd, data, num_of_bytes, 0);
     }
 };
+
+#endif

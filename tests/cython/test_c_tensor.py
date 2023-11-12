@@ -21,4 +21,3 @@ def test_tensor_open():
   
   # data2 = ten.read(10) 
   # print(f"data: {data2}")
-
