@@ -28,7 +28,7 @@ class conn {
 
     // msg can be anything compatible with std::memcpy
     void write(void* msg, int len) {
-      buffer buf = buffer();
+      buffer buf = buffer(); 
       buf.write(msg, len);
     }
 

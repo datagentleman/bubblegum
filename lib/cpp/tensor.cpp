@@ -61,8 +61,8 @@ class CTensor {
 
     int read(unsigned char* data, int num_of_tensors) {
       // calculate number of bytes to read
-      auto num_of_elems = std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<int>());
-      auto num_of_bytes = num_of_tensors * num_of_elems * type;
+      auto elems_per_tensor = std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<int>());
+      auto num_of_bytes = num_of_tensors * elems_per_tensor * type;
 
       return pread(fd, data, num_of_bytes, 0);
     }

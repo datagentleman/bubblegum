@@ -6,7 +6,7 @@ def test_tensor_open():
   t = tensor.Tensor().open(b'tensors/test.tensor')
   t.write(b'd')
   print(t.shape())
-  
+
   dst = b''
   print(t.read(dst, 10))
 
