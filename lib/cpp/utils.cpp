@@ -18,7 +18,8 @@ uint16_t to_uint16(char* bytes, bool big_endian=true) {
 }
 
 // display unsigned char*
-void display(unsigned char* data, int size, bool as_bytes=false) {
+template <typename T>
+void display(T data, int size, bool as_bytes=false) {
   if(as_bytes) {
     for(int i=0; i < size; i++) {
       std::cout << std::hex << "\\x" << static_cast<int>(data[i]);
@@ -29,6 +30,12 @@ void display(unsigned char* data, int size, bool as_bytes=false) {
   for(int i=0; i < size; i++) {
     std::cout << data[i];
   }
+}
+
+// this should work for every object that implements [] and size()
+template <typename T>
+int container_size(T data) { 
+  return sizeof(data[0]) * data.size();
 }
 
 #endif
