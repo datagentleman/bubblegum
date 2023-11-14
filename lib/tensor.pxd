@@ -4,9 +4,11 @@ from libcpp.vector cimport vector
 
 cdef extern from "cpp/tensor.cpp":
   cdef cppclass CTensor:
+
     vector[int] shape
 
     CTensor() except +
+    void save() except +
     int open(char* path) except +
     int write(unsigned char *data, int len) except +
     int read(unsigned char *data, int len) except +
@@ -14,8 +16,9 @@ cdef extern from "cpp/tensor.cpp":
 
 cdef class Tensor:
   cdef CTensor tensor
+  cdef vector[int] shape
 
   cpdef Tensor open(self, bytes) 
+  cpdef save(self)
   cpdef read(self, bytes, int) 
   cpdef int write(self, bytes)
-  cpdef vector[int] shape(self)

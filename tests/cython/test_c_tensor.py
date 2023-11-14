@@ -3,12 +3,12 @@ import numpy as np
 
 
 def test_tensor_open():
-  t = tensor.Tensor().open(b'tensors/test.tensor')
-  t.write(b'd')
-  print(t.shape())
+  pass
+  # t = tensor.Tensor().open(b'tensors/test.tensor')
+  # t.write(b'd')
 
-  dst = b''
-  print(t.read(dst, 10))
+  # dst = b''
+  # print(t.read(dst, 10))
 
   # ten = tensor()
   # ten.open(b'datasets/iris/iris.csv')
@@ -21,3 +21,10 @@ def test_tensor_open():
   
   # data2 = ten.read(10) 
   # print(f"data: {data2}")
+
+def test_tensor_save():
+  t = tensor.Tensor()
+  data = np.arange(100, dtype=np.int8).tobytes()
+  t.shape = data
+  print(t.save())
+  

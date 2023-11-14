@@ -10,7 +10,7 @@
 using namespace std;
 
 void test(buffer buf, int sock) {
-  send(sock, buf.data(), buf.len(), 0);
+  send(sock, buf.data(), buf.size(), 0);
 }
 
 // class for handling sockets and user connections

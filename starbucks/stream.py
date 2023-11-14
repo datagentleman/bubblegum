@@ -11,7 +11,7 @@ class MSGType(Enum):
 
 # TODO: change this to Conn class
 class Stream:
-  def __init__(self, source: socket.socket):
+  def __init__(self, source: socket.socket):/
     self.source = source
     self.buf = Buffer()
 

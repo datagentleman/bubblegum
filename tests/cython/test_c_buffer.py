@@ -4,6 +4,10 @@ import numpy as np
 def test_buffer():
   data = np.arange(20, dtype=np.int8).tobytes()
   buf = Buffer(data)
-  
   assert(buf.data() == data)
   
+
+def test_buffer_write():
+  data = np.arange(20, dtype=np.int8).tobytes()
+  buf = Buffer(data)
+  buf.write([1,2])
