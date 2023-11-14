@@ -19,6 +19,7 @@ using namespace std;
 
 // values are number of bytes per element
 enum dtype { 
+  int8  = 1,
   int16 = 2,
 };
 
@@ -39,18 +40,15 @@ class CTensor {
     // If shape = {2, 2} we will get {100 x 2 x 2}.
     //
     // For now it's hardcoded.
-    std::vector<int> shape = {1};
+    std::vector<int32_t> shape = {1};
 
     CTensor();
     
     int open(char* tensor_path);
-    int write(unsigned char* data, int len, int offset);
-
     int read(unsigned char* data, int num_of_tensors);
 
     void save();
     void load();
-
 };
 
 #endif

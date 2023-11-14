@@ -7,11 +7,6 @@
 
 buffer:: buffer() {}
  
-buffer::buffer(unsigned char* b, int len) {
-  buf.resize(len);
-  memcpy(buf.data(), b, len);
-}
-
 // read next packet
 int buffer::read(unsigned char *dst, int len) {  
   // read data length 
@@ -23,12 +18,12 @@ int buffer::read(unsigned char *dst, int len) {
   return size;
 }
 
-template <typename T> 
-void buffer::write(T data, int len) {
-  buf.resize(header_size + len);
+// write data from src to buffer
+void buffer::write(void* src, int len) {
+  buf.resize(buf.size() + header_size + len);
 
   _write(&len, header_size);
-  _write(data, len);
+  _write(src, len);
 }
 
 unsigned char buffer::operator[](int index) {
@@ -43,20 +38,22 @@ unsigned char* buffer::data() {
   return buf.data();
 }
 
-void buffer::_write (void *data_src, int size) {
-  auto dst = buf.data() + write_offset; 
+// write data from src to buffer
+void buffer::_write(void* src, int size) {
+  auto dst = buf.data() + write_offset;
+  memcpy(dst, src, size);  
 
-  memcpy(dst, data_src, size);
   write_offset += size;
 }
 
+// read bytes from buffe to dst. We are removing consumed bytes.
 // TODO: check boundaries. Add read_offset !!!
-void buffer::_read(void *dst, int offset, int len) {
-  memcpy(dst, buf.data() + offset, len);
+void buffer::_read(void *dst, int offset, int num_bytes) {
+  memcpy(dst, buf.data() + offset, num_bytes);
 
   // we must remove bytes that we just read
   auto start = buf.begin() + offset;
-  auto end   = start + len;
+  auto end   = start + num_bytes;
 
   buf.erase(start, end);
 }

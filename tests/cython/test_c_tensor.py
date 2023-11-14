@@ -1,32 +1,10 @@
 import lib.tensor as tensor
 import numpy as np
-
-
-def test_tensor_open():
-  pass
-  # t = tensor.Tensor().open(b'tensors/test.tensor')
-  # t.write(b'd')
-
-  # dst = b''
-  # print(t.read(dst, 10))
-
-  # ten = tensor()
-  # ten.open(b'datasets/iris/iris.csv')
-
-  # data = np.arange(10, dtype=np.int8).tobytes()
-
-  # bytes_written = ten.write(data)
-  # print(f'bytes written: {bytes_written}')
-  # print(f'proper bytes: {data}')
-
-  # data2 = ten.read(10) 
-  # print(f"data: {data2}")
-
 def test_tensor_save():
-  t = tensor.Tensor()
-  data = np.arange(100, dtype=np.int8).tobytes()
-  t.shape = data
+  t = tensor.Tensor().open(b'tensors/test_load.tensor')
+  data = np.arange(2, dtype=np.int32).tobytes()
 
-  # TODO: check if we are passing pointers to cython.
+  t.shape = data
   print(t.save())
+  print(t.load())
   

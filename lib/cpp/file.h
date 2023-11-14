@@ -26,6 +26,9 @@ class File {
 
     int write(unsigned char* src, int len, int offset);
     int read(void* dst, int len, int offset);
+
+    // read next record(packet = size + data) from file 
+    int read_next(void* dst, int offset);
 };
 
 #endif

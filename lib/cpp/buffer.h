@@ -7,21 +7,22 @@ class buffer {
   public:
     std::vector<unsigned char> buf;
 
-    int header_size = 2;
-    int packet_size = 2;
-    
+    int header_size     = 4;
+    int number_of_elems = 0;
+    int current_size    = 0;
+
     // Since we are using std::memcpy we must track current offset while writing
     // data to our vector.
     //
     // If that will become problematic, I will replace it with something else, 
     // probably push_back() 
-    int write_offset = 0;
+    int write_offset;
 
     buffer();   
     buffer(unsigned char* b, int len);
     int read(unsigned char *dst, int len); 
 
-    template <typename T> void write(T data, int len);
+    void write(void *data, int len);
 
     unsigned char operator[](int index);
     int size();

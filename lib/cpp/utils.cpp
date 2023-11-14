@@ -34,7 +34,7 @@ void display(T data, int size, bool as_bytes=false) {
 
 // this should work for every object that implements [] and size()
 template <typename T>
-int container_size(T data) { 
+int container_size(T data) {
   return sizeof(data[0]) * data.size();
 }
 

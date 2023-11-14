@@ -1,24 +1,26 @@
 # distutils: language = c++
 
 from libcpp.vector cimport vector
+from libc.stdint cimport int32_t
 
 cdef extern from "cpp/tensor.cpp":
   cdef cppclass CTensor:
 
-    vector[int] shape
+    vector[int32_t] shape
 
     CTensor() except +
     void save() except +
+    void load() except +
     int open(char* path) except +
-    int write(unsigned char *data, int len) except +
     int read(unsigned char *data, int len) except +
 
 
 cdef class Tensor:
   cdef CTensor tensor
-  cdef vector[int] shape
+  cdef vector[int32_t] shape
 
   cpdef Tensor open(self, bytes) 
   cpdef save(self)
+  cpdef load(self)
   cpdef read(self, bytes, int) 
   cpdef int write(self, bytes)
