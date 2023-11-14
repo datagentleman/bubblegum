@@ -36,9 +36,13 @@ class CTensor {
     
     int open(char* tensor_path);
     int write(unsigned char* data, int len, int offset);
+
     int read(unsigned char* data, int num_of_tensors);
+    void _read(void *dst, int len, int offset);
 
     void save();
+    void load();
+
 };
 
 #endif

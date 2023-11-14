@@ -14,6 +14,7 @@
 #include "tensor.h"
 #include "buffer.cpp"
 #include "utils.cpp"
+#include "file.cpp"
 
 using namespace std;
 
@@ -49,11 +50,19 @@ int CTensor::read(unsigned char* data, int num_of_tensors) {
 void CTensor::save() {  
   buffer buf = buffer();
 
-  // saving tensor metadata 
+  // saving tensor metadata
   buf.write(shape.data(), container_size(shape));
   buf.write(&type, type);
 
   write(buf.data(), container_size(buf));
+}
+
+void CTensor::load() {  
+  buffer buf = buffer();
+}
+
+void CTensor::_read(void *dst, int len, int offset) {
+  pread(fd, dst, len, offset);
 }
 
 #endif

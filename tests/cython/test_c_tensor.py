@@ -12,13 +12,13 @@ def test_tensor_open():
 
   # ten = tensor()
   # ten.open(b'datasets/iris/iris.csv')
-  
+
   # data = np.arange(10, dtype=np.int8).tobytes()
 
   # bytes_written = ten.write(data)
   # print(f'bytes written: {bytes_written}')
   # print(f'proper bytes: {data}')
-  
+
   # data2 = ten.read(10) 
   # print(f"data: {data2}")
 
@@ -26,5 +26,7 @@ def test_tensor_save():
   t = tensor.Tensor()
   data = np.arange(100, dtype=np.int8).tobytes()
   t.shape = data
+
+  # TODO: check if we are passing pointers to cython.
   print(t.save())
   
