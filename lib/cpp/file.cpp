@@ -21,12 +21,10 @@ File::File(std::string file_path) {
 void File::_write(void *src, int len, int offset) {
   pwrite(fd, src, len, file_offset.load());
   file_offset.fetch_add(len, std::memory_order_relaxed);
-
 }
 
 void File::_read(void* dst, int len, int offset) {
-  cout << "\nLEN: " << +len << " OFFSET: " << +offset << "\n";
-  pread(fd, dst, len-1, offset);
+  pread(fd, dst, len, offset);
 }
 
 #endif

@@ -26,17 +26,25 @@ void CTensor::save() {
   buffer buf = buffer();
   
   // saving tensor metadata
+  int size = 5;
+  
+  buf.write(&size, 4);
+  buf.write(&type, 2);
   buf.write(shape.data(), container_size(shape));
 
-  // buf.write(&type, 2);
   file.write(buf.data(), container_size(buf), true);
 }
 
 void CTensor::load() {
-  type = int8;
+  std::vector<int32_t> shape2;  
 
-  std::vector<int32_t> shape2;
-  shape2.resize(5);
+  int size = 0;
+  file.read(&size);
+
+  dtype type = int8;
+  file.read(&type);
+
+  shape2.resize(size);
   file.read(shape2.data());
 }
 

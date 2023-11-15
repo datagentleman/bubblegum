@@ -7,4 +7,3 @@ def test_tensor_save():
   t.shape = [1, 8, 5, 12, 8]
   t.save()
   t.load()
-  

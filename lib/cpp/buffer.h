@@ -31,7 +31,7 @@ class ReaderWriter {
     }
 
     int read_header() {
-      int16_t len;
+      int len = 0;
       _read(&len, header_size, read_offset);
       read_offset += header_size;
       return len;
