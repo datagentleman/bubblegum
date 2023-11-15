@@ -24,7 +24,6 @@ cdef class Tensor:
     def __get__(self):
       return self.tensor.shape
 
-    def __set__(self, bytes val):
+    def __set__(self, vector[int32_t] val):
       self.shape = val
       self.tensor.shape = val
-      

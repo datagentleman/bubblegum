@@ -2,6 +2,7 @@
 #define TENSOR
 
 #include "tensor.h"
+#include<map>
 
 using namespace std;
 
@@ -17,27 +18,26 @@ int CTensor::read(unsigned char* data, int num_of_tensors) {
   auto elems_per_tensor = std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<int>());
   auto num_of_bytes = num_of_tensors * elems_per_tensor * type;
 
-  return file.read(data, num_of_bytes, 0);
+  file.read(data);
+  return 0;
 }
 
 void CTensor::save() {  
   buffer buf = buffer();
-
-  // saving tensor metadata
-
-  buf.write(shape.data(), container_size(shape));  
-  // buf.write(&type, type);
   
-  file.write(buf.data(), container_size(buf));
+  // saving tensor metadata
+  buf.write(shape.data(), container_size(shape));
+
+  // buf.write(&type, 2);
+  file.write(buf.data(), container_size(buf), true);
 }
 
 void CTensor::load() {
-  shape = {0}; 
-  type  = int8;
+  type = int8;
 
-  shape.resize(40);
-  int off = file.read_next(shape.data());
-  // file.read_next(&type, off);
+  std::vector<int32_t> shape2;
+  shape2.resize(5);
+  file.read(shape2.data());
 }
 
 #endif

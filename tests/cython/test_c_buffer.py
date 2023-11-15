@@ -13,6 +13,7 @@ def test_buffer_write():
   buf.write(raw1)
   buf.write(raw2)
   buf.write(raw3)
+  print(buf.data())
 
   raw = bytearray(6)
   buf.read(raw)

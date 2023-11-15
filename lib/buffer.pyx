@@ -11,7 +11,7 @@ cdef extern from "cpp/buffer.cpp":
     buffer()
 
     int size()
-    int read(unsigned char* data, int len)
+    int read(unsigned char* data)
     int write(void* data, int len)
     unsigned char* data()
 
@@ -27,16 +27,17 @@ cdef class Buffer:
     self.buf = buffer()
 
   def read(self, bytearray dst):
-    self.buf.read(dst, 0)
+    self.buf.read(dst)
 
 
   def write(self, bytes data):
     cdef unsigned char* ptr = data
     self.buf.write(ptr, len(data))
     
-
+    
   def data(self):
     cdef int len = self.buf.size()
+    print(f'SIZE: {self.buf.size()}')
     cdef unsigned char[:] data = <unsigned char[:len]> self.buf.data()
 
     return bytearray(data)
