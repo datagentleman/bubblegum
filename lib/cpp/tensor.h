@@ -17,18 +17,15 @@
 
 using namespace std;
 
-// values are number of bytes per element
-enum dtype { 
-  int8  = 1,
-  int16 = 2,
-};
+int INT_8  = 1;
+int INT_16 = 2;
 
 class CTensor {
   public:
     // main file for our tensor
     File file;
 
-    dtype type = int16;
+    int type = INT_8;
 
     // we need initial shape for tensor. We need it to calculate 
     // it's size and to assign id - required for update/remove operations.

@@ -10,12 +10,9 @@ File::File() {}
 
 File::File(std::string file_path) {
   fd = ::open(file_path.c_str(), O_CREAT| O_RDWR, 0666);
-
-  int eof_offset = lseek(fd, 0, SEEK_END);
-  // file_offset.fetch_add(eof_offset, std::memory_order_relaxed);
   
-  // set initial write_offset (default is 0). In case of files it will be EOF.
-  write_offset = file_offset.fetch_add(eof_offset, std::memory_order_relaxed);
+  int eof_offset = lseek(fd, 0, SEEK_END);
+  file_offset.fetch_add(eof_offset, std::memory_order_relaxed);
 }
 
 void File::_write(void *src, int len, int offset) {

@@ -10,8 +10,8 @@ class ReaderWriter {
     int read_offset  = 0;
     int header_size  = 4;
 
-    void write(void *src, int len, bool raw=false) {      
-      raw ? void() : write_header(len);
+    void write(void *src, int len, bool with_header=true) {      
+      if(with_header) write_header(len);
       write_data(src, len);
     }
 

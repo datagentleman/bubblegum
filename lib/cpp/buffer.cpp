@@ -5,7 +5,7 @@
 #include "buffer.h"
 #include "utils.cpp"
 
-buffer::buffer()  {}
+buffer::buffer()  {};
 buffer::~buffer() {};
 
 unsigned char buffer::operator[](int index) {

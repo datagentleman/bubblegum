@@ -22,30 +22,26 @@ int CTensor::read(unsigned char* data, int num_of_tensors) {
   return 0;
 }
 
+// saving tensor metadata
 void CTensor::save() {  
   buffer buf = buffer();
-  
-  // saving tensor metadata
-  int size = 5;
-  
+  int size = shape.size();
+
   buf.write(&size, 4);
   buf.write(&type, 2);
   buf.write(shape.data(), container_size(shape));
 
-  file.write(buf.data(), container_size(buf), true);
+  file.write(buf.data(), container_size(buf), false);
 }
 
 void CTensor::load() {
-  std::vector<int32_t> shape2;  
-
   int size = 0;
+  
   file.read(&size);
-
-  dtype type = int8;
   file.read(&type);
 
-  shape2.resize(size);
-  file.read(shape2.data());
+  shape.resize(size);
+  file.read(&shape);
 }
 
 #endif
