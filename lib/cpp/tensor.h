@@ -2,6 +2,7 @@
 #define TENSOR_H
 
 #include <atomic>
+#include <map>
 #include <iostream>
 #include <string>
 #include <stdio.h>
@@ -15,17 +16,20 @@
 #include "utils.cpp"
 #include "file.cpp"
 
-using namespace std;
 
-int INT_8  = 1;
-int INT_16 = 2;
+std::map<std::string, int> DTYPES = {
+  { "int8",  1 },
+  { "int16", 2 }
+};
+
+using namespace std;
 
 class CTensor {
   public:
     // main file for our tensor
     File file;
 
-    int type = INT_8;
+    string dtype = "int16";
 
     // we need initial shape for tensor. We need it to calculate 
     // it's size and to assign id - required for update/remove operations.

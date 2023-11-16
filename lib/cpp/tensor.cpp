@@ -15,8 +15,8 @@ int CTensor::open(char* tensor_path) {
 
 int CTensor::read(unsigned char* data, int num_of_tensors) {
   // calculate number of bytes to read
-  auto elems_per_tensor = std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<int>());
-  auto num_of_bytes = num_of_tensors * elems_per_tensor * type;
+  // auto elems_per_tensor = std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<int>());
+  // auto num_of_bytes = num_of_tensors * elems_per_tensor * type;
 
   file.read(data);
   return 0;
@@ -28,20 +28,21 @@ void CTensor::save() {
   int size = shape.size();
 
   buf.write(&size, 4);
-  buf.write(&type, 2);
+  buf.write(&dtype, dtype.size());
   buf.write(shape.data(), container_size(shape));
-
+  
   file.write(buf.data(), container_size(buf), false);
 }
 
 void CTensor::load() {
   int size = 0;
-  
-  file.read(&size);
-  file.read(&type);
+  dtype.resize(5);
 
+  file.read(&size);
+  file.read(&dtype);
+  
   shape.resize(size);
-  file.read(&shape);
+  file.read(shape.data());
 }
 
 #endif
