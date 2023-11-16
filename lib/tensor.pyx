@@ -14,16 +14,24 @@ cdef class Tensor:
 
   cpdef load(self):
     self.tensor.load()
-
+ 
   cpdef read(self, bytes dst, int len):
     data = bytearray(len)
     self.tensor.read(data, len)
     return data
 
-  property shape:
-    def __get__(self):
-      return self.tensor.shape
+  @property
+  def shape(self):
+    return self.tensor.shape
 
-    def __set__(self, vector[int32_t] val):
-      self.shape = val
-      self.tensor.shape = val
+  @shape.setter
+  def shape(self, val):
+    self.tensor.shape = val
+  
+  @property
+  def dtype(self):
+    return self.tensor.dtype
+
+  @dtype.setter
+  def dtype(self, val):
+    self.tensor.dtype = val

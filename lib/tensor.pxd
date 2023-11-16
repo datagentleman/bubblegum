@@ -1,12 +1,13 @@
 # distutils: language = c++
 
 from libcpp.vector cimport vector
-from libc.stdint cimport int32_t
+from libc.stdint   cimport int32_t
+from libcpp.string cimport string
 
 cdef extern from "cpp/tensor.cpp":
   cdef cppclass CTensor:
-
     vector[int32_t] shape
+    string dtype
 
     CTensor() except +
     void save() except +
@@ -17,10 +18,10 @@ cdef extern from "cpp/tensor.cpp":
 
 cdef class Tensor:
   cdef CTensor tensor
-  cdef vector[int32_t] shape
-
+  
   cpdef Tensor open(self, bytes) 
   cpdef save(self)
   cpdef load(self)
   cpdef read(self, bytes, int) 
   cpdef int write(self, bytes)
+  

@@ -13,7 +13,6 @@ class Client:
     self.port: int = port
     self.type: str = type
 
-
   def connect(self) -> Client:
     conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     conn.connect((self.host, self.port))
@@ -22,7 +21,6 @@ class Client:
     self.conn.send_handshake()
 
     return self
-
 
   def ping(self):
     self.send('PING')
@@ -37,7 +35,6 @@ class Client:
   def read(self) -> Buffer:
     return self.conn.read()
 
-
   ### 
   ### WORKERS 
   ###
@@ -51,7 +48,6 @@ class Client:
   def wls(self) -> Buffer:
     self.send('WLS')
     return self.read()
-  
   
   ### 
   ### TENSORS 

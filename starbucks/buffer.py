@@ -7,7 +7,7 @@ class Buffer:
     self._data = packet
 
 
-  # TODO: handle more types
+  # TODO: handle more types. Extract this logic.
   def write(self, data: any, num_of_bytes: int = 2, byteorder: str = 'little'):
     match type(data).__name__:
       case 'int':
@@ -16,14 +16,14 @@ class Buffer:
 
       case 'float':
         self._data += self.pack(pack('d', data))
-        
+
       case 'str': 
         self._data += self.pack(data.encode())
 
       case 'list' | 'tuple':
         # write list len first
         self.write(len(data), 2)
-
+        
         # write list itself
         for elem in data: self.write(elem)
 
@@ -40,7 +40,7 @@ class Buffer:
     self._data += data
 
 
-  # read next packet
+  # read next element
   def read(self) -> bytes:  
     # read size
     size = int.from_bytes(self._read(2), byteorder='little')

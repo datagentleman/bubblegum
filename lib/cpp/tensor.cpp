@@ -27,20 +27,21 @@ void CTensor::save() {
   buffer buf = buffer();
   int size = shape.size();
 
-  buf.write(&size, 4);
   buf.write(&dtype, dtype.size());
+  buf.write(&size, sizeof(size));
   buf.write(shape.data(), container_size(shape));
-  
+
   file.write(buf.data(), container_size(buf), false);
 }
 
 void CTensor::load() {
-  int size = 0;
-  dtype.resize(5);
+  int size = file.read_header();
+  dtype.resize(size);
+  file.read_data(&dtype, size);
 
+  size = 0;
   file.read(&size);
-  file.read(&dtype);
-  
+
   shape.resize(size);
   file.read(shape.data());
 }
