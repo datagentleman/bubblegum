@@ -8,7 +8,7 @@ class Writer:
         return pack('i', data)
       
       case 'float':
-        return pack('d', data)
+        return pack('f', data)
 
       case 'str': 
         return self.write_len_data(data.encode())

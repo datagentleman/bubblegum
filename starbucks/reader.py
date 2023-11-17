@@ -12,15 +12,25 @@ class Reader:
     match type_1:
       case "int":
         format += "i"
-        return unpack(format, self._read())
+        lst = unpack(format, self.read_length())
+        return lst if len(lst) > 1 else lst[0]
+        
+      case "float":
+        format += "f"
+        lst = unpack(format, self.read_length())
+        return lst if len(lst) > 1 else lst[0]
         
       case "bytes":
-        len = unpack('i', self.read_length())[0]
-        return self.read_length(len)
+        length = unpack('i', self.read_length())[0]
+        return self.read_length(length)
+
+      case "string":
+        length = unpack('i', self.read_length())[0]
+        return self.read_length(length).decode()
 
       case "list":
-        len = unpack('i', self.read_length())
-        return self.read(type_2, length=f'{len[0]}')
+        length = unpack('i', self.read_length())[0]
+        return self.read(type_2, length=f'{length}')
         
       case _:
         print('unsupported type')
@@ -38,5 +48,5 @@ class Reader:
     b = self.data[:len]
     
     # we must delete consumed bytes after reading 
-    self.data = self.data[len:]
+    self.data[:] = self.data[len:]
     return b
