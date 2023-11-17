@@ -3,50 +3,56 @@ from __future__ import annotations
 from struct import pack
 
 class Buffer:
-  def __init__(self, packet =b''):
+  def __init__(self, packet = b''):
     self._data = packet
 
-
   # TODO: handle more types. Extract this logic.
-  def write(self, data: any, num_of_bytes: int = 2, byteorder: str = 'little'):
+  def write(self, data: any):
     match type(data).__name__:
       case 'int':
-        b = data.to_bytes(num_of_bytes, byteorder=byteorder)
-        self._data += self.pack(b)
-
+        return pack('i', data)
+      
       case 'float':
-        self._data += self.pack(pack('d', data))
+        return pack('d', data)
 
       case 'str': 
-        self._data += self.pack(data.encode())
+        return self.pack(data.encode())
 
       case 'list' | 'tuple':
-        # write list len first
-        self.write(len(data), 2)
+        elems = b''.join([self.write(elem) for elem in data])
         
-        # write list itself
-        for elem in data: self.write(elem)
+        data =  self.write(len(data))
+        data += self.write(len(elems))
+        data += elems
 
+        return data
+        
       case 'bytes': 
-        self._data += self.pack(data)
+        return self.pack(data)
 
       case _:        
-        self._data += self.pack(data)  
-
-    return self
+        return self.pack(data)  
 
 
   def append(self, data: bytes):
     self._data += data
 
 
-  # read next element
+  # read next 
   def read(self) -> bytes:  
     # read size
-    size = int.from_bytes(self._read(2), byteorder='little')
+    size = int.from_bytes(self._read(4), byteorder='little')
     
     # read data
     return self._read(size)
+    
+    
+  def read_header(self):
+    bytes = self._data[:4]
+    
+    # we must delete consumed bytes after reading 
+    self._data = self._data[4:]
+    return bytes
     
     
   def _read(self, len):
@@ -58,7 +64,7 @@ class Buffer:
 
 
   def pack(self, data: bytes) -> bytes:
-    size = len(data).to_bytes(2, byteorder='little')
+    size = len(data).to_bytes(4, byteorder='little')
     return size + data
   
 
@@ -68,4 +74,3 @@ class Buffer:
   
   def data(self) -> bytes:
     return self._data
-  
