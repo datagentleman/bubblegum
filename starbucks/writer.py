@@ -1,31 +1,34 @@
 from struct import pack
+from typing import Any
 
-def write(data: any):
-  match type(data).__name__:
-    case 'int':
-      return pack('i', data)
-    
-    case 'float':
-      return pack('d', data)
-
-    case 'str': 
-      return write_len_data(data.encode())
-
-    case 'list' | 'tuple':
-      elems = b''.join([write(elem) for elem in data])
+class Writer:
+  def write(self, data: any):
+    match type(data).__name__:
+      case 'int':
+        return pack('i', data)
       
-      data =  write(len(data))
-      data += write(len(elems))
-      data += elems
+      case 'float':
+        return pack('d', data)
 
-      return data
-      
-    case 'bytes': 
-      return write_len_data(data)
+      case 'str': 
+        return self.write_len_data(data.encode())
 
-    case _:        
-      return write_len_data(data)  
+      case 'list' | 'tuple':
+        elems = b''.join([self.write(elem) for elem in data])
+        
+        data =  self.write(len(data))
+        data += self.write(len(elems))
+        data += elems
 
-def write_len_data(data: bytes) -> bytes:
-  size = len(data).to_bytes(4, byteorder='little')
-  return size + data
+        return data
+        
+      case 'bytes': 
+        return self.write_len_data(data)
+
+      case _:        
+        return self.write_len_data(data)  
+
+
+  def write_len_data(self, data: bytes) -> bytes:
+    size = len(data).to_bytes(4, byteorder='little')
+    return size + data

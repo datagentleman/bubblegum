@@ -1,8 +1,10 @@
 from struct import unpack
+from typing import Any
 
 class Reader:
   def __init__(self, raw: bytes):
     self.data = raw
+
 
   def read(self, type_1: str, type_2: str=None, length: str="") -> any:
     format = length
