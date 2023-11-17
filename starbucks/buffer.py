@@ -47,7 +47,7 @@ class Buffer:
     return self._read(size)
     
     
-  def read_header(self):
+  def read_length(self):
     bytes = self._data[:4]
     
     # we must delete consumed bytes after reading 
