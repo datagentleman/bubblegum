@@ -2,7 +2,6 @@
 #define UTILS 
 
 #include <cstdint>
-
 #include <fstream>
 #include <iostream>
 #include <sstream>

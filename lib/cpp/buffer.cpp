@@ -23,9 +23,8 @@ unsigned char* buffer::data() {
 // write data from src to buffer
 void buffer::_write(void* src, int len, int offset) {
   buf.resize(buf.size() + len);
-
   auto dst = buf.data() + offset;
-  memcpy(dst, src, len);  
+  memcpy(dst, src, len);
 }
 
 // read bytes from buffe to dst. We are removing consumed bytes.

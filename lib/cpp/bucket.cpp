@@ -7,18 +7,19 @@
 
 using namespace std;
 
-// TODO: this will be map. Each bucket must have it's own counter. 
-// static std::atomic<int> bucket_size(0);
+static std::map<std::string, std::atomic<int> *> bucket_lengths;
 
 // Main class for storing tensor data.
 class CBucket : File {
   public:
     int id = 0;
-    
-    CBucket(std::string file_path="tensors/iris/1.bucket") { }
-    
-    void write(buffer *data) {
 
+    CBucket() {}
+    CBucket(std::string file_path) : File(file_path) {
+    }
+
+    void write(buffer *buff) {
+      File::write(buff->data(), buff->size());
     }
 };
 

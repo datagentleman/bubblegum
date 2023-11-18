@@ -26,6 +26,7 @@ cdef class Buffer:
   def __init__(self):
     self.buf = buffer()
 
+
   def read(self, bytearray dst):
     self.buf.read(dst)
 
