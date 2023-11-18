@@ -50,6 +50,8 @@ class CTensor {
 
     void save();
     void load();
+
+    void write(buffer data, int len);
 };
 
 #endif

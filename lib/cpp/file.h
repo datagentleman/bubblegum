@@ -16,14 +16,12 @@
 // this will allow us to use pwrite() in concurrent manner.
 // Each thread will get different offset for it's data and
 // we shouldn't have any conflicts ;)
-//
-// TODO: this will be map for each tensor. We must have write_offset for each opened tensor.
-static std::atomic<int> file_offset(0);
+static std::map<std::string, std::atomic<int> *> file_offsets;
 
 class File : public ReaderWriter {
   public:
-    // main file descriptor for our tensor
     int fd;
+    std::atomic<int> *file_offset;
 
     File();
     File(std::string file_path);

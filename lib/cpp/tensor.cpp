@@ -1,8 +1,11 @@
 #ifndef TENSOR
 #define TENSOR
 
-#include "tensor.h"
 #include<map>
+
+#include "tensor.h"
+#include "bucket.cpp"
+#include "buffer.cpp"
 
 using namespace std;
 
@@ -44,6 +47,11 @@ void CTensor::load() {
 
   shape.resize(size);
   file.read(shape.data());
+}
+
+void CTensor::write(buffer data, int len) {
+  CBucket current_bucket = CBucket();
+  current_bucket.write(&data);
 }
 
 #endif

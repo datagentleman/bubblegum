@@ -11,13 +11,16 @@ File::File() {}
 File::File(std::string file_path) {
   fd = ::open(file_path.c_str(), O_CREAT| O_RDWR, 0666);
   
+  file_offsets.insert({file_path, new std::atomic<int>(0)});
+  file_offset = file_offsets[file_path];
+
   int eof_offset = lseek(fd, 0, SEEK_END);
-  file_offset.fetch_add(eof_offset, std::memory_order_relaxed);
+  file_offset->fetch_add(eof_offset, std::memory_order_relaxed);
 }
 
 void File::_write(void *src, int len, int offset) {
-  pwrite(fd, src, len, file_offset.load());
-  file_offset.fetch_add(len, std::memory_order_relaxed);
+  pwrite(fd, src, len, file_offset->load());
+  file_offset->fetch_add(offset, std::memory_order_relaxed);
 }
 
 void File::_read(void* dst, int len, int offset) {
