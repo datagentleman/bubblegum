@@ -37,4 +37,9 @@ int container_size(T data) {
   return sizeof(data[0]) * data.size();
 }
 
+template <typename T>
+int container_size(T *data) {
+  return sizeof(data->front()) * data->size();
+}
+
 #endif

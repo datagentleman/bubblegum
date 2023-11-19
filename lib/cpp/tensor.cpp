@@ -30,9 +30,9 @@ void CTensor::save() {
   buffer buf = buffer();
   int size = shape.size();
 
-  buf.write(&dtype, dtype.size());
-  buf.write(&size, sizeof(size));
-  buf.write(shape.data(), container_size(shape));
+  buf.write(&dtype);
+  buf.write(&size);
+  buf.write(&shape);
 
   file.write(buf.data(), container_size(buf), false);
 }

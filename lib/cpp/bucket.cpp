@@ -19,7 +19,7 @@ class CBucket : File {
     }
 
     void write(buffer *buff) {
-      File::write(buff->data(), buff->size());
+      File::write(buff->vec());
     }
 };
 

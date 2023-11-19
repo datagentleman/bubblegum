@@ -11,9 +11,9 @@ cdef extern from "cpp/buffer.cpp":
 
 cdef extern from "cpp/bucket.cpp":
   cdef cppclass CBucket:
-    CBucket() except +
-    CBucket(string file_path) except +
-    void write(buffer *src) except+
+    CBucket() except*
+    CBucket(string file_path) except*
+    void write(buffer *src) except*
 
 
 cdef class Bucket:

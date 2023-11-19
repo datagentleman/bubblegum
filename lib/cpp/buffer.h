@@ -3,7 +3,6 @@
 
 #include "reader_writer.cpp"
 
-
 using namespace std;
 
 class buffer : public ReaderWriter {
@@ -19,6 +18,7 @@ class buffer : public ReaderWriter {
 
     unsigned char operator[](int index);
     unsigned char* data();
+    std::vector<unsigned char>* vec();
 
     void _write(void *data_src, int size, int offset) override;
     void _read(void *dst, int len, int offset) override;

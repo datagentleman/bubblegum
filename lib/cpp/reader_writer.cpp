@@ -1,9 +1,27 @@
+#include "utils.cpp"
+
 // TODO: consider different naming
 class ReaderWriter {
   public:
     int write_offset = 0;
     int read_offset  = 0;
     int header_size  = 4;
+
+    template <typename T>
+    void write(std::vector<T> *src) {
+      write_header(container_size(src));
+      write_data(src->data(), container_size(src));
+    }
+
+    void write(int *src) {
+      write_header(sizeof(*src));
+      write_data(src, sizeof(*src));
+    }
+
+    void write(std::string *src) {
+      write_header(src->size());
+      write_data(src, src->size());
+    }
 
     void write(void *src, int len, bool with_header=true) {      
       if(with_header) write_header(len);
@@ -37,6 +55,7 @@ class ReaderWriter {
       read_offset += len;
     }
 
+    // implemented by children (File, Buffer, ...)
     virtual void _write(void *src, int len, int offset) {}
     virtual void _read(void  *dst, int len, int offset) {}
 

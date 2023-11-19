@@ -38,7 +38,6 @@ cdef class Buffer:
     
   def data(self):
     cdef int len = self.buf.size()
-    print(f'SIZE: {self.buf.size()}')
     cdef unsigned char[:] data = <unsigned char[:len]> self.buf.data()
 
     return bytearray(data)

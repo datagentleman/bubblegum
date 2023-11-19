@@ -20,6 +20,10 @@ unsigned char* buffer::data() {
   return buf.data();
 }
 
+std::vector<unsigned char>* buffer::vec() {
+  return &buf;
+}
+
 // write data from src to buffer
 void buffer::_write(void* src, int len, int offset) {
   buf.resize(buf.size() + len);
