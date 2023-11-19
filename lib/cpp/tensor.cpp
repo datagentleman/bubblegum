@@ -34,7 +34,7 @@ void CTensor::save() {
   buf.write(&size);
   buf.write(&shape);
 
-  file.write(buf.data(), container_size(buf), false);
+  file.write(buf.vec());
 }
 
 void CTensor::load() {
