@@ -14,6 +14,17 @@ cdef extern from "cpp/tensor.cpp":
     void load() except +
     int open(char* path) except +
     int read(unsigned char *data, int len) except +
+    int write(buffer data, int len) except +
+
+
+cdef extern from "cpp/buffer.cpp":
+  cdef cppclass buffer:
+    buffer()
+
+    int size()
+    int read(unsigned char* data)
+    int write(unsigned char* data, int len)
+    unsigned char* data()
 
 
 cdef class Tensor:
@@ -23,5 +34,5 @@ cdef class Tensor:
   cpdef save(self)
   cpdef load(self)
   cpdef read(self, bytes, int) 
-  cpdef int write(self, bytes)
+  cpdef write(self, bytes)
   

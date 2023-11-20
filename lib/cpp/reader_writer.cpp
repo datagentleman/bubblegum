@@ -23,6 +23,11 @@ class ReaderWriter {
       write_data(src, src->size());
     }
 
+    void write(unsigned char *src, int len, bool header=true) {      
+      if(header) write_header(len);
+      write_data(src, len);
+    }
+
     void write(void *src, int len, bool header=true) {      
       if(header) write_header(len);
       write_data(src, len);
