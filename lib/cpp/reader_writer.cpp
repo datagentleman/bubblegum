@@ -1,3 +1,6 @@
+#ifndef READER_WRITER
+#define READER_WRITER
+
 #include "utils.cpp"
 
 // TODO: consider different naming
@@ -7,6 +10,13 @@ class ReaderWriter {
     int read_offset  = 0;
     int header_size  = 4;
 
+    virtual ~ReaderWriter() {}
+
+    // implemented by children (File, Buffer, ...)
+    virtual void _write(void *src, int len, int offset) {}
+    virtual void _read(void  *dst, int len, int offset) {}
+
+    // WRITER
     template <typename T>
     void write(std::vector<T> *src) {
       write_header(container_size(src));
@@ -43,9 +53,20 @@ class ReaderWriter {
       write_offset += len;
     }
 
+    // READER
+    void read(int *dst) {
+      read_data(dst, 4);
+    }
+
+    void read(std::string *dst) {
+      int len = read_header();
+      dst->resize(len);
+      read_data(dst, len);
+    }
+
     void read(void *dst) {
-      int data_size = read_header();
-      read_data(dst, data_size);
+      int len = read_header();
+      read_data(dst, len);
     }
 
     int read_header() {
@@ -59,10 +80,6 @@ class ReaderWriter {
       _read(src, len, read_offset);
       read_offset += len;
     }
-
-    // implemented by children (File, Buffer, ...)
-    virtual void _write(void *src, int len, int offset) {}
-    virtual void _read(void  *dst, int len, int offset) {}
-
-    virtual ~ReaderWriter() {}
 };
+
+#endif

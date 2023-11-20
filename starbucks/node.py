@@ -46,7 +46,7 @@ class Node:
 
           # get command from connected client
           else:
-            run_command(conn)
+            run_command(conn, self)
 
         except ConnectionResetError as e:
           log.error(f"Connection reset by peer: {e}")

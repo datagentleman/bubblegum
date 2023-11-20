@@ -6,11 +6,14 @@
 #include <sys/socket.h>
 
 #include "buffer.cpp"
+#include "utils.cpp"
+#include "reader_writer.cpp"
 
 using namespace std;
 
 // class for handling sockets and user connections
-class conn {
+// TODO: rename this class (make all cpp classes consistent)
+class conn : public ReaderWriter {
   public:
     int sock;
 
@@ -22,10 +25,12 @@ class conn {
       create_socket(existing_fd);
     }
 
-    // msg can be anything compatible with std::memcpy
-    void write(void* msg, int len) {
-      buffer buf = buffer(); 
-      buf.write(msg, len);
+    void _write(void *data_src, int size, int offset) {
+      send(sock, data_src, size, 0);      
+    }
+
+    void _read(void *dst, int size, int offset) { 
+      recv(sock, dst, size, 0);
     }
 
   private:

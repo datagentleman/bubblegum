@@ -7,5 +7,7 @@ PORT = 1337
 if __name__ == '__main__':
   client = Client(HOST, PORT).connect()
 
-  data = np.arange(2, dtype=np.int32).tobytes()
-  client.send("TPUT", "iris", data)
+  data = np.arange(200, dtype=np.int32).tobytes()
+  client.send("TPUT", "tensors/iris", data)
+  
+  print(client.read('bytes'))

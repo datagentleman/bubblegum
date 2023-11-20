@@ -30,15 +30,15 @@ class Client:
 
   def send(self, cmd: str, *args):
     buf = Buffer()
-
+    
     buf.write(cmd)
-    (buf.write(arg) for arg in args)
+    [buf.write(arg) for arg in args]
     
     self.conn.send(buf())
 
 
-  def read(self) -> Buffer:
-    return self.conn.read()
+  def read(self, type_1: str, type_2: str=None) -> Buffer:
+    return self.conn.read(type_1, type_2)
 
   ### 
   ### WORKERS 

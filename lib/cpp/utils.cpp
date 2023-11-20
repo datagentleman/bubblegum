@@ -7,15 +7,6 @@
 #include <sstream>
 #include <string>
 
-// reading 2 bytes and converting them to uint16
-uint16_t to_uint16(char* bytes, bool big_endian=true) {
-  if (big_endian) {
-    return (bytes[0] << 8) | bytes[1];
-  }
-
-  return 0;
-}
-
 // display unsigned char*
 template <typename T>
 void display(T data, int size, bool as_bytes=false) {

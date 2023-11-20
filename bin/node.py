@@ -14,13 +14,17 @@ log.basicConfig(format="\x1b[6;37;44m%(levelname)s\x1b[0m:%(message)s", level=lo
 HOST = Config["server.host"]
 PORT = Config["server.port"]
 
-def run_command(conn: Conn):
+def run_command(conn: Conn, node: Node):
   cmd = conn.read('str')
 
   match cmd:
     # cython commands - running concurrently
     case "PING": c_commands.ping(conn.fileno())
-    case "TPUT": c_commands.put(conn.fileno())
+
+    case "TPUT": 
+      c_commands.put(conn.fileno())
+      # since we will be dealing with this conn in cpp, we must remove it from python select() loop
+      node.select.unregister(conn)
 
     # server
     case "HELLO": hello
