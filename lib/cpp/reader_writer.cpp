@@ -54,6 +54,12 @@ class ReaderWriter {
     }
 
     // READER
+    void read(std::vector<unsigned char> *dst) {
+      int len = read_header();
+      dst->resize(len);
+      read_data(dst->data(), len);
+    }
+
     void read(int *dst) {
       read_data(dst, 4);
     }
@@ -62,6 +68,7 @@ class ReaderWriter {
       int len = read_header();
       dst->resize(len);
       read_data(dst, len);
+      return dst;
     }
 
     void read(void *dst) {

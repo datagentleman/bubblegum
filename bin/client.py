@@ -8,6 +8,6 @@ if __name__ == '__main__':
   client = Client(HOST, PORT).connect()
 
   data = np.arange(200, dtype=np.int32).tobytes()
-  client.send("TPUT", "tensors/iris", data)
+  client.send("TPUT", "tensors/iris/1.bucket", data)
   
   print(client.read('bytes'))

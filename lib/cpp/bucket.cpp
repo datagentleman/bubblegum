@@ -15,8 +15,7 @@ class CBucket : File {
     int id = 0;
 
     CBucket() {}
-    CBucket(std::string file_path) : File(file_path) {
-    }
+    CBucket(std::string file_path) : File(file_path) { }
 
     void write(buffer *buff) {
       File::write(buff->vec());

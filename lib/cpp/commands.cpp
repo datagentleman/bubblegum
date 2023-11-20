@@ -1,5 +1,6 @@
 #include "conn.cpp"
 #include "buffer.cpp"
+#include "bucket.cpp"
 
 void tensor_put(int fd) {
   conn con = conn(fd);
@@ -12,4 +13,7 @@ void tensor_put(int fd) {
 
   buffer buf = buffer();
   con.read(buf.vec());
+
+  CBucket bucket = CBucket(tensor_name);
+  bucket.write(&buf); 
 }
