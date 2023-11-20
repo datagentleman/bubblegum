@@ -30,14 +30,6 @@ class Reader:
         print('unsupported type')
 
 
-  def _read(self) -> bytes:
-    # read size
-    size = int.from_bytes(self.read_length(), byteorder='little')
-
-    # read data
-    return self.read_length(size)
-
-
   def read_length(self, len=4):
     b = self.data[:len]
     
