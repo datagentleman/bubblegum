@@ -13,6 +13,7 @@ class Client:
     self.port: int = port
     self.type: str = type
 
+
   def connect(self) -> Client:
     conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     conn.connect((self.host, self.port))
@@ -21,6 +22,7 @@ class Client:
     self.conn.send_handshake()
 
     return self
+
 
   def ping(self):
     self.send('PING')
@@ -74,3 +76,4 @@ class Client:
   # Stream tensor data
   def tstream(self, path: str) -> DataStream:
     return DataStream.run(self, path)
+  

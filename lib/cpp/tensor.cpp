@@ -20,7 +20,6 @@ int CTensor::read(unsigned char* data, int num_of_tensors) {
   // calculate number of bytes to read
   // auto elems_per_tensor = std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<int>());
   // auto num_of_bytes = num_of_tensors * elems_per_tensor * type;
-
   file.read(data);
   return 0;
 }

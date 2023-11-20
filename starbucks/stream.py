@@ -5,10 +5,6 @@ from enum import Enum
 
 from starbucks.buffer import Buffer
 
-class MSGType(Enum):
-  CMD = 1
-  MSG = 2
-
 # TODO: change this to Conn class
 class Stream:
   def __init__(self, source: socket.socket):

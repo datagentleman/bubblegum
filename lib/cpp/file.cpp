@@ -11,6 +11,7 @@ File::File() {}
 File::File(std::string file_path) {
   fd = ::open(file_path.c_str(), O_CREAT| O_RDWR, 0666);
   
+  // TODO: extract this to separate function
   file_offsets.insert({file_path, new std::atomic<int>(0)});
   file_offset = file_offsets[file_path];
 

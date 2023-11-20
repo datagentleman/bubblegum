@@ -11,7 +11,7 @@ class Node:
 
     self.connected_clients = {}
     self.select = selectors.DefaultSelector()
-  
+
 
   # accept incoming connections
   def accept(self, sock):
@@ -39,11 +39,14 @@ class Node:
         conn = event.fileobj
 
         try:
+          # someone wants to connect
           if conn is self.node_socket:
             self.accept(conn)
+
+          # get command from connected client
           else:
             run_command(conn)
-            
+
         except ConnectionResetError as e:
           log.error(f"Connection reset by peer: {e}")
           self.select.unregister(conn)

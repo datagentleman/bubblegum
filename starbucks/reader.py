@@ -6,32 +6,26 @@ class Reader:
     self.data = raw
 
 
-  def read(self, type_1: str, type_2: str=None, length: str="") -> any:
-    format = length
-    
+  def read(self, type_1: str, type_2: str=None) -> any:
     match type_1:
       case "int":
-        format += "i"
-        lst = unpack(format, self.read_length())
-        return lst if len(lst) > 1 else lst[0]
-        
-      case "float":
-        format += "f"
-        lst = unpack(format, self.read_length())
-        return lst if len(lst) > 1 else lst[0]
-        
-      case "bytes":
-        length = unpack('i', self.read_length())[0]
-        return self.read_length(length)
+        return unpack("i", self.read_length())[0]
 
-      case "string":
-        length = unpack('i', self.read_length())[0]
-        return self.read_length(length).decode()
+      case "float":
+        return unpack("f", self.read_length())[0]
+
+      case "bytes":
+        length = unpack('i', self.read_length())
+        return self.read_length(length[0])
+
+      case "str":
+        length = unpack('i', self.read_length())
+        return self.read_length(length[0]).decode()
 
       case "list":
-        length = unpack('i', self.read_length())[0]
-        return self.read(type_2, length=f'{length}')
-        
+        length = unpack('i', self.read_length())
+        return [self.read(type_2) for _ in range(length[0])]
+
       case _:
         print('unsupported type')
 
@@ -39,11 +33,11 @@ class Reader:
   def _read(self) -> bytes:
     # read size
     size = int.from_bytes(self.read_length(), byteorder='little')
-    
+
     # read data
     return self.read_length(size)
-      
-      
+
+
   def read_length(self, len=4):
     b = self.data[:len]
     

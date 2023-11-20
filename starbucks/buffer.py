@@ -6,12 +6,12 @@ from starbucks.writer import Writer
 class Buffer:
   def __init__(self, packet = b''):
     self.data   = bytearray(packet)
-    self.writer = Writer()
+    self.writer = Writer(self.data)
     self.reader = Reader(self.data)
 
 
   def write(self, data: any):
-    self.data.extend(self.writer.write(data))
+    self.writer.write(data)
     return self
 
 

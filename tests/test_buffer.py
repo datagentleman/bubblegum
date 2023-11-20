@@ -11,7 +11,7 @@ def test_buffer_write_read():
   assert(round(buf.read('float'), 4) == 1.0001)
 
   buf.write("bubblegum")
-  assert(buf.read('string') == "bubblegum")
-
-  buf.write(b'bubblegum')
-  assert(buf.read('bytes') == b'bubblegum')
+  assert(buf.read('str') == "bubblegum")
+  
+  buf.write((1, 2, 3))
+  assert(buf.read('list', 'int') == [1, 2, 3])
