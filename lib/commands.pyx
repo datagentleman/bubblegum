@@ -9,11 +9,11 @@ cdef extern from "cpp/conn.cpp":
     conn(int)
     void write(void*, int)
 
-
 cpdef ping(int fd):
   Tensor().open(b'')
   
-
-cpdef tinsert(int fd):
+cpdef put(int fd):
   t = Tensor()
-  t.open(b'')
+
+  print(f'fd: {fd}')
+  print(f'tensor: {t}')

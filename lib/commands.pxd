@@ -1,4 +1,4 @@
 # distutils: language = c++
 
 cpdef ping(int)
-cpdef tinsert(int)
+cpdef put(int)

@@ -2,36 +2,42 @@ import socket
 
 from starbucks.buffer  import Buffer
 from starbucks.command import Command as command
+from starbucks.reader  import Reader
+from starbucks.writer  import Writer
 
 # this class will manage clients connection to node
 class Conn:
   def __init__(self, conn: socket.socket):
     self.conn = conn
-    self.buf  = Buffer()
+    self.data = bytearray()
 
-  # read next message. 
-  def read(self):
-    if len(self.buf.data()) == 0: 
+    self.reader = Reader(self.data)
+    self.writer = Writer(self.data)
+
+
+  # read next message
+  def read(self, type_1: str, type_2: str=None) -> bytes:
+    if len(self.data) == 0:
       self._load_buffer()
 
-    return Buffer(self.buf.read())
+    return self.reader.read(type_1, type_2)
 
 
   # send bytes
-  # TODO: try to remove batch option. Make it cleaner.
-  def send(self, buf: Buffer, batch: bool=False) -> int:
-    data = buf.data() if batch else buf.raw()
-    res  = Buffer(data)
-
-    return self.conn.send(res.raw())
+  def send(self, data: bytearray) -> int:
+    return self.conn.send(data)
 
 
   # read handshake.
   def read_handshake(self) -> bytes:
-    conn_type = self.read()
-    self.send(Buffer().write("OK".encode()))
+    self.conn.settimeout(0.5)
+    conn_type = self.read('str')
+    
+    res = Buffer().write("OK")
+    self.send(res.data)
 
-    return conn_type.read()
+    self.conn.settimeout(None)
+    return conn_type
 
 
   # send handshake.
@@ -39,22 +45,18 @@ class Conn:
   def send_handshake(self) -> bytes:
     # handshake should be reasonably fast
     self.conn.settimeout(0.5)
-        
-    self.send(Buffer().write("OK".encode()))
-    self.read()
+    
+    res = Buffer().write("OK")
+    self.send(res.data)
+    self.read('bytes')
 
     # from this point on, we cannot have any timeouts on socket - ex: streaming, long running tasks, ...
     self.conn.settimeout(None)
     
 
-  # get next command from client
-  def get_cmd(self) -> command:
-    return command.from_bytes(self.read())
-
-
   def _load_buffer(self):
-    n = int.from_bytes(self.conn.recv(2), byteorder='little')
-    self.buf.append(self.conn.recv(n))
+    n = int.from_bytes(self.conn.recv(4), byteorder='little')
+    self.writer.write(self.conn.recv(n))
     
     
   # needed when working with selec()

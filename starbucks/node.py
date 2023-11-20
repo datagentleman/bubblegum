@@ -1,5 +1,6 @@
 import socket
 import selectors
+import traceback
 import logging as log
 
 from starbucks.conn import Conn
@@ -50,10 +51,10 @@ class Node:
         except ConnectionResetError as e:
           log.error(f"Connection reset by peer: {e}")
           self.select.unregister(conn)
-          conn.conn.close()         
+          conn.conn.close()      
 
         except Exception as e:
-          log.error(f"ERROR: {e}")
+          log.error(traceback.format_exc())
 
 
   def create_socket_and_listen(self): 

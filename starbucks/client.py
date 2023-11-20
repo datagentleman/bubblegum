@@ -3,7 +3,6 @@ from __future__ import annotations
 import socket
 
 from starbucks.conn        import Conn
-from starbucks.command     import Command
 from starbucks.buffer      import Buffer
 from starbucks.data_stream import DataStream
 
@@ -30,8 +29,12 @@ class Client:
 
 
   def send(self, cmd: str, *args):
-    cmd = Command(cmd, *args)
-    self.conn.send(cmd.to_bytes())
+    buf = Buffer()
+
+    buf.write(cmd)
+    (buf.write(arg) for arg in args)
+    
+    self.conn.send(buf.data)
 
 
   def read(self) -> Buffer:
@@ -71,8 +74,8 @@ class Client:
   def tls(self, path: str='') -> Buffer:
     self.send('TLS', path)
     return self.read()
-
-
+  
+  
   # Stream tensor data
   def tstream(self, path: str) -> DataStream:
     return DataStream.run(self, path)

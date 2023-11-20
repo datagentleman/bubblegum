@@ -8,7 +8,7 @@ from starbucks.config   import Config
 from starbucks.buffer   import Buffer 
 from starbucks.commands import * 
 
-from lib.commands import ping, tinsert
+import lib.commands as c_commands
 
 log.basicConfig(format="\x1b[6;37;44m%(levelname)s\x1b[0m:%(message)s", level=log.DEBUG)
 
@@ -16,12 +16,12 @@ HOST = Config["server.host"]
 PORT = Config["server.port"]
 
 def run_command(conn: Conn):
-  cmd = conn.get_cmd()
+  cmd = conn.read('str')
 
-  match cmd.name:
+  match cmd:
     # cython commands - running concurrently
-    case "PING":    ping(conn.fileno())
-    case "TINSERT": tinsert(conn.fileno())
+    case "PING": c_commands.ping(conn.fileno())
+    case "TPUT": c_commands.put(conn.fileno())
 
     # server
     case "HELLO": hello
@@ -36,12 +36,13 @@ def run_command(conn: Conn):
     case "TSTREAM": tensor_stream
 
     case _:
-      conn.send(Buffer(b"COMMAND DOESN'T EXIST!"))
+      conn.send(b"COMMAND DOESN'T EXIST")
   
 
 def handle_client(client_conn: Conn, cmd):
   cmd.run(client_conn)
   log.error('Client is dead ...')
+  
   
 if __name__ == '__main__':
   try:
