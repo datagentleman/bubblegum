@@ -34,7 +34,7 @@ class Client:
     buf.write(cmd)
     (buf.write(arg) for arg in args)
     
-    self.conn.send(buf.data)
+    self.conn.send(buf())
 
 
   def read(self) -> Buffer:

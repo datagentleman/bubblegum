@@ -1,7 +1,6 @@
 import socket 
 
 from starbucks.buffer  import Buffer
-from starbucks.command import Command as command
 from starbucks.reader  import Reader
 from starbucks.writer  import Writer
 

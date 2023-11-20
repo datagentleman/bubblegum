@@ -5,7 +5,6 @@ import logging as log
 from starbucks.conn     import Conn
 from starbucks.node     import Node
 from starbucks.config   import Config 
-from starbucks.buffer   import Buffer 
 from starbucks.commands import * 
 
 import lib.commands as c_commands

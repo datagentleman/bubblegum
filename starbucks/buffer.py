@@ -10,6 +10,9 @@ class Buffer:
     self.reader = Reader(self.data)
 
 
+  def __call__(self):
+    return self.data
+  
   def write(self, data: any):
     self.writer.write(data)
     return self
@@ -18,6 +21,3 @@ class Buffer:
   def read(self, type_1: str, type_2: str=None) -> bytes:
     return self.reader.read(type_1, type_2)
 
-
-  def data(self) -> bytes:
-    return self.data
