@@ -13,13 +13,18 @@ class ReaderWriter {
     virtual ~ReaderWriter() {}
 
     // implemented by children (File, Buffer, ...)
-    virtual void _write(void *src, int len, int offset) {}
-    virtual void _read(void  *dst, int len, int offset) {}
+    virtual void _write(void *src, int len, int offset)    {}
+    virtual void _write_at(void *src, int len, int offset) {}
+    virtual void _read(void  *dst, int len, int offset)    {}
 
     // WRITER
+    void write_at(void *src, int len, int offset) {
+      _write_at(src, len, offset);
+    }
+
     template <typename T>
-    void write(std::vector<T> *src) {
-      write_header(container_size(src));
+    void write(std::vector<T> *src, bool header=true) {
+      if(header) write_header(container_size(src));
       write_data(src->data(), container_size(src));
     }
 
