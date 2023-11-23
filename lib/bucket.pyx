@@ -6,7 +6,7 @@ cdef extern from "cpp/buffer.cpp":
   cdef cppclass buffer:
     buffer()
     int read(unsigned char* data)
-    int write(void* data, int len)
+    int write(void* data, int, bint header)
     unsigned char* data()
 
 cdef extern from "cpp/bucket.cpp":
@@ -28,9 +28,8 @@ cdef class Bucket:
   cpdef void write(self, bytes data):
     cdef unsigned char* ptr = data
 
-    self.buf.write(ptr, len(data))
+    self.buf.write(ptr, len(data), False)
     self.bucket.write(&self.buf)
-
 
   cpdef bytes read(self, int len):
     buf = buffer();
