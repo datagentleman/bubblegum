@@ -18,14 +18,32 @@ class CBucket : File {
 
     CBucket() {}
     CBucket(std::string file_path) : File(file_path) {
-      data_offset = new std::atomic<int>(data_start);
+      data_offset = new std::atomic<int>(0);
+      data_offset->fetch_add(data_start, std::memory_order_relaxed);
     }
 
     void write(buffer *buff) {
       // write data
       int size = container_size(buff->vec());
-      int off = file_offset->fetch_add(size, std::memory_order_relaxed);
-      File::write_at(buff->vec(),  size, off);
+      int off = data_offset->fetch_add(size, std::memory_order_relaxed);
+      
+      File::write_at(buff->data(), size, off);
+
+      // calculate ids for given offset
+      // TODO: move to method
+      // off -= data_start;
+      // off += size;
+
+      // int row_size = 4;
+      // int num_of_ids = size / row_size;
+
+      // int first_id = off / row_size;
+      // int last_id  = first_id + num_of_ids;
+
+      // std::vector<int> ids(num_of_ids);
+      // for(int i=first_id; i <= last_id; i++) {
+      //   ids.push_back(i);
+      // }
     }
 };
 

@@ -6,3 +6,4 @@ def test_bucket_write():
 
   b = Bucket(b'tensors/iris/1.bucket')
   b.write(data)
+
