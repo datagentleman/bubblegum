@@ -32,6 +32,10 @@ class ReaderWriter {
       write_data(src, sizeof(*src));
     }
 
+    void write(int src) {
+      write_data(&src, sizeof(src));
+    }
+
     void write(std::string *src) {
       write_header(src->size());
       write_data(src, src->size());

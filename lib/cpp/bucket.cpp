@@ -17,29 +17,37 @@ class CBucket : File {
     
     int header_start = 0;
     int data_start   = 400;
+    int row_size     = 4;
 
     std::atomic<int> *data_offset;
-    // std::mutex save_load;
+    std::atomic<int> *size;
 
     CBucket() {}
     CBucket(std::string file_path) : File(file_path) {
       data_offset = new std::atomic<int>(0);
       data_offset->fetch_add(data_start, std::memory_order_relaxed);
+
+      size = new std::atomic<int>(0);
     }
 
-    // void save() {
+    void save() {
       // std::lock_guard<std::mutex> lock(save_load);
-      // buff = buffer()
-      // buff.write(size);
-      // File::write_at(buff->data(), container_size(buf.vec()), header_start);
-    // }
+
+      buffer buff = buffer();
+      buff.write(size->load());
+
+      File::write_at(buff.data(), container_size(buff), header_start);
+    }
 
     void write(buffer *buff) {
-      int size = container_size(buff->vec());
-      int off = data_offset->fetch_add(size, std::memory_order_relaxed);
+      int len = container_size(buff->vec());
+      int off = data_offset->fetch_add(len, std::memory_order_relaxed);
       
-      File::write_at(buff->data(), size, off);
+      File::write_at(buff->data(), len, off);
+      size->fetch_add((len/row_size));
       
+      save();
+
       // calculate ids for given offset
       // TODO: move to method
       // off -= data_start;
