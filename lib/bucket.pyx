@@ -32,6 +32,8 @@ cdef class Bucket:
     self.bucket.write(&self.buf)
 
   cpdef bytes read(self, int len):
-    buf = buffer();
+    buf = buffer()
+    row_size = 4
+    len = len * row_size;
     self.bucket.read(&buf, len)
     return bytes(buf.data()[:len])

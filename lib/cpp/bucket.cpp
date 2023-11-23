@@ -59,10 +59,9 @@ class CBucket : File {
 
     // read number of tensor rows
     void read(buffer *buff, int len) {
-      int row_size = 4;
-      buff->vec()->resize(12);
+      buff->vec()->resize(len);
 
-      int offset = data_start + (len * row_size);
+      int offset = data_start + len;
       File::read_at(buff->data(), len, data_start);
     }
 };
