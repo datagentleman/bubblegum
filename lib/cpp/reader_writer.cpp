@@ -58,6 +58,10 @@ class ReaderWriter {
     }
 
     // READER
+    void read_at(void *dst, int len, int offset) {
+      _read(dst, len, offset);
+    }
+
     template <typename T>
     void read(std::vector<T> *dst) {
       int elems = read_header();

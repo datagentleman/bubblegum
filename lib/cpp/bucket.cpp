@@ -2,6 +2,7 @@
 #define BUCKET
 
 #include<map>
+#include<mutex>
 
 #include "file.cpp"
 
@@ -13,8 +14,12 @@ static std::map<std::string, std::atomic<int> *> bucket_lengths;
 class CBucket : File {
   public:
     int id = 0;
-    int data_start = 400;
+    
+    int header_start = 0;
+    int data_start   = 400;
+
     std::atomic<int> *data_offset;
+    // std::mutex save_load;
 
     CBucket() {}
     CBucket(std::string file_path) : File(file_path) {
@@ -22,13 +27,19 @@ class CBucket : File {
       data_offset->fetch_add(data_start, std::memory_order_relaxed);
     }
 
+    // void save() {
+      // std::lock_guard<std::mutex> lock(save_load);
+      // buff = buffer()
+      // buff.write(size);
+      // File::write_at(buff->data(), container_size(buf.vec()), header_start);
+    // }
+
     void write(buffer *buff) {
-      // write data
       int size = container_size(buff->vec());
       int off = data_offset->fetch_add(size, std::memory_order_relaxed);
       
       File::write_at(buff->data(), size, off);
-
+      
       // calculate ids for given offset
       // TODO: move to method
       // off -= data_start;
@@ -44,6 +55,15 @@ class CBucket : File {
       // for(int i=first_id; i <= last_id; i++) {
       //   ids.push_back(i);
       // }
+    }
+
+    // read number of tensor rows
+    void read(buffer *buff, int len) {
+      int row_size = 4;
+      buff->vec()->resize(12);
+
+      int offset = data_start + (len * row_size);
+      File::read_at(buff->data(), len, data_start);
     }
 };
 
