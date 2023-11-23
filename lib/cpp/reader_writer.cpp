@@ -24,7 +24,6 @@ class ReaderWriter {
     }
 
     void write(int *src) {
-      write_header(sizeof(*src));
       write_data(src, sizeof(*src));
     }
 
@@ -54,9 +53,12 @@ class ReaderWriter {
     }
 
     // READER
-    void read(std::vector<unsigned char> *dst) {
-      int len = read_header();
-      dst->resize(len);
+    template <typename T>
+    void read(std::vector<T> *dst) {
+      int elems = read_header();
+      int len   = read_header();
+
+      dst->resize(elems);
       read_data(dst->data(), len);
     }
 
@@ -68,7 +70,6 @@ class ReaderWriter {
       int len = read_header();
       dst->resize(len);
       read_data(dst, len);
-      return dst;
     }
 
     void read(void *dst) {

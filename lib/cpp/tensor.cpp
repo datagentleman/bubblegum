@@ -40,12 +40,7 @@ void CTensor::load() {
   int size = file.read_header();
   dtype.resize(size);
   file.read_data(&dtype, size);
-
-  size = 0;
-  file.read(&size);
-
-  shape.resize(size);
-  file.read(shape.data());
+  file.read(&shape);
 }
 
 void CTensor::write(buffer data, int len) {
