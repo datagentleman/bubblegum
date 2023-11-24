@@ -3,9 +3,9 @@ import numpy as np
 
 def test_bucket_write():
   data = np.arange(2, dtype=np.int32).tobytes()
+  b = Bucket(b'tensors/iris/1.bucket')
 
-  for i in range(1):
-    b = Bucket(b'tensors/iris/1.bucket')
+  for i in range(3):
     b.write(data)
 
   buf = b.read(2)

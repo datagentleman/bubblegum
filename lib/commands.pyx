@@ -14,7 +14,7 @@ cdef extern from "cpp/commands.cpp":
 
 
 cpdef ping(int fd):
-  Tensor().open(b'')
+  Tensor(b'')
 
 cpdef put(int fd):
   tensor_put(fd)

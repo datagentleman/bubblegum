@@ -10,9 +10,9 @@ cdef extern from "cpp/tensor.cpp":
     string dtype
 
     CTensor() except +
+    CTensor(char* path) except +
     void save() except +
     void load() except +
-    int open(char* path) except +
     int read(unsigned char *data, int len) except +
     int write(buffer data, int len) except +
 
@@ -28,9 +28,8 @@ cdef extern from "cpp/buffer.cpp":
 
 
 cdef class Tensor:
-  cdef CTensor tensor
+  cdef CTensor *tensor
   
-  cpdef Tensor open(self, bytes) 
   cpdef save(self)
   cpdef load(self)
   cpdef read(self, bytes, int) 

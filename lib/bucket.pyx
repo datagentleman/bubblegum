@@ -18,22 +18,26 @@ cdef extern from "cpp/bucket.cpp":
 
 
 cdef class Bucket:
-  cdef CBucket bucket
+  cdef CBucket *bucket
   cdef buffer  buf
 
   def __init__(self, string bucket_path):
-    self.bucket = CBucket(bucket_path)
+    self.bucket = new CBucket(bucket_path)
     self.buf = buffer()
 
   cpdef void write(self, bytes data):
     cdef unsigned char* ptr = data
-
+    
+    self.buf = buffer()
     self.buf.write(ptr, len(data), False)
+    
     self.bucket.write(&self.buf)
 
   cpdef bytes read(self, int len):
     buf = buffer()
+    
     row_size = 4
     len = len * row_size;
+    
     self.bucket.read(&buf, len)
     return bytes(buf.data()[:len])

@@ -24,11 +24,8 @@ std::map<std::string, int> DTYPES = {
 
 using namespace std;
 
-class CTensor {
+class CTensor: public File {
   public:
-    // main file for our tensor
-    File file;
-
     string dtype = "int16";
 
     // we need initial shape for tensor. We need it to calculate 
@@ -44,8 +41,8 @@ class CTensor {
     std::vector<int32_t> shape = {1};
 
     CTensor();
+    CTensor(char* tensor_path);
     
-    int open(char* tensor_path);
     int read(unsigned char* data, int num_of_tensors);
 
     void save();

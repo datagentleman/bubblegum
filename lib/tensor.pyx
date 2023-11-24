@@ -1,10 +1,8 @@
 # distutils: language = c++
 
 cdef class Tensor:
-  cpdef Tensor open(self, bytes path):
-    self.tensor.open(path)
-    return self
-
+  def __init__(self, bytes path):
+    self.tensor = new CTensor(path) 
 
   cpdef write(self, bytes data):
     cdef buffer buf

@@ -35,7 +35,6 @@ cdef class Buffer:
     cdef unsigned char* ptr = data
     self.buf.write(ptr, len(data))
     
-    
   def data(self):
     cdef int len = self.buf.size()
     cdef unsigned char[:] data = <unsigned char[:len]> self.buf.data()

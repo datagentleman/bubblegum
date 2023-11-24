@@ -24,6 +24,7 @@ class File : public ReaderWriter {
     std::atomic<int> *file_offset;
 
     File();
+    ~File();
     File(std::string file_path, int offset);
 
     void _write(void *data_src, int size, int offset)    override;

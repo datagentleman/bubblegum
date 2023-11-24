@@ -7,9 +7,12 @@
 // Main class for writing/reading tensors (and other types in the future).
 // Cncurrent writes and reads will be supported.
 File::File() {}
+File::~File() {
+  close(fd);
+}
 
 File::File(std::string file_path, int offset=-1) {
-  fd = ::open(file_path.c_str(), O_CREAT| O_RDWR, 0666);
+  fd = ::open(file_path.c_str(), O_RDWR | O_CREAT, 0666);
   
   // TODO: extract this to separate function
   file_offsets.insert({file_path, new std::atomic<int>(0)});
