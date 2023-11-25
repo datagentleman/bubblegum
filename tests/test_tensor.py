@@ -1,14 +1,15 @@
 import os
 from starbucks.tensor import Tensor
+from pathlib import Path
 
 def test_tensor_create_remove():
   path = 'test/iris/validation/w1'
 
   Tensor.create(path)
-  assert(os.path.exists(Tensor.ROOT + path))
+  assert(os.path.exists(Path(Tensor.ROOT).joinpath(path)))
   
   Tensor.remove(path)
-  assert not(os.path.exists(Tensor.ROOT + path))
+  assert not(os.path.exists(Path(Tensor.ROOT).joinpath(path)))
   
 
 def test_tensor_ls():

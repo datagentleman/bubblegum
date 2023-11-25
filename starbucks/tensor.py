@@ -16,8 +16,8 @@ class TensorIterator:
 
 
 class Tensor:
-  ROOT = "./tensors/"
-  TENSOR_INFO = "tensor.info"
+  ROOT = "./tensors"
+  EXT  = ".tensor"
   
   def __init__(self, name: str):
     self.name = name
@@ -28,34 +28,41 @@ class Tensor:
 
 
   @classmethod
-  def find(cls, path: str) -> Tensor|None:
-    if Path(cls.ROOT).joinpath(path, cls.TENSOR_INFO).is_file():
-      return Tensor(path)
-    
-    return None
-    
+  def _path(cls, tensor: str):
+    name = Path(tensor).name
+    return Path(cls.ROOT).joinpath(tensor, f'{name}{cls.EXT}')
+
+
   @classmethod
-  def create(cls, path: str, root: str=ROOT):
-    dir = Path(f'{root}/{path}')
+  def _dir(cls, tensor: str):
+    return Path(cls.ROOT).joinpath(tensor)
+    
 
-    os.makedirs(dir, exist_ok=True)
-    Path(f'{dir}/{cls.TENSOR_INFO}').touch()
-
-
-  # TODO: remove only directories with tensor.info files.
-  # Don't remove directory if there are sub-directories with other tensors. 
   @classmethod
-  def remove(cls, path: str):
-    shutil.rmtree(f'{cls.ROOT}/{path}')
+  def find(cls, tensor: str) -> Tensor:
+    if cls._path(tensor).is_file():
+      return Tensor(tensor)
+
+
+  @classmethod
+  def create(cls, tensor: str, root: str=ROOT):
+    os.makedirs(cls._dir(tensor), exist_ok=True)
+    Path(cls._path(tensor)).touch()
+
+
+  # TODO: remove only .tensor file and all .bucket files. If dir became empty, also remove it.
+  @classmethod
+  def remove(cls, tensor: str):
+    shutil.rmtree(cls._dir(tensor))
 
 
   @classmethod
   def ls(cls, root: str=ROOT) -> list[tuple[str, ...]]:
     tensors = []
 
-    # we only want directories with proper .info file inside
+    # we only want directories with proper .tensor file
     for path in Path(root).rglob("*"):
-      if path.joinpath(cls.TENSOR_INFO).is_file():
-        tensors.append(path.parts[1:])
+      if path.is_file() and path.suffixes[0] == cls.EXT:
+        tensors.append(path.parts[1:-1])
     
     return tensors
