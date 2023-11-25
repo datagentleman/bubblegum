@@ -13,6 +13,7 @@ class Buffer:
   def __call__(self):
     return self.data
   
+  
   def write(self, data: any):
     self.writer.write(data)
     return self

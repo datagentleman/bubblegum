@@ -23,7 +23,6 @@ def test_tensor_create_remove():
   assert(os.path.exists(Path(Tensor.ROOT).joinpath(path2)))
   
   
-
 def test_tensor_ls():
   Tensor.remove("test", force=True)
   Tensor.create("test/iris/validation/w1")
@@ -43,3 +42,12 @@ def test_find():
   
   tensor = Tensor.find("test/fake")
   assert(tensor == None)
+
+
+def test_from_to_bytes():
+  t1 = Tensor("test/iris")
+  t1.dtype = "int16"
+  t1.shape = [2, 3]
+  
+  t2 = Tensor.from_bytes(t1.bytes())
+  assert(t1.bytes() == t2.bytes())
