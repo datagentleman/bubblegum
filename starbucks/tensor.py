@@ -4,6 +4,7 @@ import os
 import shutil
 
 from pathlib import Path
+from struct  import pack, unpack
 
 from starbucks.dataset import Dataset  
 from starbucks.buffer  import Buffer  
@@ -27,16 +28,35 @@ class Tensor:
     self.shape = ()
     self.rows_per_bucket  = 10_000
     self.buckets_per_node = 0
+    
+    self.fd = -1
 
 
   def iter(self) -> TensorIterator:
     return TensorIterator(self)
 
 
+  def save(self):
+    data = self.bytes()
+    size = pack('i', len(data))
+
+    os.pwrite(self._open(self.name), size + data, 0)
+
+
+  @classmethod
+  def load(cls, name: str) -> Tensor:
+    fd = cls._open(name)
+    
+    data = os.pread(fd, 4, 0)
+    size = unpack('i', data)[0]
+
+    data = os.pread(fd, size, 4)
+    return cls.from_bytes(data)
+
   # Encode tensor to bytes
   def bytes(self) -> bytearray:
     buf = Buffer()
-    
+
     buf.write(self.name)
     buf.write(self.dtype)
     buf.write(self.shape)
@@ -60,7 +80,13 @@ class Tensor:
     t.buckets_per_node = buf.read('int')
     
     return t
+
     
+  @classmethod
+  def _open(cls, name: str) -> int:
+    fd = os.open(cls._path(name), os.O_RDWR | os.O_CREAT)
+    return fd
+
 
   @classmethod
   def _path(cls, tensor: str):

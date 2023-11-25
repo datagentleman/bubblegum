@@ -51,3 +51,17 @@ def test_from_to_bytes():
   
   t2 = Tensor.from_bytes(t1.bytes())
   assert(t1.bytes() == t2.bytes())
+
+
+def test_save_load():
+  path = 'test/iris/validation/w1'
+  Tensor.create(path)
+  
+  t1 = Tensor(path)
+  t1.dtype = "int32"
+  t1.shape = [2, 3]
+  t1.save()
+  
+  t2 = Tensor.load(path)
+  assert(t1.bytes() == t2.bytes())
+  
