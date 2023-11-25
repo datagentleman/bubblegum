@@ -50,17 +50,29 @@ class Tensor:
     Path(cls._path(tensor)).touch()
 
 
-  # TODO: remove only .tensor file and all .bucket files. If dir became empty, also remove it.
   @classmethod
-  def remove(cls, tensor: str):
-    shutil.rmtree(cls._dir(tensor))
+  def remove(cls, tensor: str, root: str=ROOT, force: bool=False):
+    if force: shutil.rmtree(cls._dir(tensor))
+      
+    for file in cls._dir(tensor).glob('*.tensor'):
+      os.remove(file)
+
+    for file in cls._dir(tensor).glob('*.bucket'):
+      os.remove(file)
+    
+    # This will remove dir only if it's empty. If not then we will get exception
+    # which we can ignore. 
+    try:
+      cls._dir(tensor).rmdir()
+    except Exception:
+      pass
 
 
   @classmethod
   def ls(cls, root: str=ROOT) -> list[tuple[str, ...]]:
     tensors = []
 
-    # we only want directories with proper .tensor file
+    # We only want directories with proper .tensor file
     for path in Path(root).rglob("*"):
       if path.is_file() and path.suffixes[0] == cls.EXT:
         tensors.append(path.parts[1:-1])

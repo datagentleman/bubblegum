@@ -10,10 +10,22 @@ def test_tensor_create_remove():
   
   Tensor.remove(path)
   assert not(os.path.exists(Path(Tensor.ROOT).joinpath(path)))
+
+  # When we have nested tensors, we don't want to remove directories
+  path1 = 'test/iris/validation/w1'
+  path2 = 'test/iris/validation/w1/w2'
+
+  Tensor.create(path1)
+  Tensor.create(path2)
+
+  Tensor.remove(path1)
+  assert(os.path.exists(Path(Tensor.ROOT).joinpath(path1)))
+  assert(os.path.exists(Path(Tensor.ROOT).joinpath(path2)))
+  
   
 
 def test_tensor_ls():
-  Tensor.remove("test")
+  Tensor.remove("test", force=True)
   Tensor.create("test/iris/validation/w1")
   
   tensors = Tensor.ls('tensors/test')
@@ -23,7 +35,7 @@ def test_tensor_ls():
 
 
 def test_find():
-  Tensor.remove("test")
+  Tensor.remove("test", force=True)
   Tensor.create("test/iris")
   
   tensor = Tensor.find("test/iris")
