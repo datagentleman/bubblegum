@@ -9,15 +9,6 @@ from struct  import pack, unpack
 from starbucks.dataset import Dataset  
 from starbucks.buffer  import Buffer  
 
-class TensorIterator:
-  def __init__(self, tensor: Tensor):
-    self.tensor = tensor
-    
-  def next(self) -> bytes:
-    # POC: only temporary
-    return Dataset.read('iris/iris.csv')
-
-
 class Tensor:
   ROOT = "./tensors"
   EXT  = ".tensor"
@@ -32,15 +23,12 @@ class Tensor:
     self.fd = -1
 
 
-  def iter(self) -> TensorIterator:
-    return TensorIterator(self)
-
-
   def save(self):
     data = self.bytes()
     size = pack('i', len(data))
 
-    os.pwrite(self._open(self.name), size + data, 0)
+    self.fd = self._open(self.name)
+    os.pwrite(self.fd, size + data, 0)
 
 
   @classmethod
@@ -52,6 +40,7 @@ class Tensor:
 
     data = os.pread(fd, size, 4)
     return cls.from_bytes(data)
+
 
   # Encode tensor to bytes
   def bytes(self) -> bytearray:
