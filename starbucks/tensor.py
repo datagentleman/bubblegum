@@ -6,21 +6,21 @@ import shutil
 from pathlib import Path
 from struct  import pack, unpack
 
-from starbucks.dataset import Dataset  
 from starbucks.buffer  import Buffer  
 
 class Tensor:
   ROOT = "./tensors"
   EXT  = ".tensor"
-  
+
   def __init__(self, name: str):
     self.name  = name
     self.dtype = ""
     self.shape = ()
-    self.rows_per_bucket  = 10_000
-    self.buckets_per_node = 0
+    self.size  = 0
+    self.fd    = -1
     
-    self.fd = -1
+    # size in bytes
+    self.max_bucket_size = 10_000
 
 
   def save(self):
@@ -34,7 +34,7 @@ class Tensor:
   @classmethod
   def load(cls, name: str) -> Tensor:
     fd = cls._open(name)
-    
+
     data = os.pread(fd, 4, 0)
     size = unpack('i', data)[0]
 
@@ -49,9 +49,7 @@ class Tensor:
     buf.write(self.name)
     buf.write(self.dtype)
     buf.write(self.shape)
-    buf.write(self.rows_per_bucket)
-    buf.write(self.buckets_per_node)
-    
+    buf.write(self.size)
     return buf.data
 
 
@@ -60,17 +58,14 @@ class Tensor:
   def from_bytes(cls, data: bytes) -> Tensor:
     buf = Buffer(data)
     t = Tensor("")
-    
+
     t.name  = buf.read('str')
     t.dtype = buf.read('str')
     t.shape = buf.read('list', 'int')
-    
-    t.rows_per_bucket  = buf.read('int')
-    t.buckets_per_node = buf.read('int')
-    
+    t.size  = buf.read('int')
     return t
 
-    
+
   @classmethod
   def _open(cls, name: str) -> int:
     fd = os.open(cls._path(name), os.O_RDWR | os.O_CREAT)
@@ -98,13 +93,14 @@ class Tensor:
   def create(cls, tensor: str, root: str=ROOT):
     os.makedirs(cls._dir(tensor), exist_ok=True)
     Path(cls._path(tensor)).touch()
-
+    
 
   @classmethod
   def remove(cls, tensor: str, root: str=ROOT, force: bool=False):
     # remove whole directory including sub-directories
     if force: shutil.rmtree(cls._dir(tensor))
       
+    # TODO: just remove all files from dir
     for file in cls._dir(tensor).glob('*.tensor'):
       os.remove(file)
 
@@ -119,13 +115,14 @@ class Tensor:
       pass
 
 
+  # List all tensors 
   @classmethod
   def ls(cls, root: str=ROOT) -> list[tuple[str, ...]]:
     tensors = []
 
-    # We only want directories with proper .tensor file
+    # We only want directories with .tensor file
     for path in Path(root).rglob("*"):
       if path.is_file() and path.suffixes[0] == cls.EXT:
         tensors.append(path.parts[1:-1])
-    
+
     return tensors

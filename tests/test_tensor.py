@@ -64,4 +64,3 @@ def test_save_load():
   
   t2 = Tensor.load(path)
   assert(t1.bytes() == t2.bytes())
-  
