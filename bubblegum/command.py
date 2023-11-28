@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
-from starbucks.buffer import Buffer
+from bubblegum.buffer import Buffer
 
 class Command:
   def __init__(self, name: str, *args: tuple[Any, ...]):

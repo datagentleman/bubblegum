@@ -1,8 +1,8 @@
 import socket 
 
-from starbucks.buffer  import Buffer
-from starbucks.reader  import Reader
-from starbucks.writer  import Writer
+from bubblegum.buffer  import Buffer
+from bubblegum.reader  import Reader
+from bubblegum.writer  import Writer
 
 # this class will manage clients connection to node
 class Conn:

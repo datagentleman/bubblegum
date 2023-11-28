@@ -1,5 +1,5 @@
 import numpy as np
-from starbucks.client import Client
+from bubblegum.client import Client
 
 HOST = '127.0.0.1'
 PORT = 1337

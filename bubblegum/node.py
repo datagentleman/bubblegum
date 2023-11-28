@@ -3,7 +3,7 @@ import selectors
 import traceback
 import logging as log
 
-from starbucks.conn import Conn
+from bubblegum.conn import Conn
 
 class Node:
   def __init__(self, host, port):

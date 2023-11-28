@@ -2,10 +2,10 @@ import os
 import traceback
 import logging as log
 
-from starbucks.conn     import Conn
-from starbucks.node     import Node
-from starbucks.config   import Config 
-from starbucks.commands import * 
+from bubblegum.conn     import Conn
+from bubblegum.node     import Node
+from bubblegum.config   import Config 
+from bubblegum.commands import * 
 
 import lib.commands as c_commands
 
@@ -49,7 +49,7 @@ def handle_client(client_conn: Conn, cmd):
   
 if __name__ == '__main__':
   try:
-    log.info(f'Starting starbucks node on host: {HOST} port: {PORT} pid: {os.getpid()}')
+    log.info(f'Starting bubblegum node on host: {HOST} port: {PORT} pid: {os.getpid()}')
     Node(HOST, PORT).run(run_command)
   except Exception as e:
     log.error(f'{traceback.format_exc()}')

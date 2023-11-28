@@ -1,4 +1,4 @@
-from starbucks.command import Command
+from bubblegum.command import Command
 
 def test_command_from_to_bytes():
   cmd1 = Command('HELLO', 'CRUEL', 'WORLD')

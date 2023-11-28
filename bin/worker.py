@@ -1,7 +1,7 @@
 import sys
 
-from starbucks.client import Client
-from starbucks.config import Config as config
+from bubblegum.client import Client
+from bubblegum.config import Config as config
 
 HOST = config["server.host"]
 PORT = config["server.port"]
@@ -10,7 +10,7 @@ PORT = config["server.port"]
 exec(sys.argv[1])
 
 if __name__ == '__main__':
-  # connect to starbucks server
+  # connect to bubblegum server
   client = Client(HOST, PORT).connect()  
   iter   = client.tstream('iris')
 

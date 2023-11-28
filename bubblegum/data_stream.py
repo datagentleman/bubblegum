@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import socket
-from starbucks.buffer import Buffer
+from bubblegum.buffer import Buffer
 
 class DataStream:
   def __init__(self, conn):

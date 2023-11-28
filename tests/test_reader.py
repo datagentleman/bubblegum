@@ -1,4 +1,4 @@
-from starbucks.buffer import Buffer
+from bubblegum.buffer import Buffer
 
 def test_reader():
   buf = Buffer()

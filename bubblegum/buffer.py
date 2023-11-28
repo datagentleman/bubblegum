@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from starbucks.reader import Reader
-from starbucks.writer import Writer
+from bubblegum.reader import Reader
+from bubblegum.writer import Writer
 
 class Buffer:
   def __init__(self, packet = b''):

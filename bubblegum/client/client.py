@@ -4,10 +4,10 @@ import socket
 import dataclasses
 import numpy as np
 
-from starbucks.conn   import Conn
-from starbucks.buffer import Buffer
+from bubblegum.conn   import Conn
+from bubblegum.buffer import Buffer
 
-import starbucks.client.dataclasses as dataclass 
+import bubblegum.client.dataclasses as dataclass 
 
 class Client:
   def __init__(self, host: str, port: str, type: str="CLIENT"):

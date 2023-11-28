@@ -1,4 +1,4 @@
-from starbucks.config import Config
+from bubblegum.config import Config
 
 def test_config_load():
   Config.load('test')

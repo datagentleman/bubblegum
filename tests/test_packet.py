@@ -1,4 +1,4 @@
-from starbucks.command import Command as command
+from bubblegum.command import Command as command
 
 def test_packet_command_to_bytes():
   buf = command("HELLO", "WORLD").to_bytes()

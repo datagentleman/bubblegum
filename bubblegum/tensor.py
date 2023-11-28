@@ -6,7 +6,7 @@ import shutil
 from pathlib import Path
 from struct  import pack, unpack
 
-from starbucks.buffer  import Buffer  
+from bubblegum.buffer  import Buffer  
 
 class Tensor:
   ROOT = "./tensors"

@@ -1,8 +1,8 @@
 <p align='center'>
-  <img src="./logo.png?raw=true" height="250px" alt="starbucks db" />
+  <img src="./logo.png?raw=true" height="250px" alt="bubblegum db" />
 </p>
 
-<h1 align="center">☕ STARBUCKS DB:  distributed tensor ☕</h1>
+<h1 align="center">☕ bubblegum DB:  distributed tensor ☕</h1>
 
 ## What's all about 🤔
 
@@ -41,7 +41,7 @@ Heavily in progress ! It's not usable yet 🔥 I should have something running t
 # Run Mypy
 
 ```
-  python3 -m mypy starbucks
+  python3 -m mypy bubblegum
 ```
 
 

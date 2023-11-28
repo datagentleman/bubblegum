@@ -1,5 +1,5 @@
 import os
-from starbucks.tensor import Tensor
+from bubblegum.tensor import Tensor
 from pathlib import Path
 
 def test_tensor_create_remove():

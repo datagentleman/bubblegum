@@ -1,4 +1,4 @@
-from starbucks.buffer import Buffer
+from bubblegum.buffer import Buffer
 
 def test_buffer_write_read():
   buf = Buffer().write(b'Hello')

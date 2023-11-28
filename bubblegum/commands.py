@@ -1,8 +1,8 @@
-from starbucks.conn        import Conn
-from starbucks.worker      import Worker  
-from starbucks.buffer      import Buffer  
-from starbucks.tensor      import Tensor  
-from starbucks.data_stream import DataStream
+from bubblegum.conn        import Conn
+from bubblegum.worker      import Worker  
+from bubblegum.buffer      import Buffer  
+from bubblegum.tensor      import Tensor  
+from bubblegum.data_stream import DataStream
 
 def response(code: str, msg: str="")-> Buffer:
   return Buffer().write(code.encode()).write(msg.encode())
