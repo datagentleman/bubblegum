@@ -1,8 +1,20 @@
-<p align='center'>
-  <img src="./logo.png?raw=true" height="250px" alt="bubblegum db" />
-</p>
+<div align="center">
 
-<h1 align="center">☕ bubblegum DB:  distributed tensor ☕</h1>
+```
+
+
+   ██████  ██    ██ ██████  ██████  ██      ███████  ██████  ██    ██ ███    ███    
+  ██   ██ ██    ██ ██   ██ ██   ██ ██      ██      ██       ██    ██ ████  ████   
+  ██████  ██    ██ ██████  ██████  ██      █████   ██   ███ ██    ██ ██ ████ ██   
+  ██   ██ ██    ██ ██   ██ ██   ██ ██      ██      ██    ██ ██    ██ ██  ██  ██   
+  ██████   ██████  ██████  ██████  ███████ ███████  ██████   ██████  ██      ██   
+                            
+
+```
+
+</div>
+
+<h1 align="center">Distributed Tensor</h1>
 
 ## What's all about 🤔
 
