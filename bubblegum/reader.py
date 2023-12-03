@@ -1,10 +1,8 @@
 from struct import unpack
-from typing import Any
 
 class Reader:
-  def __init__(self, raw: bytes):
-    self.data = raw
-
+  def __init__(self, data: bytes = b''):
+    self.data = bytearray(data)
 
   def read(self, type_1: str, type_2: str=None) -> any:
     match type_1:
@@ -28,7 +26,6 @@ class Reader:
 
       case _:
         print('unsupported type')
-
 
   def read_length(self, len=4):
     b = self.data[:len]

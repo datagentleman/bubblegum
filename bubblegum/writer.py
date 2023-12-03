@@ -1,8 +1,8 @@
 from struct import pack
 
 class Writer:
-  def __init__(self, data: bytearray): 
-    self.data = data
+  def __init__(self, data: bytes = b''): 
+    self.data = bytearray(data)
 
   def write(self, data: any): 
     match type(data).__name__:
@@ -13,19 +13,24 @@ class Writer:
         self.data.extend(pack('f', data))
 
       case 'str': 
-        self.data.extend(self.write_len_data(data.encode()))
+        self.data.extend(self.data_with_size(data.encode()))
 
       case 'list' | 'tuple':
         self.write(len(data))
         [self.write(elem) for elem in data]
-        
-      case 'bytes': 
-        self.data.extend(self.write_len_data(data))
+
+      case 'bytes':
+        self.data.extend(self.data_with_size(data))
+
+      case 'bytearray':
+        self.data.extend(self.data_with_size(data))
 
       case _:
-        self.data.extend(self.write_len_data(data))
-        
+        print(f'unknown: {type(data).__name__}')
+        pass
 
-  def write_len_data(self, data: bytes) -> bytes:
-    size = len(data).to_bytes(4, byteorder='little')
-    return size + data
+    return self
+
+  def data_with_size(self, data: bytes) -> bytes:
+    data_size = len(data).to_bytes(4, byteorder='little')
+    return data_size + data
