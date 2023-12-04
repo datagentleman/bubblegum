@@ -19,7 +19,7 @@ class Node:
     conn, addr = sock.accept()    
     conn = Conn(conn)
 
-    log.info(f'accepted connection: {conn} from {addr}')
+    log.info(f'accepted connection: {conn} from {addr} FD: {conn.fileno()}')
 
     conn.read_handshake()
     conn.conn.setblocking(False)
@@ -55,7 +55,7 @@ class Node:
 
         except Exception as e:
           log.error(traceback.format_exc())
-
+          return
 
   def create_socket_and_listen(self): 
     self.node_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

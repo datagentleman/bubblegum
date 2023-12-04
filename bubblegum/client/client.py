@@ -7,8 +7,6 @@ import numpy as np
 from bubblegum.conn   import Conn
 from bubblegum.buffer import Buffer
 
-import bubblegum.client.dataclasses as dataclass 
-
 class Client:
   def __init__(self, host: str, port: str, type: str="CLIENT"):
     self.host: str = host
@@ -25,6 +23,10 @@ class Client:
     return self
 
 
+  def tcreate(self, tensor_name: str, shape: list(int)=None, dtype: str=None):
+    return self.send('TCREATE', tensor_name, shape, dtype)
+
+
   def send(self, cmd: str, *args):
     buf = Buffer()
 
@@ -32,25 +34,4 @@ class Client:
     [buf.write(arg) for arg in args]
 
     self.conn.send(buf())
-    return self.response(cmd)
-
-
-  def response(self, cmd: str):
-    match cmd:
-      case 'TCREATE': 
-        return self.decode(dataclass.Tensor)
-      case default: return None
-
-
-  def get_data_types(self, type: str):
-    # This will parse things like: 'list[int]' =>/ ['list', 'int']
-    type.replace('[', ' ').replace(']', '').split(' ')
-
-
-  def decode(self, data: any):
-    # Setting data attributes by name
-    for field in dataclasses.fields(data):
-      types = self.get_data_types(field.type)
-      value = self.conn.read(*types)
-
-      setattr(data, field.name, value)
+    return self.conn.read()

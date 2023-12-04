@@ -2,6 +2,8 @@ import os
 import traceback
 import logging as log
 
+from enum import Enum
+
 from bubblegum.conn     import Conn
 from bubblegum.node     import Node
 from bubblegum.config   import Config 
@@ -14,39 +16,40 @@ log.basicConfig(format="\x1b[6;37;44m%(levelname)s\x1b[0m:%(message)s", level=lo
 HOST = Config["server.host"]
 PORT = Config["server.port"]
 
+class status():
+    OK  = 1
+    ERR = 2
+
 def run_command(conn: Conn, node: Node):
-  cmd = conn.read('str')
+  msg = conn.read()
+  
+  # Conn is consider closed when it's ready for read but there is no data. 
+  # We can unregister it from select loop and return.
+  if len(msg.data) == 0: 
+    node.select.unregister(conn)
+    return
+  
+  cmd = msg.read('str')
+  
+  res_ok  = lambda data=None: conn.send(status.OK.to_bytes(4, byteorder='little'))
+  res_err = lambda data=None: conn.send(status.ERR.to_bytes(4, byteorder='little'))
 
   match cmd:
-    # cython commands - running concurrently
-    case "PING": c_commands.ping(conn.fileno())
-
-    case "TPUT": 
-      c_commands.put(conn.fileno())
-      # since we will be dealing with this conn in cpp, we must remove it from python select() loop
-      node.select.unregister(conn)
-
-    # server
-    case "HELLO": hello
-
-    # workers
-    case "WLS":  worker_ls
-    case "WRUN": worker_run
-    
-    # tensors      
-    case "TCREATE": tensor_create
-    case "TREMOVE": tensor_remove
-    case "TSTREAM": tensor_stream
+    case "TCREATE":
+      tensor_name = msg.read('str')
+      Tensor.create(tensor_name)
+      res_ok()
 
     case _:
       conn.send(b"COMMAND DOESN'T EXIST")
-  
+      raise TypeError()
+
 
 def handle_client(client_conn: Conn, cmd):
   cmd.run(client_conn)
   log.error('Client is dead ...')
-  
-  
+
+
 if __name__ == '__main__':
   try:
     log.info(f'Starting bubblegum node on host: {HOST} port: {PORT} pid: {os.getpid()}')

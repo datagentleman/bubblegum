@@ -10,28 +10,30 @@ class Conn:
     self.conn = conn
     self.data = bytearray()
 
-    self.reader = Reader(self.data)
-    self.writer = Writer(self.data)
-
 
   # read next message
-  def read(self, type_1: str, type_2: str=None) -> bytes:
-    if len(self.data) == 0:
-      self._load_buffer()
-
-    return self.reader.read(type_1, type_2)
+  def read(self) -> Buffer:
+    n = int.from_bytes(self.conn.recv(4), byteorder='little')
+    
+    data =  self.conn.recv(n)
+    return Buffer(data)
 
 
   # send bytes
-  def send(self, data: bytearray) -> int:
-    return self.conn.send(data)
+  def send(self, data) -> int:
+    # Before send we must append data size - other end must know how many bytes to read.
+    buf = Buffer()
+    buf.write(data)
+    return self.conn.send(buf.data)
 
 
   # read handshake.
   def read_handshake(self) -> bytes:
     self.conn.settimeout(0.5)
-    conn_type = self.read('str')
     
+    buf = self.read()
+    conn_type = buf.read('str')
+
     res = Buffer().write("OK")
     self.send(res.data)
 
@@ -47,18 +49,15 @@ class Conn:
     
     res = Buffer().write("OK")
     self.send(res.data)
-    self.read('bytes')
+
+    buf = self.read()
+    buf.read('bytes')
 
     # from this point on, we cannot have any timeouts on socket - ex: streaming, long running tasks, ...
     self.conn.settimeout(None)
-    
 
-  def _load_buffer(self):
-    n = int.from_bytes(self.conn.recv(4), byteorder='little')
-    self.writer.write(self.conn.recv(n))
     
-    
-  # needed when working with selec()
+  # needed when working with select()
   def fileno(self):
     return self.conn.fileno()
   

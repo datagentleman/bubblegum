@@ -16,9 +16,9 @@ class Tensor:
     self.name  = name
     self.dtype = ""
     self.shape = ()
-    self.size  = 0
+    self.size  =  0
     self.fd    = -1
-    
+
     # size in bytes
     self.max_bucket_size = 10_000
 
@@ -74,26 +74,30 @@ class Tensor:
 
   @classmethod
   def _path(cls, tensor: str):
+    tensor = tensor.replace(":", "/")
     name = Path(tensor).name
     return Path(cls.ROOT).joinpath(tensor, f'{name}{cls.EXT}')
 
 
   @classmethod
   def _dir(cls, tensor: str):
+    tensor = tensor.replace(":", "/")
     return Path(cls.ROOT).joinpath(tensor)
-    
 
+
+  # Find tensor. Return None if not found.
   @classmethod
   def find(cls, tensor: str) -> Tensor:
     if cls._path(tensor).is_file():
       return Tensor(tensor)
 
 
+  # Create tensor directories and necessary files
   @classmethod
-  def create(cls, tensor: str, root: str=ROOT):
+  def create(cls, tensor: str):
     os.makedirs(cls._dir(tensor), exist_ok=True)
-    Path(cls._path(tensor)).touch()
-    
+    Path(cls._path(tensor)).touch(exist_ok=True)
+
 
   @classmethod
   def remove(cls, tensor: str, root: str=ROOT, force: bool=False):

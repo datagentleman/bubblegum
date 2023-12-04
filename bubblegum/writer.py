@@ -26,10 +26,11 @@ class Writer:
         self.data.extend(self.data_with_size(data))
 
       case _:
-        print(f'unknown: {type(data).__name__}')
+        print(f'writer - unknown type: {type(data).__name__}')
         pass
 
     return self
+
 
   def data_with_size(self, data: bytes) -> bytes:
     data_size = len(data).to_bytes(4, byteorder='little')
