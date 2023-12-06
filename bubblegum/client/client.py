@@ -25,7 +25,7 @@ class Client:
 
   def tcreate(self, tensor_name: str, shape: list(int)=None, dtype: str=None):
     return self.send('TCREATE', tensor_name, shape, dtype)
-
+    
 
   def send(self, cmd: str, *args):
     buf = Buffer()
@@ -33,5 +33,5 @@ class Client:
     buf.write(cmd)
     [buf.write(arg) for arg in args]
 
-    self.conn.send(buf())
+    self.conn.send(buf.data)
     return self.conn.read()

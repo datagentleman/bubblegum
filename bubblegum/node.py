@@ -57,6 +57,7 @@ class Node:
           log.error(traceback.format_exc())
           return
 
+
   def create_socket_and_listen(self): 
     self.node_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     

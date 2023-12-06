@@ -56,12 +56,3 @@ Heavily in progress ! It's not usable yet 🔥 I should have something running t
 ```
   python3 -m mypy bubblegum
 ```
-
-
-# Roadmap
-
-- [ ] 30/11/2023: working version of database engine in c++/cython
-- [ ] 29/12/2023: pre-alpha
-- [ ] 31/01/2024: alpha
-- [ ] 29/02/2024: beta
-- [ ] 29/03/2024: we are going live 

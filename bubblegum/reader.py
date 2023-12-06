@@ -5,6 +5,8 @@ class Reader:
     self.data = bytearray(data)
 
   def read(self, type_1: str, type_2: str=None) -> any:
+    if self.data == b'': return None
+
     match type_1:
       case "int":
         return unpack("i", self.read_length())[0]
@@ -29,7 +31,7 @@ class Reader:
 
   def read_length(self, len=4):
     b = self.data[:len]
-    
+  
     # we must delete consumed bytes after reading 
     self.data[:] = self.data[len:]
     return b

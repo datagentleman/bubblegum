@@ -13,4 +13,3 @@ def test_tensor_save():
   assert(t1.shape == t2.shape)
   assert(t1.dtype == t2.dtype)
   
-  

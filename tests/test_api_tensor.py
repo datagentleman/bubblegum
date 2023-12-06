@@ -5,9 +5,14 @@ from bubblegum.config import Config
 
 Config.load('test')
 
+host = Config['server.host']
+port = Config['server.port']
+
 @pytest.mark.api
 def test_api_tcreate():
-  c = Client(Config['server.host'], Config['server.port']).connect()
-  res = c.tcreate('test:damianu_13')
-  print(res.read('int'))
+  c = Client(host, port).connect()
+
+  # with default values
+  res = c.tcreate('test:llm')
+  assert(res.read('int') == 1)
   

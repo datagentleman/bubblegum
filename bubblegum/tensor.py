@@ -14,13 +14,12 @@ class Tensor:
 
   def __init__(self, name: str):
     self.name  = name
-    self.dtype = ""
-    self.shape = ()
-    self.size  =  0
+    self.dtype = "float16"
+    self.shape = (0)
     self.fd    = -1
 
-    # size in bytes
-    self.max_bucket_size = 10_000
+    # 100 MB
+    self.max_bucket_size = 100_000_000
 
 
   def save(self):
@@ -49,7 +48,6 @@ class Tensor:
     buf.write(self.name)
     buf.write(self.dtype)
     buf.write(self.shape)
-    buf.write(self.size)
     return buf.data
 
 
@@ -62,7 +60,6 @@ class Tensor:
     t.name  = buf.read('str')
     t.dtype = buf.read('str')
     t.shape = buf.read('list', 'int')
-    t.size  = buf.read('int')
     return t
 
 
@@ -94,10 +91,12 @@ class Tensor:
 
   # Create tensor directories and necessary files
   @classmethod
-  def create(cls, tensor: str):
-    os.makedirs(cls._dir(tensor), exist_ok=True)
-    Path(cls._path(tensor)).touch(exist_ok=True)
+  def create(cls, name: str, dtype: str=None, shape: list(int)=None):
+    os.makedirs(cls._dir(name), exist_ok=True)
+    Path(cls._path(name)).touch(exist_ok=True)
 
+    t = Tensor(name)
+    t.save()
 
   @classmethod
   def remove(cls, tensor: str, root: str=ROOT, force: bool=False):

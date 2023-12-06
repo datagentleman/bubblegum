@@ -28,26 +28,20 @@ def run_command(conn: Conn, node: Node):
   if len(msg.data) == 0: 
     node.select.unregister(conn)
     return
-  
+
   cmd = msg.read('str')
-  
-  res_ok  = lambda data=None: conn.send(status.OK.to_bytes(4, byteorder='little'))
-  res_err = lambda data=None: conn.send(status.ERR.to_bytes(4, byteorder='little'))
+
+  response_ok  = lambda data=None: conn.send(status.OK.to_bytes(4, byteorder='little'))
+  response_err = lambda data=None: conn.send(status.ERR.to_bytes(4, byteorder='little'))
 
   match cmd:
     case "TCREATE":
-      tensor_name = msg.read('str')
-      Tensor.create(tensor_name)
-      res_ok()
+      tcreate(msg)
+      response_ok()
 
     case _:
       conn.send(b"COMMAND DOESN'T EXIST")
       raise TypeError()
-
-
-def handle_client(client_conn: Conn, cmd):
-  cmd.run(client_conn)
-  log.error('Client is dead ...')
 
 
 if __name__ == '__main__':
