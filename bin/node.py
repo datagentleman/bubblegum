@@ -29,8 +29,8 @@ def run_command(conn: Conn, node: Node):
 
   cmd = msg.read('str')
 
-  response_ok  = lambda data=None: conn.send(buffer.write(status.OK).write(data).data)
-  response_err = lambda data=None: conn.send(buffer.write(status.ERR).write(data).data)
+  response_ok  = lambda data=None: conn.send(buffer.write(status.OK, data))
+  response_err = lambda data=None: conn.send(buffer.write(status.ERR, data))
 
   match cmd:
     case "TCREATE":

@@ -6,6 +6,9 @@ from bubblegum.writer import Writer
 class Buffer(Reader, Writer):
   pass
 
-def write(data: any) -> Writer:
-  return Writer().write(data)
+def write(*values: any) -> Writer:
+  buf = Buffer()
+  
+  [buf.write(val) for val in values]
+  return buf.data
   
