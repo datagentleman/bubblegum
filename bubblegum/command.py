@@ -23,6 +23,6 @@ class Command:
     name = buf.read('str')
 
     # read and decode arguments
-    args = buf.read('list', 'str')
+    args = buf.read('list[str]')
     return Command(name, *args)
   

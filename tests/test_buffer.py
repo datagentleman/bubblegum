@@ -14,4 +14,4 @@ def test_buffer_write_read():
   assert(buf.read('str') == "bubblegum")
   
   buf.write((1, 2, 3))
-  assert(buf.read('list', 'int') == [1, 2, 3])
+  assert(buf.read('list[int]') == [1, 2, 3])

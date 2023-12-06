@@ -59,7 +59,7 @@ class Tensor:
 
     t.name  = buf.read('str')
     t.dtype = buf.read('str')
-    t.shape = buf.read('list', 'int')
+    t.shape = buf.read('list[int]')
     return t
 
 
