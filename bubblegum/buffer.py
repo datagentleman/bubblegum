@@ -5,3 +5,7 @@ from bubblegum.writer import Writer
 
 class Buffer(Reader, Writer):
   pass
+
+def write(data: any) -> bytes:
+  return Writer().write(data).data
+  
