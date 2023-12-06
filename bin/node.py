@@ -25,6 +25,7 @@ def run_command(conn: Conn, node: Node):
   # We can unregister it from select loop and return.
   if len(msg.data) == 0: 
     node.select.unregister(conn)
+    print(f'UNREGISTER CLIENT: {conn.fileno()}')
     return
 
   cmd = msg.read('str')
@@ -40,6 +41,10 @@ def run_command(conn: Conn, node: Node):
     case "TLOAD":
       res = tload(msg)
       response_ok(res)
+
+    case "TSAVE":
+      tsave(msg)
+      response_ok()
 
     case _:
       conn.send(b"COMMAND DOESN'T EXIST")

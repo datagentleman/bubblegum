@@ -12,8 +12,8 @@ class Tensor:
   ROOT = "./tensors"
   EXT  = ".tensor"
 
-  def __init__(self, name: str, dtype: str=None, shape: list(int)=None):
-    self.name  = name
+  def __init__(self, name: str=None, dtype: str=None, shape: list(int)=None):
+    self.name  = name or ""
     self.dtype = dtype or "float16"
     self.shape = shape or [0]
     self.fd    = -1
@@ -97,6 +97,7 @@ class Tensor:
     Path(cls._path(name)).touch(exist_ok=True)
 
     Tensor(name, dtype, shape).save()
+
 
   @classmethod
   def remove(cls, tensor: str, root: str=ROOT, force: bool=False):

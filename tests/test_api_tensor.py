@@ -20,16 +20,42 @@ def test_api_tcreate():
 
   s, t = c.tload('test:llm')
   assert(s == status.OK)
-  
-  expect = {'name': 'test:llm', 'dtype': 'float16', 'shape': [0], 'fd': -1, 'max_bucket_size': 100000000}
+
+  expect = {
+    'name': 'test:llm', 'dtype': 'float16', 
+    'shape': [0], 'fd': -1, 'max_bucket_size': 100000000 }
+
   assert(t.__dict__ == expect)
-    
+
   # with given values
-  res = c.tcreate('test:llm', "float32", [1, 2])
+  res = c.tcreate('test:llm', "float32", [2, 2])
   assert(res.read('int') == status.OK)
 
   s, t = c.tload('test:llm')
   assert(s == status.OK)
 
-  expect = {'name': 'test:llm', 'dtype': 'float32', 'shape': [1, 2], 'fd': -1, 'max_bucket_size': 100000000}
+  expect = {
+    'name': 'test:llm', 'dtype': 'float32', 
+    'shape': [2, 2], 'fd': -1, 'max_bucket_size': 100000000 }
+    
+  assert(t.__dict__ == expect)
+
+
+@pytest.mark.api
+def test_api_tsave():
+  c = Client(host, port).connect()
+
+  res = c.tcreate('test:bert')
+  assert(res.read('int') == status.OK)
+
+  res = c.tsave('test:bert', 'float64', [255, 255, 255])
+  assert(res == status.OK)
+  
+  
+  s, t = c.tload('test:bert')
+  assert(s == status.OK)
+
+  expect = {'name': 'test:bert', 'dtype': 'float64', 
+            'shape': [255, 255, 255], 'fd': -1, 'max_bucket_size': 100000000 }
+
   assert(t.__dict__ == expect)

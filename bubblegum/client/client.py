@@ -36,6 +36,11 @@ class Client:
     return status, tensor
 
 
+  def tsave(self, tensor_name: str, dtype: str=None, shape: list(int)=None):
+    res = self.send('TSAVE', tensor_name, dtype, shape)
+    return res.read('int')
+
+
   def send(self, cmd: str, *args):
     buf = Buffer()
 
