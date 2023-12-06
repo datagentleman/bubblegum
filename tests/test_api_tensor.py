@@ -15,8 +15,8 @@ def test_api_tcreate():
   c = Client(host, port).connect()
 
   # with default values
-  res = c.tcreate('test:llm')
-  assert(res.read('int') == status.OK)
+  s = c.tcreate('test:llm')
+  assert(s == status.OK)
 
   s, t = c.tload('test:llm')
   assert(s == status.OK)
@@ -28,8 +28,8 @@ def test_api_tcreate():
   assert(t.__dict__ == expect)
 
   # with given values
-  res = c.tcreate('test:llm', "float32", [2, 2])
-  assert(res.read('int') == status.OK)
+  s = c.tcreate('test:llm', "float32", [2, 2])
+  assert(s == status.OK)
 
   s, t = c.tload('test:llm')
   assert(s == status.OK)
@@ -45,11 +45,11 @@ def test_api_tcreate():
 def test_api_tsave_tload():
   c = Client(host, port).connect()
 
-  res = c.tcreate('test:bert')
-  assert(res.read('int') == status.OK)
+  s = c.tcreate('test:bert')
+  assert(s == status.OK)
 
-  res = c.tsave('test:bert', 'float64', [255, 255, 255])
-  assert(res == status.OK)
+  s = c.tsave('test:bert', 'float64', [255, 255, 255])
+  assert(s == status.OK)
   
   s, t = c.tload('test:bert')
   assert(s == status.OK)
@@ -65,11 +65,11 @@ def test_api_tsave_tload():
 def test_api_tremove():  
   c = Client(host, port).connect()
 
-  res = c.tcreate('test:bert')
-  assert(res.read('int') == status.OK)
+  s = c.tcreate('test:bert')
+  assert(s == status.OK)
 
-  res = c.tremove('test:bert')
-  assert(res.read('int') == status.OK)
+  s = c.tremove('test:bert')
+  assert(s == status.OK)
 
-  s, t = c.tload('test:bert')
+  s, _ = c.tload('test:bert')
   assert(s == status.ERR)

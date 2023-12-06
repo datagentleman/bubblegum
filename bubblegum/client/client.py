@@ -25,11 +25,13 @@ class Client:
 
 
   def tcreate(self, tensor_name: str, dtype: str=None, shape: list(int)=None):
-    return self.send('TCREATE', tensor_name, dtype, shape)
+    res = self.send('TCREATE', tensor_name, dtype, shape)
+    return res.read('int')
 
 
   def tremove(self, tensor_name: str):
-    return self.send('TREMOVE', tensor_name)
+    res = self.send('TREMOVE', tensor_name)
+    return res.read('int') 
     
     
   def tload(self, tensor_name: str):
