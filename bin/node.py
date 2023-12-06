@@ -9,16 +9,14 @@ from bubblegum.node     import Node
 from bubblegum.config   import Config 
 from bubblegum.commands import * 
 
-import lib.commands as c_commands
+import bubblegum.status as status  
+import bubblegum.buffer as buffer 
+import lib.commands     as c_commands
 
 log.basicConfig(format="\x1b[6;37;44m%(levelname)s\x1b[0m:%(message)s", level=log.DEBUG)
 
 HOST = Config["server.host"]
 PORT = Config["server.port"]
-
-class status():
-    OK  = 1
-    ERR = 2
 
 def run_command(conn: Conn, node: Node):
   msg = conn.read()

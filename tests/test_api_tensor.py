@@ -1,5 +1,7 @@
 import pytest
 
+import bubblegum.status as status
+
 from bubblegum.client import Client
 from bubblegum.config import Config
 
@@ -14,5 +16,5 @@ def test_api_tcreate():
 
   # with default values
   res = c.tcreate('test:llm')
-  assert(res.read('int') == 1)
+  assert(res.read('int') == status.OK)
   
