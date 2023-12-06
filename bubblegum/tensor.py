@@ -12,10 +12,10 @@ class Tensor:
   ROOT = "./tensors"
   EXT  = ".tensor"
 
-  def __init__(self, name: str):
+  def __init__(self, name: str, dtype: str=None, shape: list(int)=None):
     self.name  = name
-    self.dtype = "float16"
-    self.shape = [0]
+    self.dtype = dtype or "float16"
+    self.shape = shape or [0]
     self.fd    = -1
 
     # 100 MB
@@ -96,7 +96,7 @@ class Tensor:
     os.makedirs(cls._dir(name), exist_ok=True)
     Path(cls._path(name)).touch(exist_ok=True)
 
-    Tensor(name).save()
+    Tensor(name, dtype, shape).save()
 
   @classmethod
   def remove(cls, tensor: str, root: str=ROOT, force: bool=False):

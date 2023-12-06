@@ -24,8 +24,8 @@ class Client:
     return self
 
 
-  def tcreate(self, tensor_name: str, shape: list(int)=None, dtype: str=None):
-    return self.send('TCREATE', tensor_name, shape, dtype)
+  def tcreate(self, tensor_name: str, dtype: str=None, shape: list(int)=None):
+    return self.send('TCREATE', tensor_name, dtype, shape)
     
     
   def tload(self, tensor_name: str):

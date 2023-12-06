@@ -23,3 +23,13 @@ def test_api_tcreate():
   
   expect = {'name': 'test:llm', 'dtype': 'float16', 'shape': [0], 'fd': -1, 'max_bucket_size': 100000000}
   assert(t.__dict__ == expect)
+    
+  # with given values
+  res = c.tcreate('test:llm', "float32", [1, 2])
+  assert(res.read('int') == status.OK)
+
+  s, t = c.tload('test:llm')
+  assert(s == status.OK)
+
+  expect = {'name': 'test:llm', 'dtype': 'float32', 'shape': [1, 2], 'fd': -1, 'max_bucket_size': 100000000}
+  assert(t.__dict__ == expect)
