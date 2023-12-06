@@ -12,9 +12,17 @@ def tcreate(cmd: Buffer):
   Tensor.create(name, dtype, shape)
 
 
+# Remove tensor files and directory (if possible)
+def tremove(cmd: Buffer):
+  name = cmd.read('str')
+  Tensor.remove(name)
+
+
 # Load tensor from file
 def tload(cmd: Buffer) -> bytes:
   name = cmd.read('str')
+  
+  if not Tensor.find(name): raise TypeError('Tensor not found')
   return Tensor.load(name).encode()
 
 
@@ -26,3 +34,4 @@ def tsave(cmd: Buffer):
   t.dtype = cmd.read('str')
   t.shape = cmd.read('list[int]')
   t.save()
+  

@@ -42,7 +42,7 @@ class CTensor: public File {
 
     CTensor();
     CTensor(char* tensor_path);
-    
+
     int read(unsigned char* data, int num_of_tensors);
 
     void save();

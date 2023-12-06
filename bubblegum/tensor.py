@@ -55,12 +55,11 @@ class Tensor:
   @classmethod
   def decode(cls, data: bytes) -> Tensor:
     buf = Buffer(data)
-    t = Tensor("")
+    t = Tensor()
 
     t.name  = buf.read('str')
     t.dtype = buf.read('str')
     t.shape = buf.read('list[int]')
-
     return t
 
 
@@ -83,12 +82,12 @@ class Tensor:
     return Path(cls.ROOT).joinpath(tensor)
 
 
-  # Find tensor. Return None if not found.
+  # Find tensor
   @classmethod
-  def find(cls, tensor: str) -> Tensor:
+  def find(cls, tensor: str) -> Tensor | None:
     if cls._path(tensor).is_file():
       return Tensor(tensor)
-
+      
 
   # Create tensor directories and necessary files
   @classmethod

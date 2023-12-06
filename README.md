@@ -16,7 +16,6 @@
 
 </div>
 
-
 ## What's all about 🤔
 
 I'm implementing distributed tensor.<br/>
@@ -26,13 +25,12 @@ It will also have worker like processing features. And it will be distributed.<b
 
 Don't know if it will be useful in any way, but it's worth trying 😀<br/>
 
-
-<br/><br/>
+<br/>
 \* the db engine itself will be implemented in c++/cython
 
 ## Current state
 
-Heavily in progress ! It's not usable yet 🔥 I should have something running till end of November 2023 🤞
+Heavily in progress ! It's not usable yet 🔥
 
 
 

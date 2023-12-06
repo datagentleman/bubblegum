@@ -37,12 +37,12 @@ def test_api_tcreate():
   expect = {
     'name': 'test:llm', 'dtype': 'float32', 
     'shape': [2, 2], 'fd': -1, 'max_bucket_size': 100000000 }
-    
+
   assert(t.__dict__ == expect)
 
 
 @pytest.mark.api
-def test_api_tsave():
+def test_api_tsave_tload():
   c = Client(host, port).connect()
 
   res = c.tcreate('test:bert')
@@ -51,11 +51,25 @@ def test_api_tsave():
   res = c.tsave('test:bert', 'float64', [255, 255, 255])
   assert(res == status.OK)
   
-  
   s, t = c.tload('test:bert')
   assert(s == status.OK)
 
-  expect = {'name': 'test:bert', 'dtype': 'float64', 
-            'shape': [255, 255, 255], 'fd': -1, 'max_bucket_size': 100000000 }
+  expect = {
+    'name': 'test:bert', 'dtype': 'float64', 
+    'shape': [255, 255, 255], 'fd': -1, 'max_bucket_size': 100000000 }
 
   assert(t.__dict__ == expect)
+
+
+@pytest.mark.api
+def test_api_tremove():  
+  c = Client(host, port).connect()
+
+  res = c.tcreate('test:bert')
+  assert(res.read('int') == status.OK)
+
+  res = c.tremove('test:bert')
+  assert(res.read('int') == status.OK)
+
+  s, t = c.tload('test:bert')
+  assert(s == status.ERR)

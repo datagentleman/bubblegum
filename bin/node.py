@@ -33,22 +33,21 @@ def run_command(conn: Conn, node: Node):
   response_ok  = lambda data=None: conn.send(buffer.write(status.OK, data))
   response_err = lambda data=None: conn.send(buffer.write(status.ERR, data))
 
-  match cmd:
-    case "TCREATE":
-      tcreate(msg)
-      response_ok()
+  res = None
 
-    case "TLOAD":
-      res = tload(msg)
-      response_ok(res)
+  try:
+    match cmd:
+      case "TCREATE": res = tcreate(msg)
+      case "TREMOVE": res = tremove(msg)
+      case "TLOAD":   res = tload(msg)
+      case "TSAVE":   res = tsave(msg)
 
-    case "TSAVE":
-      tsave(msg)
-      response_ok()
+      case _: 
+        conn.send(b"COMMAND DOESN'T EXIST")
 
-    case _:
-      conn.send(b"COMMAND DOESN'T EXIST")
-      raise TypeError()
+    response_ok(res)
+  except Exception:
+    response_err()
 
 
 if __name__ == '__main__':
