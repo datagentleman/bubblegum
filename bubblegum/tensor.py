@@ -23,7 +23,7 @@ class Tensor:
 
 
   def save(self):
-    data = self.bytes()
+    data = self.encode()
     size = pack('i', len(data))
 
     self.fd = self._open(self.name)
@@ -38,11 +38,11 @@ class Tensor:
     size = unpack('i', data)[0]
 
     data = os.pread(fd, size, 4)
-    return cls.from_bytes(data)
+    return cls.decode(data)
 
 
   # Encode tensor to bytes
-  def bytes(self) -> bytearray:
+  def encode(self) -> bytearray:
     buf = Buffer()
 
     buf.write(self.name)
@@ -53,7 +53,7 @@ class Tensor:
 
   # Decode tensor from bytes
   @classmethod
-  def from_bytes(cls, data: bytes) -> Tensor:
+  def decode(cls, data: bytes) -> Tensor:
     buf = Buffer(data)
     t = Tensor("")
 
@@ -95,8 +95,7 @@ class Tensor:
     os.makedirs(cls._dir(name), exist_ok=True)
     Path(cls._path(name)).touch(exist_ok=True)
 
-    t = Tensor(name)
-    t.save()
+    Tensor(name).save()
 
   @classmethod
   def remove(cls, tensor: str, root: str=ROOT, force: bool=False):

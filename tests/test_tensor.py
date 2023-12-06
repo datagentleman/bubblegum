@@ -49,8 +49,8 @@ def test_from_to_bytes():
   t1.dtype = "int16"
   t1.shape = [2, 3]
   
-  t2 = Tensor.from_bytes(t1.bytes())
-  assert(t1.bytes() == t2.bytes())
+  t2 = Tensor.decode(t1.encode())
+  assert(t1.encode() == t2.encode())
 
 
 def test_save_load():
@@ -63,4 +63,4 @@ def test_save_load():
   t1.save()
   
   t2 = Tensor.load(path)
-  assert(t1.bytes() == t2.bytes())
+  assert(t1.encode() == t2.encode())
