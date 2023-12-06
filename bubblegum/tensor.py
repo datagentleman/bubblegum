@@ -15,7 +15,7 @@ class Tensor:
   def __init__(self, name: str):
     self.name  = name
     self.dtype = "float16"
-    self.shape = (0)
+    self.shape = [0]
     self.fd    = -1
 
     # 100 MB
@@ -60,6 +60,7 @@ class Tensor:
     t.name  = buf.read('str')
     t.dtype = buf.read('str')
     t.shape = buf.read('list[int]')
+
     return t
 
 

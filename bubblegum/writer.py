@@ -27,7 +27,6 @@ class Writer:
 
       case _:
         print(f'writer - unknown type: {type(data).__name__}')
-        pass
 
     return self
 

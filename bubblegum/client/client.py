@@ -6,6 +6,7 @@ import numpy as np
 
 from bubblegum.conn   import Conn
 from bubblegum.buffer import Buffer
+from bubblegum.tensor import Tensor 
 
 class Client:
   def __init__(self, host: str, port: str, type: str="CLIENT"):
@@ -26,6 +27,14 @@ class Client:
   def tcreate(self, tensor_name: str, shape: list(int)=None, dtype: str=None):
     return self.send('TCREATE', tensor_name, shape, dtype)
     
+    
+  def tload(self, tensor_name: str):
+    res = self.send('TLOAD', tensor_name)
+
+    status = res.read('int')
+    tensor = Tensor.decode(res.read('bytes'))
+    return status, tensor
+
 
   def send(self, cmd: str, *args):
     buf = Buffer()

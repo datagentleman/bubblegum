@@ -29,13 +29,17 @@ def run_command(conn: Conn, node: Node):
 
   cmd = msg.read('str')
 
-  response_ok  = lambda data=None: conn.send(buffer.write(status.OK))
-  response_err = lambda data=None: conn.send(buffer.write(status.ERR))
+  response_ok  = lambda data=None: conn.send(buffer.write(status.OK).write(data).data)
+  response_err = lambda data=None: conn.send(buffer.write(status.ERR).write(data).data)
 
   match cmd:
     case "TCREATE":
       tcreate(msg)
       response_ok()
+
+    case "TLOAD":
+      res = tload(msg)
+      response_ok(res)
 
     case _:
       conn.send(b"COMMAND DOESN'T EXIST")

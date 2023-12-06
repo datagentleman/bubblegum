@@ -17,4 +17,9 @@ def test_api_tcreate():
   # with default values
   res = c.tcreate('test:llm')
   assert(res.read('int') == status.OK)
+
+  s, t = c.tload('test:llm')
+  assert(s == status.OK)
   
+  expect = {'name': 'test:llm', 'dtype': 'float16', 'shape': [0], 'fd': -1, 'max_bucket_size': 100000000}
+  assert(t.__dict__ == expect)
