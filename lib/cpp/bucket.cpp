@@ -10,14 +10,16 @@ using namespace std;
 
 static std::map<std::string, std::atomic<int> *> bucket_lengths;
 
-// Main class for storing tensor data.
+// Main class for storing tensor data
 class CBucket : public File {
   public:
-    int id = 0;
-    
+    int id = 1;
+
     int header_start = 0;
     int data_start   = 400;
-    int row_size     = 4;
+    
+    // TODO: hardcoded, only temporary
+    int row_size = 4;
 
     std::atomic<int> *data_offset;
     std::atomic<int> *size;
@@ -45,41 +47,23 @@ class CBucket : public File {
     void load() {
       int s = 0;
       File::read(&s);
-
       size = new std::atomic<int>(s);
     }
 
+    // Write tensor data to bucket
     void write(buffer *buff) {
       int len = container_size(buff->vec());
       int off = data_offset->fetch_add(len, std::memory_order_relaxed);
-      
+
       File::write_at(buff->data(), len, off);
-      
+
       size->fetch_add((len/row_size));
       save();
-
-      // calculate ids for given offset
-      // TODO: move to method
-      // off -= data_start;
-      // off += size;
-
-      // int row_size = 4;
-      // int num_of_ids = size / row_size;
-
-      // int first_id = off / row_size;
-      // int last_id  = first_id + num_of_ids;
-
-      // std::vector<int> ids(num_of_ids);
-      // for(int i=first_id; i <= last_id; i++) {
-      //   ids.push_back(i);
-      // }
     }
 
     // read number of tensor rows
     void read(buffer *buff, int len) {
       buff->vec()->resize(len);
-
-      int offset = data_start + len;
       File::read_at(buff->data(), len, data_start);
     }
 };
