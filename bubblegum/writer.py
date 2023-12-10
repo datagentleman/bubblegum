@@ -8,7 +8,7 @@ class Writer:
     match type(val).__name__:
       case 'int':
         self.data.extend(pack('i', val))
-      
+
       case 'float':
         self.data.extend(pack('f', val))
 
@@ -16,9 +16,17 @@ class Writer:
         self.data.extend(self.data_with_size(val.encode()))
 
       case 'list' | 'tuple':
+        buf = Writer()
+        [buf.write(elem) for elem in val]
+        
+        # number of elements
         self.write(len(val))
-        [self.write(elem) for elem in val]
 
+        # number of bytes
+        self.write(len(len(buf.data)))
+        
+        self.data += buf.data
+        
       case 'bytes':
         self.data.extend(self.data_with_size(val))
 
@@ -32,5 +40,6 @@ class Writer:
 
 
   def data_with_size(self, val: bytes) -> bytes:
+    # TODO: change this to unpack
     data_size = len(val).to_bytes(4, byteorder='little')
     return data_size + val
