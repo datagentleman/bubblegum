@@ -12,7 +12,7 @@ class buffer : public ReaderWriter {
     int number_of_elems = 0;
     int current_size    = 0;
 
-    buffer();   
+    buffer();
     ~buffer() override;
     int size();
 
@@ -21,7 +21,7 @@ class buffer : public ReaderWriter {
     std::vector<unsigned char>* vec();
 
     void _write(void *data_src, int size, int offset) override;
-    void _read(void *dst, int len, int offset) override;
+    int _read(void *dst, int len, int offset) override;
 };
 
 #endif

@@ -32,7 +32,7 @@ void buffer::_write(void* src, int len, int offset) {
 }
 
 // read bytes from buffe to dst. We are removing consumed bytes.
-void buffer::_read(void *dst, int num_bytes, int offset) {
+int buffer::_read(void *dst, int num_bytes, int offset) {
   memcpy(dst, buf.data(), num_bytes);
 
   // we must remove bytes that we just read
@@ -40,6 +40,7 @@ void buffer::_read(void *dst, int num_bytes, int offset) {
   auto end   = start + num_bytes;
 
   buf.erase(start, end);
+  return num_bytes;
 }
 
 #endif
