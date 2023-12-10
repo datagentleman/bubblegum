@@ -29,7 +29,7 @@ class File : public ReaderWriter {
 
     void _write(void *data_src, int size, int offset)    override;
     void _write_at(void *data_src, int size, int offset) override;
-    void _read(void *dst, int len, int offset)           override;
+    int _read(void *dst, int len, int offset)           override;
 };
 
 #endif

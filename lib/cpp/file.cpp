@@ -33,8 +33,8 @@ void File::_write_at(void *src, int len, int offset) {
   pwrite(fd, src, len, offset);
 }
 
-void File::_read(void* dst, int len, int offset) {
-  pread(fd, dst, len, offset);
+int File::_read(void* dst, int len, int offset) {
+  return pread(fd, dst, len, offset);
 }
 
 #endif
