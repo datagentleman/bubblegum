@@ -2,8 +2,6 @@ import os
 import traceback
 import logging as log
 
-from enum import Enum
-
 from bubblegum.conn     import Conn
 from bubblegum.node     import Node
 from bubblegum.config   import Config 
@@ -19,34 +17,51 @@ HOST = Config["server.host"]
 PORT = Config["server.port"]
 
 def run_command(conn: Conn, node: Node):
-  msg = conn.read()
-  
+  cmd_name = conn.read()
+
   # Conn is consider closed when it's ready for read but there is no data. 
   # We can unregister it from select loop and return.
-  if len(msg.data) == 0: 
-    node.select.unregister(conn)
+  if len(cmd_name.data) == 0:
     print(f'UNREGISTER CLIENT: {conn.fileno()}')
+    node.select.unregister(conn)
     return
 
-  cmd = msg.read('str')
+  res = None
 
   response_ok  = lambda data=None: conn.send(buffer.write(status.OK, data))
   response_err = lambda data=None: conn.send(buffer.write(status.ERR, data))
 
-  res = None
-
   try:
-    match cmd:
-      case "TCREATE": res = tcreate(msg)
-      case "TREMOVE": res = tremove(msg)
-      case "TLOAD":   res = tload(msg)
-      case "TSAVE":   res = tsave(msg)
+    match cmd_name.read('str'):
+      case "TPUT": 
+        node.select.unregister(conn)
+        c_commands.t_put(conn.fileno())
+
+      case "TCREATE": 
+        args = conn.read(); 
+        res  = tcreate(args)
+        response_ok(res)
+
+      case "TREMOVE": 
+        args = conn.read(); 
+        res = tremove(args)
+        response_ok(res)
+
+      case "TLOAD":   
+        args = conn.read(); 
+        res = tload(args)
+        response_ok(res)
+
+      case "TSAVE":   
+        args = conn.read(); 
+        res = tsave(args)
+        response_ok(res)
 
       case _: 
         conn.send(b"COMMAND DOESN'T EXIST")
 
-    response_ok(res)
-  except Exception:
+  except Exception as e:
+    log.error(f'{traceback.format_exc()}')
     response_err()
 
 
