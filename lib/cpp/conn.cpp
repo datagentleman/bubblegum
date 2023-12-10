@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <string>
+#include <fcntl.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
 
 #include "buffer.cpp"
 #include "utils.cpp"
@@ -29,8 +31,8 @@ class conn : public ReaderWriter {
       send(sock, data_src, size, 0);      
     }
 
-    void _read(void *dst, int size, int offset) { 
-      recv(sock, dst, size, 0);
+    int _read(void *dst, int size, int offset) { 
+      return recv(sock, dst, size, MSG_WAITALL);
     }
 
   private:
