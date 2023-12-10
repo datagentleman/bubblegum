@@ -38,7 +38,7 @@ class CTensor: public File {
     // If shape = {2, 2} we will get {100 x 2 x 2}.
     //
     // For now it's hardcoded.
-    std::vector<int32_t> shape = {1};
+    std::vector<int16_t> shape = {1};
 
     CTensor();
     CTensor(char* tensor_path);

@@ -35,13 +35,15 @@ void CTensor::save() {
 void CTensor::load() {
   int size = File::read_header();
   dtype.resize(size);
+
+  // TODO: do something with this - there should be only one read()
   File::read_data(&dtype, size);
   File::read(&shape);
 }
 
 void CTensor::write(buffer data, int len) {
-  CBucket current_bucket = CBucket();
-  current_bucket.write(&data);
+  CBucket bucket = CBucket();
+  bucket.write(&data);
 }
 
 #endif
