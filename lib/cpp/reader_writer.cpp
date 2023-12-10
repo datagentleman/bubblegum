@@ -12,15 +12,15 @@ class ReaderWriter {
 
     virtual ~ReaderWriter() {}
 
-    // implemented by children (File, Buffer, ...)
+    // implemented by children (File, Buffer, Conn, ...)
     virtual void _write(void *src, int len, int offset)    {}
     virtual void _write_at(void *src, int len, int offset) {}
-    virtual void _read(void  *dst, int len, int offset)    {}
+    virtual int  _read(void  *dst, int len, int offset)    { return 0; }
 
     // WRITER
     void write_at(void *src, int len, int offset) {
       _write_at(src, len, offset);
-    }
+    }   
 
     template <typename T>
     void write(std::vector<T> *src, bool header=true) {
@@ -66,13 +66,19 @@ class ReaderWriter {
       _read(dst, len, offset);
     }
 
-    template <typename T>
-    void read(std::vector<T> *dst) {
-      int elems = read_header();
-      int len   = read_header();
+    int read_all(std::vector<unsigned char> *dst) {
+      int len = read_header();
+      dst->resize(len);
+      return read_data(dst->data(), len);
+    }
 
-      dst->resize(elems);
-      read_data(dst->data(), len);
+    template <typename T> 
+    int read(std::vector<T> *dst) {
+      int num_elems = read_header();
+      int byte_size = read_header();
+
+      dst->resize(num_elems);
+      return read_data(dst->data(), byte_size);
     }
 
     void read(int *dst) {
@@ -93,13 +99,15 @@ class ReaderWriter {
     int read_header() {
       int len = 0;
       _read(&len, header_size, read_offset);
+
       read_offset += header_size;
       return len;
     }
 
-    void read_data(void *src, int len) {
-      _read(src, len, read_offset);
+    int read_data(void *src, int len) {
+      int size = _read(src, len, read_offset);
       read_offset += len;
+      return size;
     }
 };
 
