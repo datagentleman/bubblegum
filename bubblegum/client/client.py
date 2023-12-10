@@ -24,6 +24,11 @@ class Client:
     return self
 
 
+  def tput(self, tensor_name: str, data: bytes):
+    res = self.send('TPUT', tensor_name.replace(":", "/"), data)
+    return res.read('int')
+
+
   def tcreate(self, tensor_name: str, dtype: str=None, shape: list(int)=None):
     res = self.send('TCREATE', tensor_name, dtype, shape)
     return res.read('int')
@@ -52,10 +57,14 @@ class Client:
 
 
   def send(self, cmd: str, *args):
-    buf = Buffer()
+    buf1 = Buffer().write(cmd)
+    buf2 = Buffer()
 
-    buf.write(cmd)
-    [buf.write(arg) for arg in args]
-
-    self.conn.send(buf.data)
+    # build command args
+    if len(args) > 0:
+      for arg in args: buf2.write(arg)
+      
+    self.conn.send(buf1.data, buf2.data)
     return self.conn.read()
+
+
