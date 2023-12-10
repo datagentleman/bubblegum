@@ -17,11 +17,11 @@ class Conn:
 
 
   # send bytes
-  def send(self, data) -> int:
-    # Before send we must append data size - other end must know how many bytes to read.
+  def send(self, *items: bytearray) -> int:
     buf = Buffer()
-    buf.write(data)
-    return self.conn.send(buf.data)
+
+    for i in items: buf.write(i)
+    self.conn.send(buf.data)
 
 
   # read handshake
@@ -43,7 +43,7 @@ class Conn:
   def send_handshake(self) -> bytes:
     # handshake should be reasonably fast
     self.conn.settimeout(0.5)
-    
+
     res = Buffer().write("OK")
     self.send(res.data)
 
