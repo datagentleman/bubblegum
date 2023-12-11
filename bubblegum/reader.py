@@ -42,6 +42,6 @@ class Reader:
     return b
     
 
-  # This will parse something like 'list[int]' => ['list', 'int'] 
+  # This will parse 'list[int]' to ['list', 'int'] 
   def parse_list(self, type: str):
     return type.replace("[", " ").replace("]", "").split()

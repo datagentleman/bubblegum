@@ -18,6 +18,7 @@ class buffer : public ReaderWriter {
 
     unsigned char operator[](int index);
     unsigned char* data();
+
     std::vector<unsigned char>* vec();
 
     void _write(void *data_src, int size, int offset) override;

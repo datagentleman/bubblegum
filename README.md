@@ -2,7 +2,6 @@
 
 ```
 
-
    ██████  ██    ██ ██████  ██████  ██      ███████  ██████  ██    ██ ███    ███    
   ██   ██ ██    ██ ██   ██ ██   ██ ██      ██      ██       ██    ██ ████  ████   
   ██████  ██    ██ ██████  ██████  ██      █████   ██   ███ ██    ██ ██ ████ ██   
@@ -31,26 +30,3 @@ Don't know if it will be useful in any way, but it's worth trying 😀<br/>
 ## Current state
 
 Heavily in progress ! It's not usable yet 🔥
-
-
-
-## Install required packages
-
-```
-  python -m pip install -r requirements.txt
-```
-
-
-## Run tests
-
-```
-  python3 -m pytest -s tests or PYTHONPATH=`pwd` python3 -m pytest -s tests
-```
-
-
-
-# Run Mypy
-
-```
-  python3 -m mypy bubblegum
-```

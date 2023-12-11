@@ -29,6 +29,11 @@ class Client:
     return res.read('int')
 
 
+  def tget(self, tensor_name: str, num: int):
+    res = self.send('TGET', tensor_name.replace(":", "/"), num)
+    return res.read('int')
+
+
   def tcreate(self, tensor_name: str, dtype: str=None, shape: list(int)=None):
     res = self.send('TCREATE', tensor_name, dtype, shape)
     return res.read('int')

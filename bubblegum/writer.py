@@ -24,7 +24,7 @@ class Writer:
 
         # number of bytes
         self.write(len(buf.data))
-        
+
         self.data += buf.data
         
       case 'bytes':

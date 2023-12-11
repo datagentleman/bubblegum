@@ -11,14 +11,13 @@ Config.load('test')
 host = Config['server.host']
 port = Config['server.port']
 
-
 @pytest.mark.api
 def test_api_tput():  
   c = Client(host, port).connect()
-  data = np.arange(1000000, dtype=np.int32).tobytes()
+  data = np.arange(100000000, dtype=np.int32).tobytes()
 
   start = timer()
-  s = c.tcreate('test:llm2')
+  s = c.tcreate('test:llm_bkt')
   assert(s == status.OK)
 
   s = c.tput("tensors:test:llm_bkt", data)
@@ -26,6 +25,20 @@ def test_api_tput():
 
   end = timer()
   print(f'Elapsed time 2: {(end-start)}')
+
+@pytest.mark.api
+def test_api_tget():  
+  c = Client(host, port).connect()
+  data = np.arange(1000000, dtype=np.int32).tobytes()
+
+  s = c.tcreate('test:llm', "int32")
+  assert(s == status.OK)
+
+  s = c.tput("tensors:test:llm_bkt", data)
+  assert(s == status.OK)
+  
+  c = Client(host, port).connect()
+  s = c.tget("tensors:test:llm_bkt", 10)
 
 
 @pytest.mark.api

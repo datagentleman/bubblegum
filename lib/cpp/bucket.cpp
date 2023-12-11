@@ -8,8 +8,6 @@
 
 using namespace std;
 
-static std::map<std::string, std::atomic<int> *> bucket_lengths;
-
 // Main class for storing tensor data
 class CBucket : public File {
   public:
@@ -20,6 +18,7 @@ class CBucket : public File {
     
     // TODO: hardcoded, only temporary
     int row_size = 4;
+    std::vector<int16_t> shape = {1};
 
     std::atomic<int> *data_offset;
     std::atomic<int> *size;
@@ -61,10 +60,23 @@ class CBucket : public File {
       save();
     }
 
-    // read number of tensor rows
-    void read(buffer *buff, int len) {
-      buff->vec()->resize(len);
-      File::read_at(buff->data(), len, data_start);
+    // Read number of rows
+    // TODO: later we can use sendfile instead 
+    void read(buffer *buff, int rows_num) {
+      buff->vec()->resize(rows_num);
+
+      // TODO: 4 is hardcoded for now - it will be replaced with dtype size
+      int bytes_to_read = rows_num * num_of_elems() * 4;
+      std::cout << "BYTES TO READ: " << +bytes_to_read << "\n"; 
+      File::read_at(buff->data(), bytes_to_read, data_start);
+    }
+
+  private:
+    int num_of_elems() {
+      auto begin = std::begin(shape);
+      auto end   = std::end(shape);
+      
+      return std::accumulate(begin, end, 1, std::multiplies<int16_t>());
     }
 };
 

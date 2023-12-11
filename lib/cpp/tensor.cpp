@@ -46,4 +46,11 @@ void CTensor::write(buffer data, int len) {
   bucket.write(&data);
 }
 
+int CTensor::get(buffer *data, int rows_num) {
+  CBucket b = CBucket();
+  b.shape = shape;
+  b.read(data, rows_num);
+  return 0;
+}
+
 #endif

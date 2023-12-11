@@ -9,7 +9,6 @@ class Conn:
   def __init__(self, conn: socket.socket):
     self.conn = conn
 
-
   # read next message
   def read(self) -> Buffer:
     n = int.from_bytes(self.conn.recv(4), byteorder='little')

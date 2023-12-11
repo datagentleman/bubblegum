@@ -33,9 +33,13 @@ def run_command(conn: Conn, node: Node):
 
   try:
     match cmd_name.read('str'):
-      case "TPUT": 
+      case "TPUT":
         node.select.unregister(conn)
         c_commands.t_put(conn.fileno())
+
+      case "TGET": 
+        node.select.unregister(conn)
+        c_commands.t_get(conn.fileno())
 
       case "TCREATE": 
         args = conn.read(); 

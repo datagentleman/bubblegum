@@ -9,7 +9,11 @@ cdef extern from "cpp/conn.cpp":
     void write(void*, int)
 
 cdef extern from "cpp/commands.cpp":
-    void tput(int fd)
+  void tput(int fd)
+  void tget(int fd)
 
 cpdef t_put(int fd):
   tput(fd)
+
+cpdef t_get(int fd):
+  tget(fd)

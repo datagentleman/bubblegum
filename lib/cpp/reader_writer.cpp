@@ -81,6 +81,12 @@ class ReaderWriter {
       return read_data(dst->data(), byte_size);
     }
 
+    int read(std::vector<unsigned char> *dst) {
+      int len = read_header();
+      dst->resize(len);
+      return read_data(dst->data(), len);
+    }
+
     void read(int *dst) {
       read_data(dst, 4);
     }

@@ -32,7 +32,7 @@ class conn : public ReaderWriter {
     }
 
     int _read(void *dst, int size, int offset) {
-      // TODO: MSG_WAITALL could potentially block forever it message is too large ? 
+      // TODO: MSG_WAITALL could potentially block forever if message is too large ? 
       return recv(sock, dst, size, MSG_WAITALL);
     }
 
@@ -40,7 +40,7 @@ class conn : public ReaderWriter {
     void create_socket(int existing_fd) {
       sock = socket(AF_INET, SOCK_STREAM, 0);
 
-      // after that we can recv/send on our sock
+      // after that we can recv/send on our socket
       dup2(existing_fd, sock);
     }
 };

@@ -49,6 +49,7 @@ class CTensor: public File {
     void load();
 
     void write(buffer data, int len);
+    int get(buffer *data, int num);
 };
 
 #endif
