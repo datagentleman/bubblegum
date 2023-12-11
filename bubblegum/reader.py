@@ -26,6 +26,8 @@ class Reader:
 
       case "list":
         length = unpack('i', self.read_length())
+        bytes  = unpack('i', self.read_length())
+        
         return [self.read(types[1]) for _ in range(length[0])]
 
       case _:

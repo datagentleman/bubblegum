@@ -2,7 +2,6 @@
 
 from libcpp.vector cimport vector
 from lib.commands  cimport *
-from lib.tensor    cimport *
 from cython        cimport cast
 
 

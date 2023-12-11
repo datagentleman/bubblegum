@@ -23,7 +23,7 @@ class Writer:
         self.write(len(val))
 
         # number of bytes
-        self.write(len(len(buf.data)))
+        self.write(len(buf.data))
         
         self.data += buf.data
         

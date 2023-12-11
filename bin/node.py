@@ -58,7 +58,7 @@ def run_command(conn: Conn, node: Node):
         response_ok(res)
 
       case _: 
-        conn.send(b"COMMAND DOESN'T EXIST")
+        response_err(b"COMMAND DOESN'T EXIST")
 
   except Exception as e:
     log.error(f'{traceback.format_exc()}')

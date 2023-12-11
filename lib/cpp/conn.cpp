@@ -28,10 +28,11 @@ class conn : public ReaderWriter {
     }
 
     void _write(void *data_src, int size, int offset) {
-      send(sock, data_src, size, 0);      
+      send(sock, data_src, size, 0);  
     }
 
-    int _read(void *dst, int size, int offset) { 
+    int _read(void *dst, int size, int offset) {
+      // TODO: MSG_WAITALL could potentially block forever it message is too large ? 
       return recv(sock, dst, size, MSG_WAITALL);
     }
 

@@ -1,7 +1,8 @@
 import pytest
-
+import numpy as np
 import bubblegum.status as status
 
+from timeit           import default_timer as timer
 from bubblegum.client import Client
 from bubblegum.config import Config
 
@@ -9,6 +10,23 @@ Config.load('test')
 
 host = Config['server.host']
 port = Config['server.port']
+
+
+@pytest.mark.api
+def test_api_tput():  
+  c = Client(host, port).connect()
+  data = np.arange(1000000, dtype=np.int32).tobytes()
+
+  start = timer()
+  s = c.tcreate('test:llm2')
+  assert(s == status.OK)
+
+  s = c.tput("tensors:test:llm_bkt", data)
+  assert(s == status.OK)
+
+  end = timer()
+  print(f'Elapsed time 2: {(end-start)}')
+
 
 @pytest.mark.api
 def test_api_tcreate():
@@ -73,3 +91,6 @@ def test_api_tremove():
 
   s, _ = c.tload('test:bert')
   assert(s == status.ERR)
+
+
+

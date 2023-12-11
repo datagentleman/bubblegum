@@ -1,7 +1,6 @@
 # distutils: language = c++
 
 from libcpp.string cimport string
-from lib.tensor    cimport Tensor
 
 cdef extern from "cpp/conn.cpp":
   cdef cppclass conn:
@@ -10,11 +9,7 @@ cdef extern from "cpp/conn.cpp":
     void write(void*, int)
 
 cdef extern from "cpp/commands.cpp":
-    void tensor_put(int fd)
+    void tput(int fd)
 
-
-cpdef ping(int fd):
-  Tensor(b'')
-
-cpdef put(int fd):
-  tensor_put(fd)
+cpdef t_put(int fd):
+  tput(fd)

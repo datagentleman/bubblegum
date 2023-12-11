@@ -2,14 +2,21 @@ from bubblegum.conn        import Conn
 from bubblegum.buffer      import Buffer  
 from bubblegum.tensor      import Tensor  
 
+import datetime
+
 # TODO: add validations
 
 # Create tensor
 def tcreate(cmd: Buffer):
+  start = datetime.datetime.now()
+
   name  = cmd.read('str')
   dtype = cmd.read('str')
   shape = cmd.read('list[int]')
   Tensor.create(name, dtype, shape)
+  
+  end = datetime.datetime.now()
+  print(f'Elapsed time 2: {(end-start).microseconds/1000000}')
 
 
 # Remove tensor files and directory (if possible)
@@ -21,8 +28,8 @@ def tremove(cmd: Buffer):
 # Load tensor from file
 def tload(cmd: Buffer) -> bytes:
   name = cmd.read('str')
-  
-  if not Tensor.find(name): raise TypeError('Tensor not found')
+
+  if not Tensor.find(name): raise TypeError(f'Tensor {name} not found')
   return Tensor.load(name).encode()
 
 
