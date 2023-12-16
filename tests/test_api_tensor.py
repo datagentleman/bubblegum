@@ -17,10 +17,10 @@ def test_api_tput():
   data = np.arange(100000000, dtype=np.int32).tobytes()
 
   start = timer()
-  s = c.tcreate('test:llm_bkt')
+  s = c.tcreate('test:llm')
   assert(s == status.OK)
 
-  s = c.tput("tensors:test:llm_bkt", data)
+  s = c.tput("test:llm", data)
   assert(s == status.OK)
 
   end = timer()
@@ -34,11 +34,11 @@ def test_api_tget():
   s = c.tcreate('test:llm', "int32")
   assert(s == status.OK)
 
-  s = c.tput("tensors:test:llm_bkt", data)
+  s = c.tput("test:llm", data)
   assert(s == status.OK)
   
   c = Client(host, port).connect()
-  s = c.tget("tensors:test:llm_bkt", 10)
+  s = c.tget("test:llm", 10)
 
 
 @pytest.mark.api

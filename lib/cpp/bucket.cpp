@@ -23,11 +23,13 @@ class CBucket : public File {
     std::atomic<int> *data_offset;
     std::atomic<int> *size;
 
+    std::string extension = ".bucket";
+
     CBucket() {}
+    CBucket(std::string path) {
+      open(fullpath(path));
 
-    CBucket(std::string file_path) : File(file_path) {
       data_offset = new std::atomic<int>(0);
-
       int eof_offset = lseek(fd, 0, SEEK_END);
 
       if(eof_offset < data_start) eof_offset = data_start;
@@ -60,6 +62,11 @@ class CBucket : public File {
       save();
     }
 
+    std::string fullpath(std::string path) {
+      std::filesystem::path p{path};
+      return p /= (std::to_string(id) + extension);
+    }
+
     // Read number of rows
     // TODO: later we can use sendfile instead 
     void read(buffer *buff, int rows_num) {
@@ -67,7 +74,6 @@ class CBucket : public File {
 
       // TODO: 4 is hardcoded for now - it will be replaced with dtype size
       int bytes_to_read = rows_num * num_of_elems() * 4;
-      std::cout << "BYTES TO READ: " << +bytes_to_read << "\n"; 
       File::read_at(buff->data(), bytes_to_read, data_start);
     }
 

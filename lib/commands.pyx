@@ -2,12 +2,6 @@
 
 from libcpp.string cimport string
 
-cdef extern from "cpp/conn.cpp":
-  cdef cppclass conn:
-    conn()
-    conn(int)
-    void write(void*, int)
-
 cdef extern from "cpp/commands.cpp":
   void tput(int fd)
   void tget(int fd)

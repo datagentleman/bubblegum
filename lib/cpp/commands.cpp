@@ -25,17 +25,15 @@ void f(int fd) {
   std::string tensor_name = "";
   buf.read(&tensor_name);
 
+  CTensor tensor = CTensor(tensor_name);
   TIMER_BEGIN(tput);
-
-  // TODO: use Tensor.put() here
-  CBucket bucket = CBucket(tensor_name);
-
+  
   TIMER_BEGIN(buf_read);
   buf.read(data.vec());
   TIMER_END(buf_read);
 
   TIMER_BEGIN(disk_write);
-  bucket.write(&data);
+  tensor.put(&data);
   TIMER_END(disk_write);
 
   // TODO: only temporary. Status OK. 
@@ -56,18 +54,17 @@ void tput(int fd) {
 
 void tget(int fd) {
   conn   con  = conn(fd);
-  buffer buf  = buffer();
+  buffer cmd  = buffer();
   buffer data = buffer();
 
-  con.read_all(buf.vec());
+  con.read_all(cmd.vec());
 
   std::string tensor_name = "";
-  buf.read(&tensor_name);
+  cmd.read(&tensor_name);
 
   int num = 0;
-  buf.read(&num);
+  cmd.read(&num);
 
-  // TODO: shape will be taken from tensor
   CBucket bucket = CBucket(tensor_name);
   bucket.shape = {2, 2, 2};
   bucket.read(&data, num);

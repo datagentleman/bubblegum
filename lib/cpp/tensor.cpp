@@ -10,12 +10,12 @@
 using namespace std;
 
 CTensor::CTensor() {} 
-CTensor::CTensor(char* tensor_path) : File(tensor_path) { }
+CTensor::CTensor(string tensor_name) {
+  root /= tensor_name;
+  open(fullpath());
+};
 
 int CTensor::read(unsigned char* data, int num_of_tensors) {
-  // calculate number of bytes to read
-  // auto elems_per_tensor = std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<int>());
-  // auto num_of_bytes = num_of_tensors * elems_per_tensor * type;
   File::read(data);
   return 0;
 }
@@ -41,16 +41,25 @@ void CTensor::load() {
   File::read(&shape);
 }
 
+void CTensor::put(buffer *data) {
+  CBucket bucket = CBucket(root);
+  bucket.write(data);
+}
+
+int CTensor::get(buffer *data, int rows_num) {
+  CBucket b = CBucket(root);
+  b.shape = shape;
+  b.read(data, rows_num);
+  return 0;
+}
+
 void CTensor::write(buffer data, int len) {
   CBucket bucket = CBucket();
   bucket.write(&data);
 }
 
-int CTensor::get(buffer *data, int rows_num) {
-  CBucket b = CBucket();
-  b.shape = shape;
-  b.read(data, rows_num);
-  return 0;
+filesystem::path CTensor::fullpath() {
+  return root / (root.filename() +=  extension);
 }
 
 #endif

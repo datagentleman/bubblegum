@@ -15,7 +15,7 @@
 
 // this will allow us to use pwrite() in concurrent manner.
 // Each thread will get different offset for it's data and
-// we shouldn't have any conflicts ;)
+// we shouldn't have any conflicts.
 static std::map<std::string, std::atomic<int> *> file_offsets;
 
 class File : public ReaderWriter {
@@ -25,11 +25,12 @@ class File : public ReaderWriter {
 
     File();
     ~File();
-    File(std::string file_path, int offset);
+
+    int open(std::string file_path, int offset);
 
     void _write(void *data_src, int size, int offset)    override;
     void _write_at(void *data_src, int size, int offset) override;
-    int _read(void *dst, int len, int offset)           override;
+    int _read(void *dst, int len, int offset)            override;
 };
 
 #endif

@@ -16,10 +16,9 @@
 #include "utils.cpp"
 #include "file.cpp"
 
-
 std::map<std::string, int> DTYPES = {
   { "int8",  1 },
-  { "int16", 2 }
+  { "int16", 2 },
 };
 
 using namespace std;
@@ -27,6 +26,9 @@ using namespace std;
 class CTensor: public File {
   public:
     string dtype = "int16";
+    filesystem::path root{"tensors"};
+
+    string extension = ".tensor";
 
     // we need initial shape for tensor. We need it to calculate 
     // it's size and to assign id - required for update/remove operations.
@@ -41,15 +43,18 @@ class CTensor: public File {
     std::vector<int16_t> shape = {1};
 
     CTensor();
-    CTensor(char* tensor_path);
+    CTensor(string tensor_path);
 
     int read(unsigned char* data, int num_of_tensors);
 
     void save();
     void load();
 
-    void write(buffer data, int len);
-    int get(buffer *data, int num);
+    filesystem::path fullpath();
+
+    void write(buffer data, int );
+    void put(buffer *data);
+    int  get(buffer *data, int num);
 };
 
 #endif
