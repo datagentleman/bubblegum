@@ -42,22 +42,22 @@ def run_command(conn: Conn, node: Node):
         c_commands.t_get(conn.fileno())
 
       case "TCREATE": 
-        buf = Buffer(conn.read('bytes'));
-        res = tcreate(buf)
+        args = Buffer(conn.read('bytes'));
+        res = tcreate(args)
         response_ok(res)
 
       case "TREMOVE": 
-        args = conn.read(); 
+        args = Buffer(conn.read('bytes'));
         res = tremove(args)
         response_ok(res)
 
       case "TLOAD":   
-        args = conn.read(); 
+        args = Buffer(conn.read('bytes'));
         res = tload(args)
         response_ok(res)
 
       case "TSAVE":   
-        args = conn.read(); 
+        args = Buffer(conn.read('bytes'));
         res = tsave(args)
         response_ok(res)
 
