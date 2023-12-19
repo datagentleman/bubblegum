@@ -19,6 +19,15 @@
 std::map<std::string, int> DTYPES = {
   { "int8",  1 },
   { "int16", 2 },
+  { "int32", 4 },
+  { "int64", 8 },
+
+  { "float16", 2 },
+  { "float32", 4 },
+  { "float64", 8 },
+
+  { "complex64",  8 },
+  { "complex128", 16 },
 };
 
 using namespace std;
