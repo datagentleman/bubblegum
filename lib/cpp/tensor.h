@@ -34,10 +34,12 @@ using namespace std;
 
 class CTensor: public File {
   public:
-    string dtype = "int16";
-    filesystem::path root{"tensors"};
-
     string extension = ".tensor";
+    
+    string dtype = "int16";
+    string name  = "";
+
+    filesystem::path root{"tensors"};
 
     // we need initial shape for tensor. We need it to calculate 
     // it's size and to assign id - required for update/remove operations.
@@ -49,7 +51,7 @@ class CTensor: public File {
     // If shape = {2, 2} we will get {100 x 2 x 2}.
     //
     // For now it's hardcoded.
-    std::vector<int16_t> shape = {1};
+    std::vector<int32_t> shape = {1};
 
     CTensor();
     CTensor(string tensor_path);
@@ -62,6 +64,9 @@ class CTensor: public File {
     filesystem::path fullpath();
 
     void write(buffer data, int );
+    int row_size();
+    int items_per_row();
+
     void put(buffer *data);
     int  get(buffer *data, int num);
 };

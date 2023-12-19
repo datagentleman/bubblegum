@@ -15,7 +15,7 @@ class CBucket : public File {
 
     int header_start = 0;
     int data_start   = 400;
-    
+
     // TODO: hardcoded, only temporary
     int row_size = 4;
     std::vector<int16_t> shape = {1};
@@ -67,18 +67,16 @@ class CBucket : public File {
       return p /= (std::to_string(id) + extension);
     }
 
-    // Read number of rows
-    // TODO: later we can use sendfile instead 
-    void read(buffer *buff, int rows_num) {
-      buff->vec()->resize(rows_num);
-
-      // TODO: 4 is hardcoded for now - it will be replaced with dtype size
-      int bytes_to_read = rows_num * num_of_elems() * 4;
-      File::read_at(buff->data(), bytes_to_read, data_start);
+    // Reading bytes from bucket file
+    void read(buffer *buff, int number_of_rows, int bytesize, int offset=0) {
+      buff->vec()->resize(number_of_rows);
+      offset = data_start + offset;
+      
+      File::read_at(buff->data(), bytesize, offset);
     }
 
   private:
-    int num_of_elems() {
+    int number_of_elems() {
       auto begin = std::begin(shape);
       auto end   = std::end(shape);
       

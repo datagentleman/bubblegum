@@ -5,6 +5,7 @@
 #include "bucket.cpp"
 #include "timer.cpp"
 #include "tensor.cpp"
+#include "status.cpp"
 
 void f(int fd) {
   conn   con  = conn(fd);
@@ -50,21 +51,18 @@ void tput(int fd) {
 void tget(int fd) {
   conn   con  = conn(fd);
   buffer cmd  = buffer();
-  buffer data = buffer();
+  buffer rows = buffer();
 
   con.read_all(cmd.vec());
 
   std::string tensor_name = "";
   cmd.read(&tensor_name);
 
+  int number_of_rows = 0;
+  cmd.read(&number_of_rows);
 
-  int num = 0;
-  cmd.read(&num);
+  CTensor tensor = CTensor(tensor_name);
+  tensor.get(&rows, number_of_rows);
 
-  CBucket bucket = CBucket(tensor_name);
-  bucket.shape = {2, 2, 2};
-  bucket.read(&data, num);
-
-  int res = 1;
-  con.write(&res);
+  con.write_all(&STATUS_OK, rows.vec());
 }

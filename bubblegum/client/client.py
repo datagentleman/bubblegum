@@ -29,7 +29,10 @@ class Client:
 
 
   def tget(self, tensor_name: str, num: int):
-    return self.send('TGET', tensor_name.replace(":", "/"), num)
+    status = self.send('TGET', tensor_name.replace(":", "/"), num)
+    data   = self.conn.read('bytes')
+    
+    return status, data
 
 
   def tcreate(self, tensor_name: str, dtype: str=None, shape: list(int)=None):

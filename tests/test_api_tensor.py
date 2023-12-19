@@ -32,14 +32,20 @@ def test_api_tget():
   c = Client(host, port).connect()
   data = np.arange(1000000, dtype=np.int32).tobytes()
 
-  s = c.tcreate('test:llm', "int32")
+  s = c.tcreate('test:llm', "int32", [2, 2])
+  assert(s == status.OK)
+
+  s = c.tsave('test:llm', 'int32', [2, 2])
   assert(s == status.OK)
 
   s = c.tput("test:llm", data)
   assert(s == status.OK)
-  
+
   c = Client(host, port).connect()
-  s = c.tget("test:llm", 10)
+  s, rows = c.tget("test:llm", 10)
+
+  assert(s == status.OK)
+  assert(rows == data[:40])
 
 
 @pytest.mark.api
@@ -80,14 +86,14 @@ def test_api_tsave_tload():
   s = c.tcreate('test:bert')
   assert(s == status.OK)
 
-  s = c.tsave('test:bert', 'float64', [255, 255, 255])
+  s = c.tsave('test:bert', 'float32', [255, 255, 255])
   assert(s == status.OK)
   
   s, t = c.tload('test:bert')
   assert(s == status.OK)
 
   expect = {
-    'name': 'test:bert', 'dtype': 'float64', 
+    'name': 'test:bert', 'dtype': 'float32', 
     'shape': [255, 255, 255], 'fd': -1, 'max_bucket_size': 100000000 }
 
   assert(t.__dict__ == expect)

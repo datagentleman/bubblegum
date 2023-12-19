@@ -14,7 +14,7 @@ cdef extern from "cpp/bucket.cpp":
     CBucket() except*
     CBucket(string file_path) except*
     void write(buffer *src) except*
-    void read(buffer *buff,  int len) except*
+    void read(buffer *buff,  int len, int size) except*
 
 
 cdef class Bucket:
@@ -34,10 +34,11 @@ cdef class Bucket:
     self.bucket.write(&self.buf)
 
   cpdef bytes read(self, int len):
-    buf = buffer()
+    # buf = buffer()
     
-    row_size = 4
-    len = len * row_size;
+    # row_size = 4
+    # len = len * row_size;
     
-    self.bucket.read(&buf, len)
-    return bytes(buf.data()[:len])
+    # self.bucket.read(&buf, len)
+    # return bytes(buf.data()[:len])
+    pass

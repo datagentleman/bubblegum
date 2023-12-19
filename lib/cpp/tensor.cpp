@@ -13,6 +13,7 @@ CTensor::CTensor() {}
 CTensor::CTensor(string tensor_name) {
   root /= tensor_name;
   open(fullpath());
+  load();
 };
 
 int CTensor::read(unsigned char* data, int num_of_tensors) {
@@ -25,20 +26,21 @@ void CTensor::save() {
   buffer buf = buffer();
   int size = shape.size();
 
+  buf.write(&name);
   buf.write(&dtype);
   buf.write(&size);
   buf.write(&shape);
-
+  
   File::write(buf.vec());
 }
 
 void CTensor::load() {
-  int size = File::read_header();
-  dtype.resize(size);
+  buffer buf = buffer();
+  File::read(buf.vec());
 
-  // TODO: do something with this - there should be only one read()
-  File::read_data(&dtype, size);
-  File::read(&shape);
+  buf.read(&name);
+  buf.read(&dtype);
+  buf.read(&shape);
 }
 
 void CTensor::put(buffer *data) {
@@ -46,11 +48,25 @@ void CTensor::put(buffer *data) {
   bucket.write(data);
 }
 
-int CTensor::get(buffer *data, int rows_num) {
+// Get rows from tensor
+int CTensor::get(buffer *dst, int number_of_rows) {
   CBucket b = CBucket(root);
-  b.shape = shape;
-  b.read(data, rows_num);
+  int bytesize    = number_of_rows * row_size();
+  int total_items = number_of_rows * items_per_row();
+
+  b.read(dst, total_items, bytesize);
   return 0;
+}
+
+// Calculate number of items per row
+int CTensor::items_per_row() {
+  return std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<int>());
+}
+
+// Calculate number of bytes per row
+int CTensor::row_size() {
+  int item_size = DTYPES[dtype];
+  return items_per_row() * item_size;
 }
 
 void CTensor::write(buffer data, int len) {
