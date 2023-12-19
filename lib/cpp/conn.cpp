@@ -27,8 +27,16 @@ class conn : public ReaderWriter {
       create_socket(existing_fd);
     }
 
+    template <typename... Items>
+    void write_all(Items... items) {
+      buffer buf = buffer();
+      (buf.write(items), ...);
+
+      _write(buf.data(), container_size(buf.vec()), 0);
+    }
+
     void _write(void *data_src, int size, int offset) {
-      send(sock, data_src, size, 0);  
+      send(sock, data_src, size, 0);
     }
 
     int _read(void *dst, int size, int offset) {

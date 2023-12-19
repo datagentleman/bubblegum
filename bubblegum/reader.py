@@ -5,34 +5,35 @@ class Reader:
     self.data = bytearray(data)
 
   def read(self, type: str) -> any:
-    if self.data == b'': return None
+    types = self.parse_types(type)
 
-    types = self.parse_list(type)
-    
-    match types[0]:
-      case "int":
-        return unpack("i", self.read_length())[0]
+    try:
+      match types[0]:
+        case "int":
+          return unpack("i", self.read_length())[0]
 
-      case "float":
-        return unpack("f", self.read_length())[0]
+        case "float":
+          return unpack("f", self.read_length())[0]
 
-      case "bytes":
-        length = unpack('i', self.read_length())
-        return self.read_length(length[0])
+        case "bytes":
+          length = unpack('i', self.read_length())
+          return self.read_length(length[0])
 
-      case "str":
-        length = unpack('i', self.read_length())
-        return self.read_length(length[0]).decode()
+        case "str":
+          length = unpack('i', self.read_length())
+          return self.read_length(length[0]).decode()
 
-      case "list":
-        length = unpack('i', self.read_length())
-        bytes  = unpack('i', self.read_length())
-        
-        return [self.read(types[1]) for _ in range(length[0])]
+        case "list":
+          length = unpack('i', self.read_length())
+          bytes  = unpack('i', self.read_length())
+          
+          return [self.read(types[1]) for _ in range(length[0])]
 
-      case _:
-        print('unsupported type')
-
+        case _:
+          print('unsupported type')
+    # TODO: create and catch NO_MORE_ERROR exception here  
+    except:
+      return None;
 
   def read_length(self, len=4):
     b = self.data[:len]
@@ -40,8 +41,8 @@ class Reader:
     # we must delete consumed bytes after reading 
     self.data[:] = self.data[len:]
     return b
-    
+
 
   # This will parse 'list[int]' to ['list', 'int'] 
-  def parse_list(self, type: str):
+  def parse_types(self, type: str):
     return type.replace("[", " ").replace("]", "").split()

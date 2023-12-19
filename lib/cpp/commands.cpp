@@ -27,7 +27,7 @@ void f(int fd) {
 
   CTensor tensor = CTensor(tensor_name);
   TIMER_BEGIN(tput);
-  
+
   TIMER_BEGIN(buf_read);
   buf.read(data.vec());
   TIMER_END(buf_read);
@@ -36,13 +36,8 @@ void f(int fd) {
   tensor.put(&data);
   TIMER_END(disk_write);
 
-  // TODO: only temporary. Status OK. 
   int res = 1;
-  buffer b = buffer();
-  b.write(&res);
-  b.write(b.vec());
-
-  con.write(b.vec());
+  con.write_all(&res);
   TIMER_END(tput);
   // }
 }
@@ -62,6 +57,7 @@ void tget(int fd) {
   std::string tensor_name = "";
   cmd.read(&tensor_name);
 
+
   int num = 0;
   cmd.read(&num);
 
@@ -69,5 +65,6 @@ void tget(int fd) {
   bucket.shape = {2, 2, 2};
   bucket.read(&data, num);
 
-  con.write(data.vec());
+  int res = 1;
+  con.write(&res);
 }

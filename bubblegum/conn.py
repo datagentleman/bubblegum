@@ -5,33 +5,29 @@ from bubblegum.reader  import Reader
 from bubblegum.writer  import Writer
 
 # this class will manage clients connection to node
-class Conn:
+class Conn(Buffer):
   def __init__(self, conn: socket.socket):
     self.conn = conn
+    super().__init__()
 
-  # read next message
-  def read(self) -> Buffer:
-    n = int.from_bytes(self.conn.recv(4), byteorder='little')
-    return Buffer(self.conn.recv(n))
+
+  def read_length(self, len=4):
+    return self.conn.recv(len)
 
 
   # send bytes
-  def send(self, *items: bytearray) -> int:
-    buf = Buffer()
-
-    for i in items: buf.write(i)
-    self.conn.send(buf.data)
+  def send(self, *items) -> int:
+    for i in items: self.write(i)
+    self.conn.send(self.data)
+    self.data = bytearray()
 
 
   # read handshake
   def read_handshake(self) -> bytes:
     self.conn.settimeout(0.5)
 
-    buf = self.read()
-    conn_type = buf.read('str')
-
-    res = Buffer().write("OK")
-    self.send(res.data)
+    conn_type = self.read('str')
+    self.send("OK")
 
     self.conn.settimeout(None)
     return conn_type
@@ -43,11 +39,8 @@ class Conn:
     # handshake should be reasonably fast
     self.conn.settimeout(0.5)
 
-    res = Buffer().write("OK")
-    self.send(res.data)
-
-    buf = self.read()
-    buf.read('bytes')
+    self.send("OK")
+    self.read('bytes')
 
     # from this point on, we cannot have any timeouts on socket - ex: streaming, long running tasks, ...
     self.conn.settimeout(None)
@@ -56,4 +49,3 @@ class Conn:
   # needed when working with select()
   def fileno(self):
     return self.conn.fileno()
-  

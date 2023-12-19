@@ -1,4 +1,4 @@
-from struct import pack
+from struct import pack, unpack
 
 class Writer:
   def __init__(self, data: bytes = b''): 
@@ -40,6 +40,5 @@ class Writer:
 
 
   def data_with_size(self, val: bytes) -> bytes:
-    # TODO: change this to unpack
-    data_size = len(val).to_bytes(4, byteorder='little')
+    data_size = pack('<i', len(val))
     return data_size + val

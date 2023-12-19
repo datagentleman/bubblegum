@@ -22,6 +22,6 @@ class Timer {
 
 #define TIMER_BEGIN(name) \
     { Timer timer##name(#name)
-    
+
 #define TIMER_END(name) \
     }

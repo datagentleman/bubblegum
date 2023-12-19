@@ -3,7 +3,7 @@ from __future__ import annotations
 from bubblegum.reader import Reader
 from bubblegum.writer import Writer
 
-class Buffer(Reader, Writer):
+class Buffer(Writer, Reader):
   pass
 
 def write(*values: any) -> bytearray:

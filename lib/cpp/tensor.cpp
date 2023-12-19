@@ -21,7 +21,7 @@ int CTensor::read(unsigned char* data, int num_of_tensors) {
 }
 
 // saving tensor metadata
-void CTensor::save() {  
+void CTensor::save() {
   buffer buf = buffer();
   int size = shape.size();
 

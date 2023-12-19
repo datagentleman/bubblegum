@@ -22,7 +22,7 @@ class Tensor:
     self.max_bucket_size = 100_000_000
 
 
-  def save(self):
+  def save(self): 
     data = self.encode()
     size = pack('i', len(data))
 

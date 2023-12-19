@@ -25,51 +25,43 @@ class Client:
 
 
   def tput(self, tensor_name: str, data: bytes):
-    res = self.send('TPUT', tensor_name.replace(":", "/"), data)
-    return res.read('int')
+    return self.send('TPUT', tensor_name.replace(":", "/"), data)
 
 
   def tget(self, tensor_name: str, num: int):
-    res = self.send('TGET', tensor_name.replace(":", "/"), num)
-    return res.read('int')
+    return self.send('TGET', tensor_name.replace(":", "/"), num)
 
 
   def tcreate(self, tensor_name: str, dtype: str=None, shape: list(int)=None):
-    res = self.send('TCREATE', tensor_name, dtype, shape)
-    return res.read('int')
+    return self.send('TCREATE', tensor_name, dtype, shape)
 
 
   def tremove(self, tensor_name: str):
-    res = self.send('TREMOVE', tensor_name)
-    return res.read('int') 
+    return self.send('TREMOVE', tensor_name)
     
     
   def tload(self, tensor_name: str):
-    res = self.send('TLOAD', tensor_name)
-
-    status = res.read('int')
+    status = self.send('TLOAD', tensor_name)
     tensor = None
     
     if status == 1:
-      tensor = Tensor.decode(res.read('bytes'))
-    
+      tensor = Tensor.decode(self.conn.read('bytes'))
+
     return status, tensor
 
 
   def tsave(self, tensor_name: str, dtype: str=None, shape: list(int)=None):
-    res = self.send('TSAVE', tensor_name, dtype, shape)
-    return res.read('int')
+    return self.send('TSAVE', tensor_name, dtype, shape)
 
 
   def send(self, cmd: str, *args):
-    buf1 = Buffer().write(cmd)
     buf2 = Buffer()
 
     # build command args
     if len(args) > 0:
       for arg in args: buf2.write(arg)
       
-    self.conn.send(buf1.data, buf2.data)
-    return self.conn.read()
+    self.conn.send(cmd, buf2.data)
+    return self.conn.read('int')
 
 

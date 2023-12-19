@@ -17,22 +17,22 @@ HOST = Config["server.host"]
 PORT = Config["server.port"]
 
 def run_command(conn: Conn, node: Node):
-  cmd_name = conn.read()
+  cmd_name = conn.read('str')
 
   # Conn is consider closed when it's ready for read but there is no data. 
   # We can unregister it from select loop and return.
-  if len(cmd_name.data) == 0:
+  if not cmd_name:
     print(f'UNREGISTER CLIENT: {conn.fileno()}')
     node.select.unregister(conn)
     return
 
   res = None
 
-  response_ok  = lambda data=None: conn.send(buffer.write(status.OK, data))
-  response_err = lambda data=None: conn.send(buffer.write(status.ERR, data))
+  response_ok  = lambda data=None: conn.send(status.OK, data)
+  response_err = lambda data=None: conn.send(status.ERR, data)
 
   try:
-    match cmd_name.read('str'):
+    match cmd_name:
       case "TPUT":
         node.select.unregister(conn)
         c_commands.t_put(conn.fileno())
@@ -42,8 +42,8 @@ def run_command(conn: Conn, node: Node):
         c_commands.t_get(conn.fileno())
 
       case "TCREATE": 
-        args = conn.read(); 
-        res  = tcreate(args)
+        buf = Buffer(conn.read('bytes'));
+        res = tcreate(buf)
         response_ok(res)
 
       case "TREMOVE": 
@@ -61,7 +61,7 @@ def run_command(conn: Conn, node: Node):
         res = tsave(args)
         response_ok(res)
 
-      case _: 
+      case _:
         response_err(b"COMMAND DOESN'T EXIST")
 
   except Exception as e:
