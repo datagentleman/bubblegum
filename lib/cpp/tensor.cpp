@@ -48,13 +48,21 @@ void CTensor::put(buffer *data) {
   bucket.write(data);
 }
 
+void CTensor::set(buffer *data, int index) {
+  CBucket bucket = CBucket(root);
+  
+  index = index_offset(index);
+  bucket.write_at(data, index_offset(index));
+}
+
 // Get rows from tensor
 int CTensor::get(buffer *dst, int number_of_rows) {
   CBucket b = CBucket(root);
-  int bytesize    = number_of_rows * row_size();
-  int total_items = number_of_rows * items_per_row();
 
-  b.read(dst, total_items, bytesize);
+  int total_bytesize = number_of_rows * row_size();
+  int total_items    = number_of_rows * items_per_row();
+
+  b.read(dst, total_items, total_bytesize);
   return 0;
 }
 
@@ -67,6 +75,12 @@ int CTensor::items_per_row() {
 int CTensor::row_size() {
   int item_size = DTYPES[dtype];
   return items_per_row() * item_size;
+}
+
+// Get index offset
+int CTensor::index_offset(int index) {
+  index = std::max(index - 1, 0);
+  return index * row_size();
 }
 
 void CTensor::write(buffer data, int len) {

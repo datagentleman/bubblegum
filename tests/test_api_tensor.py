@@ -14,7 +14,7 @@ port = Config['server.port']
 @pytest.mark.api
 def test_api_tput():  
   c = Client(host, port).connect()
-  data = np.arange(1000000, dtype=np.int32).tobytes()
+  data = np.arange1(1000000, dtype=np.int32).tobytes()
 
   start = timer()
   s = c.tcreate('test:llm')
@@ -43,10 +43,31 @@ def test_api_tget():
 
   c = Client(host, port).connect()
   s, rows = c.tget("test:llm", 10)
-
   assert(s == status.OK)
   assert(rows == data[:40])
 
+
+@pytest.mark.api
+def test_api_tset():  
+  c = Client(host, port).connect()
+  old_data = np.arange(10, dtype=np.int32).tobytes()
+
+  s = c.tcreate('test:llm', "int32", [2, 2])
+  assert(s == status.OK)
+
+  s = c.tput("test:llm", old_data)
+  assert(s == status.OK)
+
+  c = Client(host, port).connect()
+  new_data = np.random.randint(10, size=10, dtype=np.int32).tobytes()
+  s = c.tset("test:llm", new_data)
+  assert(s == status.OK)
+
+  c = Client(host, port).connect()
+  s, rows = c.tget("test:llm", 10)
+  assert(s == status.OK)
+  assert(rows == new_data)
+  
 
 @pytest.mark.api
 def test_api_tcreate():

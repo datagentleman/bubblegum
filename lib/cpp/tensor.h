@@ -62,12 +62,14 @@ class CTensor: public File {
     void load();
 
     filesystem::path fullpath();
-
     void write(buffer data, int );
+
     int row_size();
     int items_per_row();
+    int index_offset(int index);
 
     void put(buffer *data);
+    void set(buffer *data, int index);
     int  get(buffer *data, int num);
 };
 

@@ -16,10 +16,6 @@ class CBucket : public File {
     int header_start = 0;
     int data_start   = 400;
 
-    // TODO: hardcoded, only temporary
-    int row_size = 4;
-    std::vector<int16_t> shape = {1};
-
     std::atomic<int> *data_offset;
     std::atomic<int> *size;
 
@@ -51,15 +47,18 @@ class CBucket : public File {
       size = new std::atomic<int>(s);
     }
 
-    // Write tensor data to bucket
+    // Write tensor rows to bucket
     void write(buffer *buff) {
       int len = container_size(buff->vec());
       int off = data_offset->fetch_add(len, std::memory_order_relaxed);
 
       File::write_at(buff->data(), len, off);
-
-      size->fetch_add((len/row_size));
       save();
+    }
+
+    // Write tensor rows to bucket
+    void write_at(buffer *buff, int offset) {
+      File::write_at(buff->data(), container_size(buff->vec()), offset + data_start);
     }
 
     std::string fullpath(std::string path) {
@@ -71,16 +70,8 @@ class CBucket : public File {
     void read(buffer *buff, int number_of_rows, int bytesize, int offset=0) {
       buff->vec()->resize(number_of_rows);
       offset = data_start + offset;
-      
-      File::read_at(buff->data(), bytesize, offset);
-    }
 
-  private:
-    int number_of_elems() {
-      auto begin = std::begin(shape);
-      auto end   = std::end(shape);
-      
-      return std::accumulate(begin, end, 1, std::multiplies<int16_t>());
+      File::read_at(buff->data(), bytesize, offset);
     }
 };
 

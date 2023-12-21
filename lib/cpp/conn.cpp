@@ -44,6 +44,12 @@ class conn : public ReaderWriter {
       return recv(sock, dst, size, MSG_WAITALL);
     }
 
+    void blocking_mode() {
+      int flags = fcntl(sock, F_GETFL, 0);
+      flags &= ~O_NONBLOCK;
+      fcntl(sock, F_SETFL, flags);
+    }
+
   private:
     void create_socket(int existing_fd) {
       sock = socket(AF_INET, SOCK_STREAM, 0);

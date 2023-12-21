@@ -28,10 +28,14 @@ class Client:
     return self.send('TPUT', tensor_name.replace(":", "/"), data)
 
 
+  def tset(self, tensor_name: str, data: bytes, index: int=0):
+    return self.send('TSET', tensor_name.replace(":", "/"), data, index)
+
+
   def tget(self, tensor_name: str, num: int):
     status = self.send('TGET', tensor_name.replace(":", "/"), num)
     data   = self.conn.read('bytes')
-    
+
     return status, data
 
 
@@ -63,7 +67,7 @@ class Client:
     # build command args
     if len(args) > 0:
       for arg in args: buf2.write(arg)
-      
+    
     self.conn.send(cmd, buf2.data)
     return self.conn.read('int')
 

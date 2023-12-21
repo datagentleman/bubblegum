@@ -12,11 +12,7 @@ void f(int fd) {
   buffer buf  = buffer();
   buffer data = buffer();
 
-  // Set socket to blocking mode 
-  // TODO: extract this
-  int flags = fcntl(con.sock, F_GETFL, 0);
-  flags &= ~O_NONBLOCK;
-  fcntl(con.sock, F_SETFL, flags);
+  con.blocking_mode();
 
   TIMER_BEGIN(socket_read);
   con.read_all(buf.vec());
@@ -65,4 +61,29 @@ void tget(int fd) {
   tensor.get(&rows, number_of_rows);
 
   con.write_all(&STATUS_OK, rows.vec());
+}
+
+void tset(int fd) {
+  conn   con  = conn(fd);
+  buffer cmd  = buffer();
+  buffer data = buffer();
+
+  int flags = fcntl(con.sock, F_GETFL, 0);
+  flags &= ~O_NONBLOCK;
+  fcntl(con.sock, F_SETFL, flags);
+
+  con.read_all(cmd.vec());
+
+  std::string tensor_name = "";
+  cmd.read(&tensor_name);
+
+  cmd.read(data.vec());
+
+  int index = 0;
+  cmd.read(&index);
+  std::cout << "TSET: index: " << +index << "\n";
+
+  CTensor tensor = CTensor(tensor_name);
+  tensor.set(&data, index);
+  con.write_all(&STATUS_OK);
 }

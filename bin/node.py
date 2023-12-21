@@ -37,6 +37,10 @@ def run_command(conn: Conn, node: Node):
         node.select.unregister(conn)
         c_commands.t_put(conn.fileno())
 
+      case "TSET":
+        node.select.unregister(conn)
+        c_commands.t_set(conn.fileno())
+
       case "TGET": 
         node.select.unregister(conn)
         c_commands.t_get(conn.fileno())
