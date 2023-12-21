@@ -12,7 +12,7 @@ class Conn(Buffer):
 
 
   def read_length(self, len=4):
-    return self.conn.recv(len)
+    return self.conn.recv(len, socket.MSG_WAITALL)
 
 
   # send bytes

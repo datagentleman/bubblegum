@@ -43,6 +43,7 @@ def test_api_tget():
 
   c = Client(host, port).connect()
   s, rows = c.tget("test:llm", 10)
+  
   assert(s == status.OK)
   assert(rows == data[:40])
 
@@ -50,7 +51,7 @@ def test_api_tget():
 @pytest.mark.api
 def test_api_tset():  
   c = Client(host, port).connect()
-  old_data = np.arange(10, dtype=np.int32).tobytes()
+  old_data = np.arange(10000000, dtype=np.int32).tobytes()
 
   s = c.tcreate('test:llm', "int32", [2, 2])
   assert(s == status.OK)
@@ -59,12 +60,13 @@ def test_api_tset():
   assert(s == status.OK)
 
   c = Client(host, port).connect()
-  new_data = np.random.randint(10, size=10, dtype=np.int32).tobytes()
+  new_data = np.random.randint(10, size=10000000, dtype=np.int32).tobytes()
   s = c.tset("test:llm", new_data)
   assert(s == status.OK)
 
   c = Client(host, port).connect()
-  s, rows = c.tget("test:llm", 10)
+  s, rows = c.tget("test:llm", 10000000)
+  
   assert(s == status.OK)
   assert(rows == new_data)
   

@@ -70,7 +70,6 @@ class CBucket : public File {
     void read(buffer *buff, int number_of_rows, int bytesize, int offset=0) {
       buff->vec()->resize(number_of_rows);
       offset = data_start + offset;
-
       File::read_at(buff->data(), bytesize, offset);
     }
 };

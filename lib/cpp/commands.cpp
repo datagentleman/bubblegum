@@ -49,6 +49,7 @@ void tget(int fd) {
   buffer cmd  = buffer();
   buffer rows = buffer();
 
+  con.blocking_mode();
   con.read_all(cmd.vec());
 
   std::string tensor_name = "";
@@ -68,10 +69,7 @@ void tset(int fd) {
   buffer cmd  = buffer();
   buffer data = buffer();
 
-  int flags = fcntl(con.sock, F_GETFL, 0);
-  flags &= ~O_NONBLOCK;
-  fcntl(con.sock, F_SETFL, flags);
-
+  con.blocking_mode();
   con.read_all(cmd.vec());
 
   std::string tensor_name = "";
@@ -81,7 +79,6 @@ void tset(int fd) {
 
   int index = 0;
   cmd.read(&index);
-  std::cout << "TSET: index: " << +index << "\n";
 
   CTensor tensor = CTensor(tensor_name);
   tensor.set(&data, index);

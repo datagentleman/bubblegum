@@ -36,7 +36,7 @@ class conn : public ReaderWriter {
     }
 
     void _write(void *data_src, int size, int offset) {
-      send(sock, data_src, size, 0);
+      auto bytes_send = send(sock, data_src, size, MSG_WAITALL);
     }
 
     int _read(void *dst, int size, int offset) {
