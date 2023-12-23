@@ -1,14 +1,22 @@
 import socket 
 
 from bubblegum.buffer  import Buffer
-from bubblegum.reader  import Reader
-from bubblegum.writer  import Writer
 
 # this class will manage clients connection to node
-class Conn(Buffer):
-  def __init__(self, conn: socket.socket):
-    self.conn = conn
+class Connection(Buffer):
+  def __init__(self, sock: socket.socket):
     super().__init__()
+    self.conn = sock
+
+
+  @classmethod
+  def connect(cls, host: str, port: str):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host, port))
+
+    conn = Connection(s)
+    conn.send_handshake()
+    return conn
 
 
   def read_length(self, len=4):
@@ -18,20 +26,19 @@ class Conn(Buffer):
   # send bytes
   def send(self, *items) -> int:
     for i in items: self.write(i)
+
     self.conn.send(self.data)
     self.data = bytearray()
 
 
   # read handshake
-  def read_handshake(self) -> bytes:
+  def read_handshake(self):
     self.conn.settimeout(0.5)
 
-    conn_type = self.read('str')
+    self.read('str')
     self.send("OK")
 
     self.conn.settimeout(None)
-    return conn_type
-
 
   # send handshake.
   # this will also ensure us that connection was accepted and we can transfer bytes.

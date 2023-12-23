@@ -2,10 +2,10 @@ import os
 import traceback
 import logging as log
 
-from bubblegum.conn     import Conn
-from bubblegum.node     import Node
-from bubblegum.config   import Config 
-from bubblegum.commands import * 
+from bubblegum.connection import Connection as Conn
+from bubblegum.node       import Node
+from bubblegum.config     import Config 
+from bubblegum.commands   import * 
 
 import bubblegum.status as status  
 import bubblegum.buffer as buffer 

@@ -1,4 +1,4 @@
-from bubblegum.conn        import Conn
+from bubblegum.connection  import Connection as Conn
 from bubblegum.buffer      import Buffer  
 from bubblegum.tensor      import Tensor  
 

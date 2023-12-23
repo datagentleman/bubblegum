@@ -3,7 +3,7 @@ import selectors
 import traceback
 import logging as log
 
-from bubblegum.conn import Conn
+from bubblegum.connection import Connection as Conn
 
 class Node:
   def __init__(self, host, port):
@@ -15,9 +15,9 @@ class Node:
 
 
   # accept incoming connections
-  def accept(self, sock):
-    conn, addr = sock.accept()    
-    conn = Conn(conn)
+  def accept(self, sock: socket.socket):
+    sock, addr = sock.accept()    
+    conn = Conn(sock)
 
     log.info(f'accepted connection: {conn} from {addr} FD: {conn.fileno()}')
 
