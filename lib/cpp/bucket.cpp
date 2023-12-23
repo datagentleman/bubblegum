@@ -68,7 +68,7 @@ class CBucket : public File {
 
     // Reading bytes from bucket file
     void read(buffer *buff, int number_of_rows, int bytesize, int offset=0) {
-      buff->vec()->resize(number_of_rows);
+      buff->vec()->resize(bytesize);
       offset = data_start + offset;
       File::read_at(buff->data(), bytesize, offset);
     }
