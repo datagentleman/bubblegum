@@ -26,9 +26,7 @@ def tremove(cmd: Buffer):
 
 
 # Load tensor from file
-def tload(cmd: Buffer) -> bytes:
-  name = cmd.read('str')
-
+def tload(name: str) -> bytes:
   if not Tensor.find(name): raise TypeError(f'Tensor {name} not found')
   return Tensor.load(name).encode()
 

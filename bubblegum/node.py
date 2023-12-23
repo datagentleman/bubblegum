@@ -21,7 +21,7 @@ class Node:
 
     log.info(f'accepted connection: {conn} from {addr} FD: {conn.fileno()}')
 
-    conn.read_handshake()
+    # conn.read_handshake()
     conn.conn.setblocking(False)
 
     # we can now add this connection to select pool

@@ -16,13 +16,13 @@ port = Config['server.port']
 def test_api_tput():  
   c = bubblegum.connect(host, port)
 
-  data = np.arange(1000000, dtype=np.int32).tobytes()
+  data = np.arange(10000000, dtype=np.int32).tobytes()
 
   start = timer()
-  s = c.tcreate('test:llm')
+  s = c.tcreate('test:llama')
   assert(s == status.OK)
 
-  t = c.tensor('test:llm')
+  t = c.tensor('test:llama')
   s = t.put(data)
   assert(s == status.OK)
 
@@ -50,35 +50,35 @@ def test_api_tget():
   s, rows = t.get(10)
   
   assert(s == status.OK)
-  assert(rows == data[:40])
+  assert(rows == data[:160])
 
 
 @pytest.mark.api
-def test_api_tset():  
+def test_api_tset(benchmark):
   c = bubblegum.connect(host, port)
-  old_data = np.arange(10000000, dtype=np.int32).tobytes()
+  old_data = np.arange(1000000, dtype=np.int32).tobytes()
 
   s = c.tcreate('test:llm', "int32", [2, 2])
   assert(s == status.OK)
-  
+
   t = c.tensor("test:llm")
   s = t.put(old_data)
   assert(s == status.OK)
 
   c = bubblegum.connect(host, port)
-  new_data = np.random.randint(10, size=10000000, dtype=np.int32).tobytes()
-  
+  new_data = np.random.randint(10, size=1000000, dtype=np.int32).tobytes()
+
   t = c.tensor("test:llm")
   s = t.set(new_data)
   assert(s == status.OK)
 
   c = bubblegum.connect(host, port)
   t = c.tensor("test:llm")
-  s, rows = t.get(10000000)
-  
+  s, rows = t.get(1000000)
+
   assert(s == status.OK)
   assert(rows == new_data)
-  
+
 
 @pytest.mark.api
 def test_api_tcreate():

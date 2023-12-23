@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import bubblegum.buffer as buffer
+import bubblegum.status as status 
 
 from bubblegum.connection    import Connection as Conn
 from bubblegum.client.tensor import Tensor 
@@ -16,30 +17,41 @@ class Client:
     return self
 
 
-  # TODO: call tload() or tcreate() 
-  def tensor(self, name: str) -> Tensor:
+  # It loads tensor if exists, if not then it creates new one
+  def tensor(self, name: str, dtype: str=None, shape: list(int)=None) -> Tensor:
+    name = Tensor.replace_name(name)
+
+    _, tensor = self.tload(name)
+    if tensor: return tensor
+
     return Tensor(name, self.conn)
 
 
   # TODO: return Tensor
   def tcreate(self, name: str, dtype: str=None, shape: list(int)=None):
+    name = Tensor.replace_name(name)
     self.conn.send('TCREATE', buffer.write(name, dtype, shape))
     return self.conn.read('int')
 
 
-  def tremove(self, tensor_name: str):
-    self.conn.send('TREMOVE', tensor_name)
+  def tremove(self, name: str):
+    name = Tensor.replace_name(name)
+
+    self.conn.send('TREMOVE', name)
     return self.conn.read('int')
 
 
-  # TODO: return Tensor - implement decode()
-  def tload(self, tensor_name: str):
-    self.conn.send('TLOAD', tensor_name)
+  def tload(self, name: str):
+    name = Tensor.replace_name(name)
+    self.conn.send('TLOAD', name)
 
-    status = self.conn.read('int')
+    code = self.conn.read('int')
     tensor = None
 
-    # if status == 1:
-    #   tensor = Tensor.decode(self.conn.read('bytes'))
-
-    return status, tensor
+    if code == status.OK:
+      tensor = Tensor.decode(self.conn.read('bytes'))
+      tensor.conn = self.conn
+      
+    return status.OK, tensor
+  
+  

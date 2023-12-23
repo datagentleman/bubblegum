@@ -15,7 +15,7 @@ class Connection(Buffer):
     s.connect((host, port))
 
     conn = Connection(s)
-    conn.send_handshake()
+    # conn.send_handshake()
     return conn
 
 
@@ -26,31 +26,31 @@ class Connection(Buffer):
   # send bytes
   def send(self, *items) -> int:
     for i in items: self.write(i)
-
+    
     self.conn.send(self.data)
     self.data = bytearray()
 
 
   # read handshake
-  def read_handshake(self):
-    self.conn.settimeout(0.5)
+  # def read_handshake(self):
+  #   self.conn.settimeout(0.5)
 
-    self.read('str')
-    self.send("OK")
+  #   self.read('str')
+  #   self.send("OK")
 
-    self.conn.settimeout(None)
+  #   self.conn.settimeout(None)
 
   # send handshake.
   # this will also ensure us that connection was accepted and we can transfer bytes.
-  def send_handshake(self) -> bytes:
-    # handshake should be reasonably fast
-    self.conn.settimeout(0.5)
+  # def send_handshake(self) -> bytes:
+  #   # handshake should be reasonably fast
+  #   self.conn.settimeout(0.5)
 
-    self.send("OK")
-    self.read('bytes')
+  #   self.send("OK")
+  #   self.read('bytes')
 
-    # from this point on, we cannot have any timeouts on socket - ex: streaming, long running tasks, ...
-    self.conn.settimeout(None)
+  #   # from this point on, we cannot have any timeouts on socket - ex: streaming, long running tasks, ...
+  #   self.conn.settimeout(None)
 
 
   # needed when working with select()
