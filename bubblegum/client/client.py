@@ -21,17 +21,21 @@ class Client:
   def tensor(self, name: str, dtype: str=None, shape: list(int)=None) -> Tensor:
     name = Tensor.replace_name(name)
 
-    _, tensor = self.tload(name)
+    tensor = self.tload(name)
     if tensor: return tensor
 
-    return Tensor(name, self.conn)
+    return self.tcreate(name, dtype, shape)
 
 
-  # TODO: return Tensor
   def tcreate(self, name: str, dtype: str=None, shape: list(int)=None):
     name = Tensor.replace_name(name)
     self.conn.send('TCREATE', buffer.write(name, dtype, shape))
-    return self.conn.read('int')
+    
+    code = self.conn.read('int')
+    if code == status.OK:
+      return self.tload(name)
+
+    return code
 
 
   def tremove(self, name: str):
@@ -46,12 +50,12 @@ class Client:
     self.conn.send('TLOAD', name)
 
     code = self.conn.read('int')
-    tensor = None
+    ten  = None
 
     if code == status.OK:
-      tensor = Tensor.decode(self.conn.read('bytes'))
-      tensor.conn = self.conn
-      
-    return status.OK, tensor
+      ten = Tensor.decode(self.conn.read('bytes'))
+      ten.conn = self.conn
+
+    return ten
   
   

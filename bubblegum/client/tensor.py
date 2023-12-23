@@ -36,6 +36,8 @@ class Tensor:
     self.conn.send('TSAVE', buffer.write(self.name, dtype, shape))
     return self.conn.read('int')
 
+  def __repr__(self):
+    return {'name': self.name, 'dtype': self.dtype, 'shape': self.shape}
 
   @classmethod
   def decode(cls, data: bytes):

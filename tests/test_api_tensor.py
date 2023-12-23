@@ -19,10 +19,9 @@ def test_api_tput():
   data = np.arange(10000000, dtype=np.int32).tobytes()
 
   start = timer()
-  s = c.tcreate('test:llama')
-  assert(s == status.OK)
-
   t = c.tensor('test:llama')
+  assert(t)
+
   s = t.put(data)
   assert(s == status.OK)
 
@@ -35,10 +34,9 @@ def test_api_tget():
   c = bubblegum.connect(host, port)
   data = np.arange(100000000, dtype=np.int32).tobytes()
 
-  s = c.tcreate('test:llm', "int32", [2, 2])
-  assert(s == status.OK)
+  t = c.tensor('test:llm', "int32", [2, 2])
+  assert(t)
 
-  t = c.tensor('test:llm')
   s = t.save('int32', [2, 2])
   assert(s == status.OK)
 
@@ -54,14 +52,13 @@ def test_api_tget():
 
 
 @pytest.mark.api
-def test_api_tset(benchmark):
+def test_api_tset():
   c = bubblegum.connect(host, port)
   old_data = np.arange(1000000, dtype=np.int32).tobytes()
 
-  s = c.tcreate('test:llm', "int32", [2, 2])
-  assert(s == status.OK)
+  t = c.tensor("test:llm", "int32", [2, 2])
+  assert(t)
 
-  t = c.tensor("test:llm")
   s = t.put(old_data)
   assert(s == status.OK)
 
@@ -85,30 +82,24 @@ def test_api_tcreate():
   c = bubblegum.connect(host, port)
 
   # with default values
-  s = c.tcreate('test:llm')
-  assert(s == status.OK)
+  t = c.tcreate('test:llm')
+  assert(t)
 
-  s, t = c.tload('test:llm')
-  assert(s == status.OK)
+  t = c.tload('test:llm')
+  assert(t)
 
-  expect = {
-    'name': 'test:llm', 'dtype': 'float16', 
-    'shape': [0], 'fd': -1, 'max_bucket_size': 100000000 }
-
-  assert(t.__dict__ == expect)
+  expect = {'name': 'test/llm', 'dtype': 'float16', 'shape': [0]}
+  assert(t.__repr__() == expect)
 
   # with given values
-  s = c.tcreate('test:llm', "float32", [2, 2])
-  assert(s == status.OK)
+  t = c.tcreate('test:llm', "float32", [2, 2])
+  assert(t)
 
-  s, t = c.tload('test:llm')
-  assert(s == status.OK)
+  t = c.tload('test:llm')
+  assert(t)
 
-  expect = {
-    'name': 'test:llm', 'dtype': 'float32', 
-    'shape': [2, 2], 'fd': -1, 'max_bucket_size': 100000000 }
-
-  assert(t.__dict__ == expect)
+  expect = {'name': 'test/llm', 'dtype': 'float32', 'shape': [2, 2]}
+  assert(t.__repr__() == expect)
 
 
 @pytest.mark.api
@@ -125,12 +116,8 @@ def test_api_tsave_tload():
   s, t = c.tload('test:bert')
   assert(s == status.OK)
 
-  expect = {
-    'name': 'test:bert', 'dtype': 'float32', 
-    'shape': [255, 255, 255], 'fd': -1, 'max_bucket_size': 100000000 }
-
-  assert(t.__dict__ == expect)
-
+  expect = {'name': 'test/bert', 'dtype': 'float32', 'shape': [255, 255, 255]}
+  assert(t.__repr__() == expect)
 
 @pytest.mark.api
 def test_api_tremove():  
