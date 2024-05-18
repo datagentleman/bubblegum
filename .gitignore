@@ -8,4 +8,5 @@ __pycache__
 pyvenv.cfg
 
 bin/
+lib/
 .idea/
